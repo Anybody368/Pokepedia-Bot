@@ -6,6 +6,7 @@ public class Main {
     {
         //Login.login("Anyboty");
 
-        Pokemon poke = new Pokemon("Abra", 32, "Ingrédients", 2, 2, "1:23:45", 10, "Super Soutien", 5);
+        Pokemon poke = new Pokemon("Abra", 1000, "Feu", "Ingrédients", 2, 2, "1:23:45", 10, "Super Soutien", 5);
+        poke.ajoutPokeWiki();
     }
 }

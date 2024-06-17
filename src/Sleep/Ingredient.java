@@ -9,4 +9,9 @@ public class Ingredient {
         m_nom = nom;
         m_quantite = quantite;
     }
+
+    public String getNom()
+    {
+        return m_nom;
+    }
 }
