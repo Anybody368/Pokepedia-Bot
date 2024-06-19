@@ -21,6 +21,22 @@ public class Pokemon {
     private int m_ptsAmitie;
     private String m_bonbon;
 
+
+    /**
+     * Constructeur (à peine surchargé) des données d'un Pokémon dans Pokémon Sleep
+     * @param nom : Nom du Pokémon
+     * @param numDex : Numéro du Pokémon dans le Pokédex National
+     * @param type : Type du Pokémon dans Sleep
+     * @param dodoType : Catégorie de dodo du Pokémon (Ptidodo, Bondodo, ou Grododo)
+     * @param specialite : Baies, Ingrédients, ou Compétences
+     * @param nbIngredients : Combien d'ingrédients différents le Pokémon peut trouver (les détails seront demandés à l'exécution)
+     * @param nbDodos : Combien de dodo existent pour ce Pokémon (les détails seront demandés à l'exécution)
+     * @param frequence : Fréquence de base du Pokémon au format "h:min:sec" ou "min:sec"
+     * @param capacite : Capacité maximale du Pokémon (combien d'objets peut-il tenir par défaut)
+     * @param competence : Compétence Principale du Pokémon
+     * @param ptsAmitie : Combien de Pokébiscuits max faut-il pour devenir ami avec ce Pokémon
+     * @param bonbon : Nom de Pokémon utilisé pour les bonbons de celui-ci (utile pour les Pokémon évolués)
+     */
     public Pokemon(String nom, int numDex, String type, String dodoType, String specialite, int nbIngredients, int nbDodos, String frequence, int capacite, String competence, int ptsAmitie, String bonbon)
     {
         m_nom = nom;
@@ -67,37 +83,10 @@ public class Pokemon {
         }
     }
 
-    public String getBaie()
-    {
-        String baie = switch (m_type)
-        {
-            case "Normal" -> "Kika";
-            case "Feu" -> "Mepo";
-            case "Eau" -> "Oran";
-            case "Électrik" -> "Résin";
-            case "Plante" -> "Durin";
-            case "Glace" -> "Fraive";
-            case "Combat" -> "Ceriz";
-            case "Poison" -> "Maron";
-            case "Sol" -> "Figuy";
-            case "Vol" -> "Palma";
-            case "Psy" -> "Mago";
-            case "Insecte" -> "Prine";
-            case "Roche" -> "Sitrus";
-            case "Spectre" -> "Remu";
-            case "Dragon" -> "Nanone";
-            case "Ténèbres" -> "Wiki";
-            case "Acier" -> "Myrte";
-            case "Fée" -> "Pêcha";
-            default -> "";
-        };
-        if(baie.isEmpty()) {
-            System.err.println("ERREUR : Type non valide");
-            System.exit(1);
-        }
-        return baie;
-    }
-
+    /**
+     * Remplit les différentes valeurs de la fréquence à partir du String passé en paramètre
+     * @param freq : String au format "min:sec" ou "h:min:sec"
+     */
     private void remplissageFreqence(String freq)
     {
         String[] details = freq.split(":");
@@ -120,6 +109,9 @@ public class Pokemon {
         }
     }
 
+    /**
+     * Fonction à appeler pour ajouter le Pokémon aux pages du Wiki UNIQUEMENT s'il n'y a encore rien pour lui
+     */
     public void ajoutPokeWiki()
     {
         ajoutListePokeSoutien();
@@ -127,6 +119,9 @@ public class Pokemon {
         ajoutPokeIngredients();
     }
 
+    /**
+     * S'occupe d'ajouter les lignes d'un Pokémon à la page "Liste des Pokémon de soutien de Pokémon Sleep"
+     */
     private void ajoutListePokeSoutien()
     {
         final int LIGNES_INFORMATIONS = 11;
@@ -164,7 +159,7 @@ public class Pokemon {
                 "| style=\"text-align:left;\" | {{Miniature|" + m_numDex + "|jeu=Sleep}} [[" + m_nom + "]]",
                 "| {{Type|" + m_type + "|Sleep}}",
                 "| " + m_specialite,
-                "| [[Fichier:Sprite Baie " + getBaie() + " Sleep.png|30px]] [[Baie " + getBaie() + "]]",
+                "| [[Fichier:Sprite Baie " + UtilSleep.getBaie(m_type) + " Sleep.png|30px]] [[Baie " + UtilSleep.getBaie(m_type) + "]]",
                 listeIngredientsWiki(),
                 frequenceWiki(),
                 "| " + m_capacite,
@@ -204,6 +199,9 @@ public class Pokemon {
         System.out.println("Page " + listeSoutien.getTitle() + " mise à jour");
     }
 
+    /**
+     * S'occupe de mettre à jour les pages des îles de Pokémon sleep avec les dodos du nouveau Pokémon
+     */
     private void ajoutPokeIles()
     {
         for (int numIle = 1; numIle <= Dodo.NBR_ILES; numIle++) {
@@ -224,7 +222,7 @@ public class Pokemon {
 
             //mise à jour de la ligne contenant le nombre de Pokémon et de dodos disponibles
             ligneAct = Util.incrementeValeurDansString(ligneAct, 14, 1);
-            ligneAct = Util.incrementeValeurDansString(ligneAct, 22, m_listeDodos.size());
+            ligneAct = Util.incrementeValeurDansString(ligneAct, 22, paliersPourIle(numIle).size());
             lignes.set(l, ligneAct);
 
             //On continue jusqu'au tableau récapitulatif des paliers de Ronflex
@@ -286,6 +284,9 @@ public class Pokemon {
         }
     }
 
+    /**
+     * Mets à jour la page des ingrédients de Pokémon Sleep en ajoutant le Pokémon dans les listes de ses ingrédients
+     */
     private void ajoutPokeIngredients()
     {
         Page listeIngredients = new Page("Ingrédient (Pokémon Sleep)");
@@ -338,6 +339,10 @@ public class Pokemon {
         System.out.println("Page " + listeIngredients.getTitle() + " mise à jour");
     }
 
+    /**
+     * Retourne la ligne du second tableau de la page "liste des Pokémon de soutien" pour le Pokémon
+     * @return voir ci-dessus
+     */
     private String getLignePoke() {
         Dodo dodo = m_listeDodos.getFirst();
         String lignePoke = "{{Ligne Pokémon Dododex|dex=" + m_numDex + "|nom=" + m_nom + "|type=" + m_typeDodo.toLowerCase() +
@@ -353,6 +358,11 @@ public class Pokemon {
         return lignePoke;
     }
 
+    /**
+     * Permets d'obtenir les lignes à ajouter pour le Pokémon dans le tableau des îles
+     * @param numIle : numéro de l'île en considération (1 pour Vertepousse, etc)
+     * @return
+     */
     private ArrayList<String> getLignesPokeIle(int numIle) {
         ArrayList<String> r = new ArrayList<>();
         r.add("|-");
@@ -380,6 +390,10 @@ public class Pokemon {
         return r;
     }
 
+    /**
+     * Mise en forme des ingrédients d'un Pokémon pour son récap dans la liste des Pokémon de soutien
+     * @return voir ci-dessus
+     */
     private String listeIngredientsWiki()
     {
         String r = "| style=\"text-align:left;\" | ";
@@ -394,6 +408,10 @@ public class Pokemon {
         return r;
     }
 
+    /**
+     * Mise en forme de la fréquence de base d'un Pokémon pour le récap dans la liste des Pokémon de soutien
+     * @return idem
+     */
     private String frequenceWiki()
     {
         String r = "| ";
@@ -448,6 +466,11 @@ public class Pokemon {
         return false;
     }
 
+    /**
+     * Permets d'obtenir les paliers nécessaires pour chaque dodo pouvant être obtenus sur une ile donnée (peut aussi être utilisée pour savoir combien de dodos sont sur l'île)
+     * @param numIle : Numéro de l'ile pour laquelle on cherche les paliers (1 pour Vertepousse, etc)
+     * @return une liste de String contenant les paliers
+     */
     private ArrayList<String> paliersPourIle(int numIle)
     {
         ArrayList<String> r = new ArrayList<>();

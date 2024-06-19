@@ -6,6 +6,11 @@ public class Util {
 
     private static final int NBR_POKE = 1025;
 
+    /**
+     * Permet d'obtenir le numéro de Pokédex comme affiché dans Poképedia
+     * @param num : numéro du dex
+     * @return le même numéro, avec autant de 0 que nécessaire
+     */
     public static String numDexComplet(int num)
     {
         if(num <= 0 || num > NBR_POKE)
@@ -25,6 +30,13 @@ public class Util {
         return String.valueOf(num);
     }
 
+    /**
+     * Fonction permettant d'incrémenter un nombre au sein d'un String, peut causer des problèmes d'affichage si dépasse 999
+     * @param ligne : String contenant le nombre à incrémenter
+     * @param numMot : Emplacement du nombre à incrémenter dans la phrase (en commençant à 0, +1 par espace)
+     * @param increment : De combien le nombre doit être incrémenté
+     * @return le même String, avec le nombre mis à jour
+     */
     public static String incrementeValeurDansString(String ligne, int numMot, int increment)
     {
         if(increment == 0)
@@ -38,6 +50,12 @@ public class Util {
         return ligne.substring(0, ligne.length()-1);
     }
 
+    /**
+     * Permet de chercher le numéro d'une ligne précise au sein d'un texte
+     * @param lignes : collection de lignes formant le texte
+     * @param recherche : contenu exact de la ligne à rechercher
+     * @return la position de la ligne dans l'ArrayList (donc la ligne -1)
+     */
     public static int trouverNumLigne(ArrayList<String> lignes, String recherche)
     {
         int l = 0;
@@ -52,6 +70,11 @@ public class Util {
         return l;
     }
 
+    /**
+     * Permet d'ajouter des espaces pour l'affichage de chiffres au-dessus de 999 pour l'affichage dans Poképedia (exemple : 1234567 retournera 1 234 567)
+     * @param num : Nombre à adapter
+     * @return le nombre sous forme de String avec des espaces
+     */
     public static String decompMilliers(int num)
     {
         if(num < 1000) return String.valueOf(num);
