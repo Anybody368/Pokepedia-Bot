@@ -2,11 +2,11 @@ import Sleep.Pokemon;
 import Utilitaire.*;
 
 public class Main {
-    public static void main(String args[])
+    public static void main(String[] args)
     {
-        //Login.login("Anyboty");
+        Login.login("Anyboty");
 
-        Pokemon poke = new Pokemon("Pikachu (Fêtes)", 1000, "Électrik", "Bondodo", "Baies", 2, 2, "1:23:45", 10, "Super Soutien", 5, "Pikachu");
+        Pokemon poke = new Pokemon("Nigosier", 845, "Vol", "Grododo", "Ingrédients", 3, 4, "45:00", 19, "Plat Super Bon S", 16, "Nigosier");
         poke.ajoutPokeWiki();
     }
 }

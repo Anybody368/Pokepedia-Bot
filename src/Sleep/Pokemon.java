@@ -56,9 +56,13 @@ public class Pokemon {
         {
             System.out.println("Nom de l'ingrédient " + i);
             String nomIngredient = sc.nextLine();
-            System.out.println("Quantité de l'ingrédient " + i);
-            int quantite = sc.nextInt();
-            m_listeIngredients.add(new Ingredient(nomIngredient, quantite));
+            System.out.println("Quantité de : " + nomIngredient + " au niveau 1");
+            int quantite1 = sc.nextInt();
+            System.out.println("Quantité de : " + nomIngredient + " au niveau 30");
+            int quantite2 = sc.nextInt();
+            System.out.println("Quantité de : " + nomIngredient + " au niveau 60");
+            int quantite3 = sc.nextInt();
+            m_listeIngredients.add(new Ingredient(nomIngredient, quantite1, quantite2, quantite3));
             sc.nextLine();
         }
     }
@@ -118,8 +122,9 @@ public class Pokemon {
 
     public void ajoutPokeWiki()
     {
-        //ajoutListePokeSoutien();
+        ajoutListePokeSoutien();
         ajoutPokeIles();
+        ajoutPokeIngredients();
     }
 
     private void ajoutListePokeSoutien()
@@ -150,7 +155,6 @@ public class Pokemon {
             //Si jamais le Pokémon doit être inséré à la toute fin du tableau
             if(ligneAct.isEmpty())
             {
-                l -= 1;
                 break;
             }
         }
@@ -196,7 +200,7 @@ public class Pokemon {
         {
             newContenu += ligne + "\n";
         }
-        System.out.println(newContenu);
+        listeSoutien.setContent(newContenu, "Ajout de " + m_nom);
         System.out.println("Page " + listeSoutien.getTitle() + " mise à jour");
     }
 
@@ -233,7 +237,7 @@ public class Pokemon {
             for (int p = 0; p < 35; p++) {
                 for(String pal : paliers)
                 {
-                    if(ligneAct.contains(pal))
+                    if(ligneAct.substring(ligneAct.indexOf("]]")+3).equals(pal))
                     {
                         increment++;
                         lignes.set(l+2, Util.incrementeValeurDansString(lignes.get(l+2), 2, 1));
@@ -261,7 +265,11 @@ public class Pokemon {
                 }
 
                 //Si jamais on arrive à la fin du tableau
-                if(ligneAct.equals("|}")) l++; break;
+                if(ligneAct.equals("|}"))
+                {
+                    l++;
+                    break;
+                }
             }
 
             ArrayList<String> ajout = getLignesPokeIle(numIle);
@@ -273,14 +281,66 @@ public class Pokemon {
             {
                 newContenu += ligne + "\n";
             }
-            System.out.println(newContenu);
+            pageIle.setContent(newContenu, "Ajout de " + m_nom);
             System.out.println("Page " + pageIle.getTitle() + " mise à jour");
         }
     }
 
+    private void ajoutPokeIngredients()
+    {
+        Page listeIngredients = new Page("Ingrédient (Pokémon Sleep)");
+        String content = listeIngredients.getContent();
+        ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
+
+        for(Ingredient bouffe : m_listeIngredients)
+        {
+            //On cherche le tableau des Pokémon pour l'ingrédient
+            int l = Util.trouverNumLigne(lignes, "| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser le " + bouffe.getNom() + "'''");
+            if(l == -1)
+            {
+                l = Util.trouverNumLigne(lignes, "| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser la " + bouffe.getNom() + "'''");
+            }
+            if(l == -1)
+            {
+                l = Util.trouverNumLigne(lignes, "| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser l'" + bouffe.getNom() + "'''");
+            }
+            l += 7;
+            String ligneAct = lignes.get(l);
+
+            while(ligneAct.substring(14, 18).compareTo(m_numDex) < 0)
+            {
+                l += 5;
+                ligneAct = lignes.get(l);
+
+                //Si jamais le Pokémon doit être inséré à la toute fin du tableau
+                if(ligneAct.isEmpty())
+                {
+                    break;
+                }
+            }
+            l--;
+
+            String[] ajout = {"|-",
+                    "| {{Miniature|" + m_numDex + "|jeu=Sleep}} [[" + m_nom + "]]",
+                    "| " + bouffe.getQttNv1(),
+                    "| " + bouffe.getQttNv30(),
+                    "| " + bouffe.getQttNv60()};
+            lignes.addAll(l, List.of(ajout));
+        }
+
+        //Reconstruction du texte de la page afin de publier
+        String newContenu = "";
+        for(String ligne : lignes)
+        {
+            newContenu += ligne + "\n";
+        }
+        listeIngredients.setContent(newContenu, "Ajout de " + m_nom);
+        System.out.println("Page " + listeIngredients.getTitle() + " mise à jour");
+    }
+
     private String getLignePoke() {
         Dodo dodo = m_listeDodos.getFirst();
-        String lignePoke = "{{Ligne Pokémon Dododex|dex=" + m_numDex + "|nom=" + m_nom + "|type=" + m_typeDodo +
+        String lignePoke = "{{Ligne Pokémon Dododex|dex=" + m_numDex + "|nom=" + m_nom + "|type=" + m_typeDodo.toLowerCase() +
                 "|dodo1=" + dodo.getNom() + "|lieu1=" + dodo.getLieux() + dodo.getRecompenses(1) +
                 "|nombonbon=" + m_bonbon + "|bonbon1=" + dodo.getQttBonbons();
         for (int i = 1; i < m_listeDodos.size(); i++) {
@@ -299,13 +359,13 @@ public class Pokemon {
         int nbrDodos = paliersPourIle(numIle).size();
         if (nbrDodos == 1) {
             r.add("| {{Miniature|" + m_numDex + "|jeu=Sleep}} [[" + m_nom + "]]");
-            r.add("| class=\"" + m_typeDodo.toLowerCase(Locale.ROOT) + "\" | [[Fichier:Icône Type " +
-                    m_typeDodo.toLowerCase(Locale.ROOT) + " Sleep.png|50px]] " + m_typeDodo);
+            r.add("| class=\"" + m_typeDodo.toLowerCase() + "\" | [[Fichier:Icône Type " +
+                    m_typeDodo.toLowerCase() + " Sleep.png|50px]] " + m_typeDodo);
         }
         else {
             r.add("| rowspan=\"" + nbrDodos + "\" | {{Miniature|" + m_numDex + "|jeu=Sleep}} [[" + m_nom + "]]");
-            r.add("| rowspan=\"" + nbrDodos + "\" class=\"" + m_typeDodo.toLowerCase(Locale.ROOT) + "\" | [[Fichier:Icône Type " +
-                    m_typeDodo.toLowerCase(Locale.ROOT) + " Sleep.png|50px]] " + m_typeDodo);
+            r.add("| rowspan=\"" + nbrDodos + "\" class=\"" + m_typeDodo.toLowerCase() + "\" | [[Fichier:Icône Type " +
+                    m_typeDodo.toLowerCase() + " Sleep.png|50px]] " + m_typeDodo);
         }
 
         //lignes pour chaque dodo

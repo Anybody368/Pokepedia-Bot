@@ -1,5 +1,7 @@
 package Sleep;
 
+import Utilitaire.Util;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -65,7 +67,7 @@ public class Dodo {
 
     public String getRecompenses(int numDodo)
     {
-        return "|recherche" + numDodo + "=" + m_ptsRecherche + "|fragment" + numDodo + "=" + m_qttFragment;
+        return "|recherche" + numDodo + "=" + Util.decompMilliers(m_ptsRecherche) + "|fragment" + numDodo + "=" + Util.decompMilliers(m_qttFragment);
     }
 
     public int getQttBonbons() {

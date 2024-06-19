@@ -46,10 +46,24 @@ public class Util {
             l++;
             if(l == lignes.size())
             {
-                System.err.println("ERREUR : Ligne non trouvée dans le texte");
-                System.exit(2);
+                return -1;
             }
         }
         return l;
+    }
+
+    public static String decompMilliers(int num)
+    {
+        if(num < 1000) return String.valueOf(num);
+        ArrayList<String> temp = new ArrayList<>();
+        while(num/1000 >= 1)
+        {
+            temp.addFirst(String.valueOf(num%1000));
+            num /= 1000;
+        }
+        temp.addFirst(String.valueOf(num));
+        String r = "";
+        for(String t : temp) r += t + " ";
+        return r.substring(0, r.length()-1);
     }
 }
