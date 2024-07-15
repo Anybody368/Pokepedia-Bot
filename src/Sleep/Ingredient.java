@@ -14,6 +14,14 @@ public class Ingredient {
         m_quantite60 = lvl60;
     }
 
+    public Ingredient(String nom, int quantite)
+    {
+        m_nom = nom;
+        m_quantiteBase = quantite;
+        m_quantite30 = 0;
+        m_quantite60 = 0;
+    }
+
     public String getNom()
     {
         return m_nom;

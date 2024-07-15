@@ -83,6 +83,39 @@ public class Pokemon {
         }
     }
 
+    public Pokemon(String nom, int numDex, String type, String dodoType, String specialite, ArrayList<Ingredient> ingredients, int nbDodos, String frequence, int capacite, String competence, int ptsAmitie, String bonbon)
+    {
+        m_nom = nom;
+        m_numDex = Util.numDexComplet(numDex);
+        m_type = type;
+        m_typeDodo = dodoType;
+        m_specialite = specialite;
+        remplissageFreqence(frequence);
+        m_capacite = capacite;
+        m_competence = competence;
+        m_ptsAmitie = ptsAmitie;
+        m_bonbon = bonbon;
+
+        Scanner sc = new Scanner(System.in);
+        m_listeDodos = new ArrayList<>();
+        for (int i = 1; i <= nbDodos; i++)
+        {
+            System.out.println("Nom du dodo " + i);
+            String nomDodo = sc.nextLine();
+            System.out.println("Rareté du dodo " + nomDodo);
+            int numDodo = sc.nextInt();
+            System.out.println("Points de recherche du dodo " + nomDodo);
+            int recherche = sc.nextInt();
+            System.out.println("Fragments du dodo " + nomDodo);
+            int fragment = sc.nextInt();
+            System.out.println("Nombre de bonbons du dodo " + nomDodo);
+            int qttBonbon = sc.nextInt();
+            m_listeDodos.add(new Dodo(nomDodo, numDodo, recherche, fragment, qttBonbon));
+            sc.nextLine();
+        }
+        m_listeIngredients = ingredients;
+    }
+
     /**
      * Remplit les différentes valeurs de la fréquence à partir du String passé en paramètre
      * @param freq : String au format "min:sec" ou "h:min:sec"
@@ -136,7 +169,7 @@ public class Pokemon {
         String ligneAct = lignes.get(l);
 
         //On cherche l'endroit où le nouveau Pokémon doit être inséré en comparant les numéros de Pokédex
-        while (ligneAct.substring(ligneAct.length()-4).compareTo(m_numDex) < 0)
+        while (ligneAct.substring(ligneAct.length()-4).compareTo(m_numDex) <= 0)
         {
             l += LIGNES_INFORMATIONS;
             //Si jamais il y a un rowspan avant le numero du dex (coucou Pikachu)
@@ -154,17 +187,7 @@ public class Pokemon {
             }
         }
 
-        String[] ajout = {"|-",
-                "| " + m_numDex,
-                "| style=\"text-align:left;\" | {{Miniature|" + m_numDex + "|jeu=Sleep}} [[" + m_nom + "]]",
-                "| {{Type|" + m_type + "|Sleep}}",
-                "| " + m_specialite,
-                "| [[Fichier:Sprite Baie " + UtilSleep.getBaie(m_type) + " Sleep.png|30px]] [[Baie " + UtilSleep.getBaie(m_type) + "]]",
-                listeIngredientsWiki(),
-                frequenceWiki(),
-                "| " + m_capacite,
-                "| [[" + m_competence + "]]",
-                "| " + m_ptsAmitie};
+        String[] ajout = getLignePoke1();
         lignes.addAll(l - 1, List.of(ajout));
         ajout = null;
 
@@ -173,7 +196,7 @@ public class Pokemon {
         l += 2;
         ligneAct = lignes.get(l);
 
-        while(ligneAct.substring(28, 32).compareTo(m_numDex) < 0)
+        while(ligneAct.substring(28, 32).compareTo(m_numDex) <= 0)
         {
             l += 2;
             ligneAct = lignes.get(l);
@@ -185,7 +208,7 @@ public class Pokemon {
             }
         }
 
-        String lignePoke = getLignePoke();
+        String lignePoke = getLignePoke2();
         lignes.add(l, lignePoke);
         lignes.add(l+1, "");
 
@@ -195,7 +218,7 @@ public class Pokemon {
         {
             newContenu += ligne + "\n";
         }
-        listeSoutien.setContent(newContenu, "Ajout de " + m_nom);
+        //listeSoutien.setContent(newContenu, "Ajout de " + m_nom);
         System.out.println("Page " + listeSoutien.getTitle() + " mise à jour");
     }
 
@@ -221,7 +244,7 @@ public class Pokemon {
             String ligneAct = lignes.get(l);
 
             //mise à jour de la ligne contenant le nombre de Pokémon et de dodos disponibles
-            ligneAct = Util.incrementeValeurDansString(ligneAct, 14, 1);
+            ligneAct = Util.incrementeValeurDansString(ligneAct, 15, 1);
             ligneAct = Util.incrementeValeurDansString(ligneAct, 22, paliersPourIle(numIle).size());
             lignes.set(l, ligneAct);
 
@@ -252,7 +275,7 @@ public class Pokemon {
             ligneAct = lignes.get(l);
 
             int locNumDex = ligneAct.indexOf("{{Miniature") + 12;
-            while(ligneAct.substring(locNumDex, locNumDex+4).compareTo(m_numDex) < 0)
+            while(ligneAct.substring(locNumDex, locNumDex+4).compareTo(m_numDex) <= 0)
             {
                 locNumDex = 11;
                 while(locNumDex == 11 && !ligneAct.equals("|}"))
@@ -279,7 +302,7 @@ public class Pokemon {
             {
                 newContenu += ligne + "\n";
             }
-            pageIle.setContent(newContenu, "Ajout de " + m_nom);
+            //pageIle.setContent(newContenu, "Ajout de " + m_nom);
             System.out.println("Page " + pageIle.getTitle() + " mise à jour");
         }
     }
@@ -335,15 +358,30 @@ public class Pokemon {
         {
             newContenu += ligne + "\n";
         }
-        listeIngredients.setContent(newContenu, "Ajout de " + m_nom);
+        //listeIngredients.setContent(newContenu, "Ajout de " + m_nom);
         System.out.println("Page " + listeIngredients.getTitle() + " mise à jour");
+    }
+
+    private String[] getLignePoke1()
+    {
+        return new String[]{"|-",
+                "| " + m_numDex,
+                "| style=\"text-align:left;\" | {{Miniature|" + m_numDex + "|jeu=Sleep}} [[" + m_nom + "]]",
+                "| {{Type|" + m_type + "|Sleep}}",
+                "| " + m_specialite,
+                "| [[Fichier:Sprite Baie " + UtilSleep.getBaie(m_type) + " Sleep.png|30px]] [[Baie " + UtilSleep.getBaie(m_type) + "]]",
+                listeIngredientsWiki(),
+                frequenceWiki(),
+                "| " + m_capacite,
+                "| [[" + m_competence + "]]",
+                "| " + m_ptsAmitie};
     }
 
     /**
      * Retourne la ligne du second tableau de la page "liste des Pokémon de soutien" pour le Pokémon
      * @return voir ci-dessus
      */
-    private String getLignePoke() {
+    private String getLignePoke2() {
         Dodo dodo = m_listeDodos.getFirst();
         String lignePoke = "{{Ligne Pokémon Dododex|dex=" + m_numDex + "|nom=" + m_nom + "|type=" + m_typeDodo.toLowerCase() +
                 "|dodo1=" + dodo.getNom() + "|lieu1=" + dodo.getLieux() + dodo.getRecompenses(1) +
