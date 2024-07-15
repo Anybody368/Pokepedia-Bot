@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args)
     {
-        //Login.login("Anyboty");
+        Login.login("Anyboty");
 
         ArrayList<Ingredient> plante = new ArrayList<>(3);
         plante.add(new Ingredient("Pomme de Terre Fondante", 2, 5, 7));

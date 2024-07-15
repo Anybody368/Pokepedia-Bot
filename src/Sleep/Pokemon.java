@@ -218,7 +218,7 @@ public class Pokemon {
         {
             newContenu += ligne + "\n";
         }
-        //listeSoutien.setContent(newContenu, "Ajout de " + m_nom);
+        listeSoutien.setContent(newContenu, "Ajout de " + m_nom);
         System.out.println("Page " + listeSoutien.getTitle() + " mise à jour");
     }
 
@@ -302,7 +302,7 @@ public class Pokemon {
             {
                 newContenu += ligne + "\n";
             }
-            //pageIle.setContent(newContenu, "Ajout de " + m_nom);
+            pageIle.setContent(newContenu, "Ajout de " + m_nom);
             System.out.println("Page " + pageIle.getTitle() + " mise à jour");
         }
     }
@@ -358,7 +358,7 @@ public class Pokemon {
         {
             newContenu += ligne + "\n";
         }
-        //listeIngredients.setContent(newContenu, "Ajout de " + m_nom);
+        listeIngredients.setContent(newContenu, "Ajout de " + m_nom);
         System.out.println("Page " + listeIngredients.getTitle() + " mise à jour");
     }
 
