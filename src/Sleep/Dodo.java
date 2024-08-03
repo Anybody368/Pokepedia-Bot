@@ -1,17 +1,15 @@
 package Sleep;
 
-import Utilitaire.Util;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Dodo {
-    private String m_nom;
-    private int m_rarete;
-    private int m_ptsRecherche;
-    private int m_qttFragment;
-    private int m_qttBonbons;
-    private ArrayList<LieuxDodo> m_localisations;
+    private final String m_nom;
+    private final int m_rarete;
+    private final int m_ptsRecherche;
+    private final int m_qttFragment;
+    private final int m_qttBonbons;
+    private final ArrayList<LieuxDodo> m_localisations;
     public static final int NBR_ILES = 5;
 
     public Dodo(String nom, int rarete, int recherche, int fragment, int bonbon)

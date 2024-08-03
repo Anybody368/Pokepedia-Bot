@@ -6,20 +6,20 @@ import Utilitaire.Util;
 import java.util.*;
 
 public class Pokemon {
-    private String m_nom;
-    private String m_numDex;
-    private String m_type;
-    private String m_typeDodo;
-    private String m_specialite;
-    private ArrayList<Ingredient> m_listeIngredients;
-    private ArrayList<Dodo> m_listeDodos;
+    private final String m_nom;
+    private final String m_numDex;
+    private final String m_type;
+    private final String m_typeDodo;
+    private final String m_specialite;
+    private final ArrayList<Ingredient> m_listeIngredients;
+    private final ArrayList<Dodo> m_listeDodos;
     private int m_freqHeure;
     private int m_freqMin;
     private int m_freqSec;
-    private int m_capacite;
-    private String m_competence;
-    private int m_ptsAmitie;
-    private String m_bonbon;
+    private final int m_capacite;
+    private final String m_competence;
+    private final int m_ptsAmitie;
+    private final String m_bonbon;
 
 
     /**
@@ -192,7 +192,6 @@ public class Pokemon {
 
         String[] ajout = getLignePoke1();
         lignes.addAll(l - 1, List.of(ajout));
-        ajout = null;
 
         //Même procédé pour le deuxième tableau
         l = Util.trouverNumLigne(lignes, "! Récompenses");
@@ -402,7 +401,7 @@ public class Pokemon {
     /**
      * Permets d'obtenir les lignes à ajouter pour le Pokémon dans le tableau des îles
      * @param numIle : numéro de l'île en considération (1 pour Vertepousse, etc)
-     * @return
+     * @return un String à ajouter dans le tableau des Pokémon présents sur l'île
      */
     private ArrayList<String> getLignesPokeIle(int numIle) {
         ArrayList<String> r = new ArrayList<>();
