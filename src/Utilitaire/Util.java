@@ -81,9 +81,18 @@ public class Util {
         ArrayList<String> temp = new ArrayList<>();
         while(num/1000 >= 1)
         {
-            temp.addFirst(String.valueOf(num%1000));
+            if(num%1000 == 0) {
+                temp.addFirst("000");
+            } else if (num%1000 < 10) {
+                temp.addFirst("00" + num%1000);
+            } else if (num%1000 < 100) {
+                temp.addFirst("0" + num%1000);
+            } else {
+                temp.addFirst(String.valueOf(num%1000));
+            }
             num /= 1000;
         }
+
         temp.addFirst(String.valueOf(num));
         String r = "";
         for(String t : temp) r += t + " ";

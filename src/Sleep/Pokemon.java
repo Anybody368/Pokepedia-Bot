@@ -149,7 +149,10 @@ public class Pokemon {
     {
         ajoutListePokeSoutien();
         ajoutPokeIles();
-        ajoutPokeIngredients();
+
+        //Si le pokémon n'est pas al forme de base de sa ligne évolutive, on ne l'ajoute pas à la page ingrédients
+        if(m_nom.equals(m_bonbon))
+            ajoutPokeIngredients();
     }
 
     /**
