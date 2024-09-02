@@ -10,9 +10,23 @@ public class LieuxDodo {
     public LieuxDodo(int numIle, String rangComplet)
     {
         m_ile = UtilSleep.getNomIle(numIle);
-        String[] temp = rangComplet.split(" ");
-        m_rang = temp[0];
-        m_niveau = Integer.parseInt(temp[1]);
+        if(rangComplet.length() <= 3)
+        {
+            m_rang = switch (rangComplet.charAt(0))
+            {
+                case 'b' -> "Basique";
+                case 's' -> "Super";
+                case 'h' -> "Hyper";
+                case 'm' -> "Master";
+                default -> "erreur";
+            };
+            m_niveau = Integer.parseInt(rangComplet.substring(1));
+        }
+        else {
+            String[] temp = rangComplet.split(" ");
+            m_rang = temp[0];
+            m_niveau = Integer.parseInt(temp[1]);
+        }
     }
 
     public LieuxDodo(int numIle)
