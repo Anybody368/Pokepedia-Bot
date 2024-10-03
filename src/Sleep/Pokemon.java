@@ -169,11 +169,7 @@ public class Pokemon {
         lignes.add(l+1, "");
 
         //Reconstruction du texte de la page afin de publier
-        String newContenu = "";
-        for(String ligne : lignes)
-        {
-            newContenu += ligne + "\n";
-        }
+        String newContenu = Util.reconstructionCodeSource(lignes);
         listeSoutien.setContent(newContenu, "Ajout de " + m_nom);
         System.out.println("Page " + listeSoutien.getTitle() + " mise à jour");
     }
@@ -253,11 +249,7 @@ public class Pokemon {
             lignes.addAll(l-1, ajout);
 
             //Reconstruction du texte de la page afin de publier
-            String newContenu = "";
-            for(String ligne : lignes)
-            {
-                newContenu += ligne + "\n";
-            }
+            String newContenu = Util.reconstructionCodeSource(lignes);
             pageIle.setContent(newContenu, "Ajout de " + m_nom);
             System.out.println("Page " + pageIle.getTitle() + " mise à jour");
         }
@@ -309,11 +301,7 @@ public class Pokemon {
         }
 
         //Reconstruction du texte de la page afin de publier
-        String newContenu = "";
-        for(String ligne : lignes)
-        {
-            newContenu += ligne + "\n";
-        }
+        String newContenu = Util.reconstructionCodeSource(lignes);
         listeIngredients.setContent(newContenu, "Ajout de " + m_nom);
         System.out.println("Page " + listeIngredients.getTitle() + " mise à jour");
     }

@@ -95,4 +95,14 @@ public class Util {
         for(String t : temp) r += t + " ";
         return r.substring(0, r.length()-1);
     }
+
+    public static String reconstructionCodeSource(ArrayList<String> lignes)
+    {
+        StringBuilder result = new StringBuilder();
+        for(String ligne : lignes)
+        {
+            result.append(ligne).append("\n");
+        }
+        return result.toString();
+    }
 }

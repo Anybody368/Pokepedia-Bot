@@ -10,7 +10,7 @@ public enum ListeIngredients {
     VIANDE_VEGETALE("Viande Végétale", 103, 4),
     LAIT_MEUMEU("Lait Meumeu", 98, 4),
     MIEL("Miel", 101, 4),
-    HUILE_PURE("Hule Pure", 121, 5),
+    HUILE_PURE("Huile Pure", 121, 5),
     GINGEMBRE_CHALEUREUX("Gingembre Chaleureux", 109, 4),
     TOMATE_ROUPILLON("Tomate Roupillon", 110, 4),
     CACAO_RELAXANT("Cacao Relaxant", 151, 6),
