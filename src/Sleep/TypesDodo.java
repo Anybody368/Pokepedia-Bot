@@ -6,7 +6,7 @@ public enum TypesDodo {
     GRODODO("Grododo");
     private final String m_nom;
 
-    private TypesDodo(String nom)
+    TypesDodo(String nom)
     {
         m_nom = nom;
     }

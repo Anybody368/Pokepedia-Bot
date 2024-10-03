@@ -15,7 +15,7 @@ public enum Competences {
     SUPER_SOUTIEN("Super Soutien");
     private final String m_nom;
 
-    private Competences(String nom)
+    Competences(String nom)
     {
         m_nom = nom;
     }

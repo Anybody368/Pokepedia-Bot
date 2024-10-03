@@ -22,7 +22,7 @@ public enum ListeIngredients {
     private final int m_puissance;
     private final int m_prix;
 
-    private ListeIngredients(String nom, int puissance, int prix)
+    ListeIngredients(String nom, int puissance, int prix)
     {
         m_nom = nom;
         m_prix = prix;

@@ -6,7 +6,7 @@ public enum Specialites {
     COMPETENCES("Compétences");
     private final String m_nom;
 
-    private Specialites(String nom)
+    Specialites(String nom)
     {
         m_nom = nom;
     }

@@ -22,7 +22,7 @@ public enum PokeTypes {
     private final String m_nomType;
     private final String m_nomBaie;
 
-    private PokeTypes(String nom, String baie)
+    PokeTypes(String nom, String baie)
     {
         m_nomType = nom;
         m_nomBaie = baie;
