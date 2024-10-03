@@ -1,6 +1,7 @@
 package Utilitaire;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Util {
 
@@ -51,23 +52,19 @@ public class Util {
     }
 
     /**
-     * Permet de chercher le numéro d'une ligne précise au sein d'un texte
+     * Permet de chercher le numéro de la première occurrence d'une ligne précise au sein d'un texte, à partir d'une ligne donnée
      * @param lignes : collection de lignes formant le texte
      * @param recherche : contenu exact de la ligne à rechercher
-     * @return la position de la ligne dans l'ArrayList (donc la ligne -1)
+     * @param debut : Index de la ligne à partir de laquelle chercher
+     * @return la position de la ligne dans l'ArrayList, sinon -1
      */
-    public static int trouverNumLigne(ArrayList<String> lignes, String recherche)
+    public static int nextIndexOf(ArrayList<String> lignes, String recherche, int debut)
     {
-        int l = 0;
-        while (!lignes.get(l).equals(recherche))
-        {
-            l++;
-            if(l == lignes.size())
-            {
-                return -1;
-            }
-        }
-        return l;
+        List<String> sub = lignes.subList(debut, lignes.size());
+        int r = sub.indexOf(recherche);
+
+        if(r == -1) return -1;
+        return r+debut;
     }
 
     /**

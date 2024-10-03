@@ -1,4 +1,5 @@
 package Sleep;
+import PokeType;
 
 public class UtilSleep {
     public static String getNomIle(int numIle)
@@ -23,7 +24,7 @@ public class UtilSleep {
         return r;
     }
 
-    public static String getBaie(String type)
+    public static String getBaie(PokeType type)
     {
         String baie = switch (type)
         {

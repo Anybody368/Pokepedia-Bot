@@ -1,22 +1,22 @@
 package Sleep;
 
-public class Ingredient {
-    private String m_nom;
-    private int m_quantiteBase;
-    private int m_quantite30;
-    private int m_quantite60;
+public class IngredientPoke {
+    private final ListeIngredients m_ingredient;
+    private final int m_quantiteBase;
+    private final int m_quantite30;
+    private final int m_quantite60;
 
-    public Ingredient(String nom, int lvl1, int lvl30, int lvl60)
+    public IngredientPoke(ListeIngredients ingr, int lvl1, int lvl30, int lvl60)
     {
-        m_nom = nom;
+        m_ingredient = ingr;
         m_quantiteBase = lvl1;
         m_quantite30 = lvl30;
         m_quantite60 = lvl60;
     }
 
-    public Ingredient(String nom, int quantite)
+    public IngredientPoke(ListeIngredients ingr, int quantite)
     {
-        m_nom = nom;
+        m_ingredient = ingr;
         m_quantiteBase = quantite;
         m_quantite30 = 0;
         m_quantite60 = 0;
@@ -24,7 +24,7 @@ public class Ingredient {
 
     public String getNom()
     {
-        return m_nom;
+        return m_ingredient.getNom();
     }
 
     public String getQttNv1()

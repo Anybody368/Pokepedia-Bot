@@ -8,16 +8,16 @@ import java.util.*;
 public class Pokemon {
     private final String m_nom;
     private final String m_numDex;
-    private final String m_type;
-    private final String m_typeDodo;
-    private final String m_specialite;
+    private final PokeTypes m_type;
+    private final TypesDodo m_typeDodo;
+    private final Specialites m_specialite;
     private final ArrayList<IngredientPoke> m_listeIngredients;
     private final ArrayList<Dodo> m_listeDodos;
     private int m_freqHeure;
     private int m_freqMin;
     private int m_freqSec;
     private final int m_capacite;
-    private final String m_competence;
+    private final Competences m_competence;
     private final int m_ptsAmitie;
     private final String m_bonbon;
 
@@ -29,7 +29,7 @@ public class Pokemon {
      * @param type : Type du Pokémon dans Sleep
      * @param dodoType : Catégorie de dodo du Pokémon (Ptidodo, Bondodo, ou Grododo)
      * @param specialite : Baies, Ingrédients, ou Compétences
-     * @param nbIngredients : Combien d'ingrédients différents le Pokémon peut trouver (les détails seront demandés à l'exécution)
+     * @param ingredients : Liste des ingrédients du Pokémon à créer au préalable
      * @param nbDodos : Combien de dodo existent pour ce Pokémon (les détails seront demandés à l'exécution)
      * @param frequence : Fréquence de base du Pokémon au format "h:min:sec" ou "min:sec"
      * @param capacite : Capacité maximale du Pokémon (combien d'objets peut-il tenir par défaut)
@@ -37,53 +37,7 @@ public class Pokemon {
      * @param ptsAmitie : Combien de Pokébiscuits max faut-il pour devenir ami avec ce Pokémon
      * @param bonbon : Nom de Pokémon utilisé pour les bonbons de celui-ci (utile pour les Pokémon évolués)
      */
-    public Pokemon(String nom, int numDex, String type, String dodoType, String specialite, int nbIngredients, int nbDodos, String frequence, int capacite, String competence, int ptsAmitie, String bonbon)
-    {
-        m_nom = nom;
-        m_numDex = Util.numDexComplet(numDex);
-        m_type = type;
-        m_typeDodo = dodoType;
-        m_specialite = specialite;
-        remplissageFreqence(frequence);
-        m_capacite = capacite;
-        m_competence = competence;
-        m_ptsAmitie = ptsAmitie;
-        m_bonbon = bonbon;
-
-        Scanner sc = new Scanner(System.in);
-        m_listeDodos = new ArrayList<>();
-        for (int i = 1; i <= nbDodos; i++)
-        {
-            System.out.println("Nom du dodo " + i);
-            String nomDodo = sc.nextLine();
-            System.out.println("Rareté du dodo " + nomDodo);
-            int numDodo = sc.nextInt();
-            System.out.println("Points de recherche du dodo " + nomDodo);
-            int recherche = sc.nextInt();
-            System.out.println("Fragments du dodo " + nomDodo);
-            int fragment = sc.nextInt();
-            System.out.println("Nombre de bonbons du dodo " + nomDodo);
-            int qttBonbon = sc.nextInt();
-            m_listeDodos.add(new Dodo(nomDodo, numDodo, recherche, fragment, qttBonbon));
-            sc.nextLine();
-        }
-        m_listeIngredients = new ArrayList<>();
-        for (int i = 1; i <= nbIngredients; i++)
-        {
-            System.out.println("Nom de l'ingrédient " + i);
-            String nomIngredient = sc.nextLine();
-            System.out.println("Quantité de : " + nomIngredient + " au niveau 1");
-            int quantite1 = sc.nextInt();
-            System.out.println("Quantité de : " + nomIngredient + " au niveau 30");
-            int quantite2 = sc.nextInt();
-            System.out.println("Quantité de : " + nomIngredient + " au niveau 60");
-            int quantite3 = sc.nextInt();
-            m_listeIngredients.add(new IngredientPoke(nomIngredient, quantite1, quantite2, quantite3));
-            sc.nextLine();
-        }
-    }
-
-    public Pokemon(String nom, int numDex, String type, String dodoType, String specialite, ArrayList<IngredientPoke> ingredients, int nbDodos, String frequence, int capacite, String competence, int ptsAmitie, String bonbon)
+    public Pokemon(String nom, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, int nbDodos, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon)
     {
         m_nom = nom;
         m_numDex = Util.numDexComplet(numDex);
@@ -369,13 +323,13 @@ public class Pokemon {
         return new String[]{"|-",
                 "| " + m_numDex,
                 "| style=\"text-align:left;\" | {{Miniature|" + m_numDex + "|jeu=Sleep}} [[" + m_nom + "]]",
-                "| {{Type|" + m_type + "|Sleep}}",
-                "| " + m_specialite,
-                "| [[Fichier:Sprite Baie " + UtilSleep.getBaie(m_type) + " Sleep.png|30px]] [[Baie " + UtilSleep.getBaie(m_type) + "]]",
+                "| {{Type|" + m_type.getNom() + "|Sleep}}",
+                "| " + m_specialite.getNom(),
+                "| [[Fichier:Sprite Baie " + m_type.getBaie() + " Sleep.png|30px]] [[Baie " + m_type.getBaie() + "]]",
                 listeIngredientsWiki(),
                 frequenceWiki(),
                 "| " + m_capacite,
-                "| [[" + m_competence + "]]",
+                "| [[" + m_competence.getNom() + "]]",
                 "| " + m_ptsAmitie};
     }
 
@@ -385,7 +339,7 @@ public class Pokemon {
      */
     private String getLignePoke2() {
         Dodo dodo = m_listeDodos.getFirst();
-        String lignePoke = "{{Ligne Pokémon Dododex|dex=" + m_numDex + "|nom=" + m_nom + "|type=" + m_typeDodo.toLowerCase() +
+        String lignePoke = "{{Ligne Pokémon Dododex|dex=" + m_numDex + "|nom=" + m_nom + "|type=" + m_typeDodo.getNom().toLowerCase() +
                 "|dodo1=" + dodo.getNom() + "|lieu1=" + dodo.getLieux() + dodo.getRecompenses(1) +
                 "|nombonbon=" + m_bonbon + "|bonbon1=" + dodo.getQttBonbons();
         for (int i = 1; i < m_listeDodos.size(); i++) {
@@ -409,13 +363,13 @@ public class Pokemon {
         int nbrDodos = paliersPourIle(numIle).size();
         if (nbrDodos == 1) {
             r.add("| {{Miniature|" + m_numDex + "|jeu=Sleep}} [[" + m_nom + "]]");
-            r.add("| class=\"" + m_typeDodo.toLowerCase() + "\" | [[Fichier:Icône Type " +
-                    m_typeDodo.toLowerCase() + " Sleep.png|50px]] " + m_typeDodo);
+            r.add("| class=\"" + m_typeDodo.getNom().toLowerCase() + "\" | [[Fichier:Icône Type " +
+                    m_typeDodo.getNom().toLowerCase() + " Sleep.png|50px]] " + m_typeDodo.getNom());
         }
         else {
             r.add("| rowspan=\"" + nbrDodos + "\" | {{Miniature|" + m_numDex + "|jeu=Sleep}} [[" + m_nom + "]]");
-            r.add("| rowspan=\"" + nbrDodos + "\" class=\"" + m_typeDodo.toLowerCase() + "\" | [[Fichier:Icône Type " +
-                    m_typeDodo.toLowerCase() + " Sleep.png|50px]] " + m_typeDodo);
+            r.add("| rowspan=\"" + nbrDodos + "\" class=\"" + m_typeDodo.getNom().toLowerCase() + "\" | [[Fichier:Icône Type " +
+                    m_typeDodo.getNom().toLowerCase() + " Sleep.png|50px]] " + m_typeDodo.getNom());
         }
 
         //lignes pour chaque dodo
