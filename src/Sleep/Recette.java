@@ -24,7 +24,7 @@ public class Recette {
 
     public void plublieRecette()
     {
-        //ajoutCuisine();
+        ajoutCuisine();
         ajoutIngredients();
     }
 
@@ -81,7 +81,7 @@ public class Recette {
                 System.exit(-1);
             }
 
-            if(!lignes.get(l-3).equals("|-"))
+            if((!lignes.get(l-3).equals("|-")) || lignes.get(l-1).equals("|-"))
             {
                 lignes.add(l, "|-");
                 l++;

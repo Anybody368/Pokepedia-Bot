@@ -1,13 +1,8 @@
 import Sleep.IngredientPoke;
-import Sleep.Pokemon;
 import Sleep.Recette;
-import Utilitaire.*;
+import Utilitaire.Login;
 
 import static Sleep.ListeIngredients.*;
-import static Sleep.PokeTypes.*;
-import static Sleep.Competences.*;
-import static Sleep.TypesDodo.*;
-import static Sleep.Specialites.*;
 import static Sleep.CategoriesRecettes.*;
 
 import java.util.ArrayList;
@@ -15,14 +10,15 @@ import java.util.ArrayList;
 public class Main {
     public static void main(String[] args)
     {
-        //Login.login("Anyboty");
+        Login.login("Anyboty");
 
-        ArrayList<IngredientPoke> eau = new ArrayList<>(3);
-        eau.add(new IngredientPoke(POMME_JUTEUSE, 10, 2, 4));
-        eau.add(new IngredientPoke(HUILE_PURE, 20, 2, 3));
-        eau.add(new IngredientPoke(MAIS_VERTEPOUSSE, 1, 0, 2));
+        ArrayList<IngredientPoke> ingredients = new ArrayList<>(3);
+        ingredients.add(new IngredientPoke(OEUF_EXQUIS, 20));
+        ingredients.add(new IngredientPoke(VIANDE_VEGETALE, 28));
+        ingredients.add(new IngredientPoke(MAIS_VERTEPOUSSE, 11));
+        ingredients.add(new IngredientPoke(TOMATE_ROUPILLON, 10));
 
-        Recette recette = new Recette("Test", BOISSONS_DESSERTS, eau, 69420, "Ceci est un test pour vérifier que tout marche bien !");
+        Recette recette = new Recette("Salade Coup-Croix", SALADES, ingredients, 8755, "Cette salade a été préparée en coupant finement les ingrédients.");
         recette.plublieRecette();
 
         //Pokemon petit = new Pokemon("Suicune", 245, EAU, GRODODO, COMPETENCES, eau, 3, "45:00", 17, SUPER_SOUTIEN, 30, "Suicune");

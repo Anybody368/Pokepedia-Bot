@@ -1,7 +1,5 @@
 package Sleep;
 
-import java.util.ArrayList;
-
 public class UtilSleep {
     public static String getNomIle(int numIle)
     {
@@ -18,10 +16,6 @@ public class UtilSleep {
 
     public static String ligneEtoiles(int nbrEtoiles)
     {
-        String r = "|";
-        for (int i = 0; i < nbrEtoiles; i++) {
-            r += " [[Fichier:Miniature Étoile Sleep.png|20px]]";
-        }
-        return r;
+        return "|" + " [[Fichier:Miniature Étoile Sleep.png|20px]]".repeat(nbrEtoiles);
     }
 }

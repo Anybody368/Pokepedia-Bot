@@ -29,17 +29,17 @@ public class IngredientPoke {
 
     public String getQttNv1()
     {
-        if(m_quantiteBase < 1) return "–";
+        if(m_quantiteBase < 1) return "—";
         return String.valueOf(m_quantiteBase);
     }
     public String getQttNv30()
     {
-        if(m_quantite30 < 1) return "–";
+        if(m_quantite30 < 1) return "—";
         return String.valueOf(m_quantite30);
     }
     public String getQttNv60()
     {
-        if(m_quantite60 < 1) return "–";
+        if(m_quantite60 < 1) return "—";
         return String.valueOf(m_quantite60);
     }
 }

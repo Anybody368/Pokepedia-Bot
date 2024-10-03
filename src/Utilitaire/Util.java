@@ -46,9 +46,9 @@ public class Util {
         }
         String[] mots = ligne.split(" ");
         mots[numMot] = String.valueOf(Integer.parseInt(mots[numMot])+increment);
-        ligne = "";
-        for(String mot : mots) ligne += mot + " ";
-        return ligne.substring(0, ligne.length()-1);
+        StringBuilder newLigne = new StringBuilder();
+        for(String mot : mots) newLigne.append(mot).append(" ");
+        return newLigne.substring(0, ligne.length()-1);
     }
 
     /**
@@ -91,8 +91,8 @@ public class Util {
         }
 
         temp.addFirst(String.valueOf(num));
-        String r = "";
-        for(String t : temp) r += t + " ";
+        StringBuilder r = new StringBuilder();
+        for(String t : temp) r.append(t).append(" ");
         return r.substring(0, r.length()-1);
     }
 
