@@ -11,7 +11,7 @@ public class Pokemon {
     private final String m_type;
     private final String m_typeDodo;
     private final String m_specialite;
-    private final ArrayList<Ingredient> m_listeIngredients;
+    private final ArrayList<IngredientPoke> m_listeIngredients;
     private final ArrayList<Dodo> m_listeDodos;
     private int m_freqHeure;
     private int m_freqMin;
@@ -78,12 +78,12 @@ public class Pokemon {
             int quantite2 = sc.nextInt();
             System.out.println("Quantité de : " + nomIngredient + " au niveau 60");
             int quantite3 = sc.nextInt();
-            m_listeIngredients.add(new Ingredient(nomIngredient, quantite1, quantite2, quantite3));
+            m_listeIngredients.add(new IngredientPoke(nomIngredient, quantite1, quantite2, quantite3));
             sc.nextLine();
         }
     }
 
-    public Pokemon(String nom, int numDex, String type, String dodoType, String specialite, ArrayList<Ingredient> ingredients, int nbDodos, String frequence, int capacite, String competence, int ptsAmitie, String bonbon)
+    public Pokemon(String nom, int numDex, String type, String dodoType, String specialite, ArrayList<IngredientPoke> ingredients, int nbDodos, String frequence, int capacite, String competence, int ptsAmitie, String bonbon)
     {
         m_nom = nom;
         m_numDex = Util.numDexComplet(numDex);
@@ -167,7 +167,7 @@ public class Pokemon {
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
         //On se place au niveau de la première ligne d'un Pokémon de Soutien du premier tableau, normalement "| 0001"
-        int l = Util.trouverNumLigne(lignes, "! Points d'amitié requis");
+        int l = lignes.indexOf("! Points d'amitié requis");
         l += 2;
         String ligneAct = lignes.get(l);
 
@@ -194,7 +194,7 @@ public class Pokemon {
         lignes.addAll(l - 1, List.of(ajout));
 
         //Même procédé pour le deuxième tableau
-        l = Util.trouverNumLigne(lignes, "! Récompenses");
+        l = lignes.indexOf("! Récompenses");
         l += 2;
         ligneAct = lignes.get(l);
 
@@ -241,7 +241,7 @@ public class Pokemon {
             ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
             //Recherche de la section Description pour modifier les chiffres
-            int l = Util.trouverNumLigne(lignes, "== Description ==");
+            int l = lignes.indexOf("== Description ==");
             l += 3;
             String ligneAct = lignes.get(l);
 
@@ -251,7 +251,7 @@ public class Pokemon {
             lignes.set(l, ligneAct);
 
             //On continue jusqu'au tableau récapitulatif des paliers de Ronflex
-            l = Util.trouverNumLigne(lignes, "| [[Fichier:Sprite Rang Basique Sleep.png|30px]] Basique 1");
+            l = lignes.indexOf("| [[Fichier:Sprite Rang Basique Sleep.png|30px]] Basique 1");
             ligneAct = lignes.get(l);
 
             //À partir de la liste des paliers qui gagnent un/des dodo(s), on incrémente les valeurs du tableau en conséquence
@@ -273,7 +273,7 @@ public class Pokemon {
             }
 
             //Plus qu'à ajouter le Pokémon dans le tableau global
-            l = Util.trouverNumLigne(lignes, "! Rang nécessaire") + 2;
+            l = lignes.indexOf("! Rang nécessaire") + 2;
             ligneAct = lignes.get(l);
 
             int locNumDex = ligneAct.indexOf("{{Miniature") + 12;
@@ -318,17 +318,17 @@ public class Pokemon {
         String content = listeIngredients.getContent();
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
-        for(Ingredient bouffe : m_listeIngredients)
+        for(IngredientPoke bouffe : m_listeIngredients)
         {
             //On cherche le tableau des Pokémon pour l'ingrédient
-            int l = Util.trouverNumLigne(lignes, "| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser le " + bouffe.getNom() + "'''");
+            int l = lignes.indexOf("| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser le " + bouffe.getNom() + "'''");
             if(l == -1)
             {
-                l = Util.trouverNumLigne(lignes, "| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser la " + bouffe.getNom() + "'''");
+                l = lignes.indexOf("| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser la " + bouffe.getNom() + "'''");
             }
             if(l == -1)
             {
-                l = Util.trouverNumLigne(lignes, "| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser l'" + bouffe.getNom() + "'''");
+                l = lignes.indexOf("| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser l'" + bouffe.getNom() + "'''");
             }
             l += 7;
             String ligneAct = lignes.get(l);
@@ -437,7 +437,7 @@ public class Pokemon {
     private String listeIngredientsWiki()
     {
         String r = "| style=\"text-align:left;\" | ";
-        for(Ingredient i : m_listeIngredients)
+        for(IngredientPoke i : m_listeIngredients)
         {
             if(!r.equals("| style=\"text-align:left;\" | "))
             {
