@@ -1,4 +1,4 @@
-package Sleep;
+package Sleep.bouffe;
 
 import Utilitaire.Page;
 import Utilitaire.Util;

@@ -1,4 +1,4 @@
-package Sleep;
+package Sleep.pokemon;
 
 public enum PokeTypes {
     NORMAL("Normal", "Kika"),
@@ -17,7 +17,7 @@ public enum PokeTypes {
     SPECTRE("Spectre", "Remu"),
     FEE("Fée", "Pêcha"),
     DRAGON("Dragon", "Nanone"),
-    INSECTE("Prine", "Insecte"),
+    INSECTE("Insecte", "Prine"),
     POISON("Poison", "Maron");
     private final String m_nomType;
     private final String m_nomBaie;

@@ -1,4 +1,4 @@
-package Sleep;
+package Sleep.bouffe;
 
 public enum ListeIngredients {
     GROS_POIREAU("Gros Poireau", 185, 7),

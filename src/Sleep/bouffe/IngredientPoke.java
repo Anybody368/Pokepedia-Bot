@@ -1,4 +1,4 @@
-package Sleep;
+package Sleep.bouffe;
 
 public class IngredientPoke {
     private final ListeIngredients m_ingredient;

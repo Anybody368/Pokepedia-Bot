@@ -1,4 +1,4 @@
-package Sleep;
+package Sleep.pokemon;
 
 public enum Specialites {
     BAIES("Baies"),

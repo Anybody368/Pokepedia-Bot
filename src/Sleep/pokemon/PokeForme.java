@@ -1,4 +1,4 @@
-package Sleep;
+package Sleep.pokemon;
 
 /*public class PokeForme extends Pokemon{
     private String m_nomForme;

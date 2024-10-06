@@ -1,4 +1,4 @@
-package Sleep;
+package Sleep.pokemon;
 
 public enum Competences {
     CHARGE_PUISSANCE_S("Charge de Puissance S"),

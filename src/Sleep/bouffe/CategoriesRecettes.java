@@ -1,4 +1,4 @@
-package Sleep;
+package Sleep.bouffe;
 
 public enum CategoriesRecettes {
     CURRYS_RAGOUTS("Currys et ragoûts"),

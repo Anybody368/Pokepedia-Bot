@@ -1,4 +1,4 @@
-package Sleep;
+package Sleep.dodos;
 
 public enum TypesDodo {
     PTIDODO("Ptidodo"),

@@ -10,6 +10,7 @@ public class UtilSleep {
             case 3 -> "Grotte Sépia";
             case 4 -> "Plaine Perce-neige";
             case 5 -> "Rivage Lapis-lazuli";
+            case 6 -> "Vieille Centrale Dorée";
             default -> "The promised neverland";
         };
     }

@@ -1,5 +1,10 @@
-package Sleep;
+package Sleep.pokemon;
 
+import Sleep.dodos.Dodo;
+import Sleep.dodos.Iles;
+import Sleep.dodos.TypesDodo;
+import Sleep.UtilSleep;
+import Sleep.bouffe.IngredientPoke;
 import Utilitaire.Page;
 import Utilitaire.Util;
 
@@ -13,6 +18,7 @@ public class Pokemon {
     private final Specialites m_specialite;
     private final ArrayList<IngredientPoke> m_listeIngredients;
     private final ArrayList<Dodo> m_listeDodos;
+    private final ArrayList<Iles> m_iles;
     private int m_freqHeure;
     private int m_freqMin;
     private int m_freqSec;
@@ -37,7 +43,7 @@ public class Pokemon {
      * @param ptsAmitie : Combien de Pokébiscuits max faut-il pour devenir ami avec ce Pokémon
      * @param bonbon : Nom de Pokémon utilisé pour les bonbons de celui-ci (utile pour les Pokémon évolués)
      */
-    public Pokemon(String nom, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, int nbDodos, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon)
+    public Pokemon(String nom, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, int nbDodos, ArrayList<Iles> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon)
     {
         m_nom = nom;
         m_numDex = Util.numDexComplet(numDex);
@@ -49,6 +55,7 @@ public class Pokemon {
         m_competence = competence;
         m_ptsAmitie = ptsAmitie;
         m_bonbon = bonbon;
+        m_iles = iles;
 
         Scanner sc = new Scanner(System.in);
         m_listeDodos = new ArrayList<>();
@@ -64,7 +71,7 @@ public class Pokemon {
             int fragment = sc.nextInt();
             System.out.println("Nombre de bonbons du dodo " + nomDodo);
             int qttBonbon = sc.nextInt();
-            m_listeDodos.add(new Dodo(nomDodo, numDodo, recherche, fragment, qttBonbon));
+            m_listeDodos.add(new Dodo(nomDodo, numDodo, recherche, fragment, qttBonbon, iles));
             sc.nextLine();
         }
         m_listeIngredients = ingredients;
@@ -179,14 +186,15 @@ public class Pokemon {
      */
     private void ajoutPokeIles()
     {
-        for (int numIle = 1; numIle <= Dodo.NBR_ILES; numIle++) {
+        int numIle = 0;
+        for (Iles ile : m_iles) {
             //Si le pokémon n'est pas dispo sur l'ile, on passe directement à la suivante
             if(!pokeDispoSurIle(numIle))
             {
                 continue;
             }
 
-            Page pageIle = new Page(UtilSleep.getNomIle(numIle));
+            Page pageIle = new Page(ile.getNom());
             String content = pageIle.getContent();
             ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
@@ -252,6 +260,8 @@ public class Pokemon {
             String newContenu = Util.reconstructionCodeSource(lignes);
             pageIle.setContent(newContenu, "Ajout de " + m_nom);
             System.out.println("Page " + pageIle.getTitle() + " mise à jour");
+
+            numIle++;
         }
     }
 
@@ -279,15 +289,15 @@ public class Pokemon {
             l += 7;
             String ligneAct = lignes.get(l);
 
-            while(ligneAct.substring(14, 18).compareTo(m_numDex) < 0)
-            {
-                l += 5;
-                ligneAct = lignes.get(l);
+            if(!ligneAct.isEmpty()) {
+                while (ligneAct.substring(14, 18).compareTo(m_numDex) < 0) {
+                    l += 5;
+                    ligneAct = lignes.get(l);
 
-                //Si jamais le Pokémon doit être inséré à la toute fin du tableau
-                if(ligneAct.isEmpty())
-                {
-                    break;
+                    //Si jamais le Pokémon doit être inséré à la toute fin du tableau
+                    if (ligneAct.isEmpty()) {
+                        break;
+                    }
                 }
             }
             l--;
