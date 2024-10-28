@@ -48,7 +48,7 @@ public class Util {
         mots[numMot] = String.valueOf(Integer.parseInt(mots[numMot])+increment);
         StringBuilder newLigne = new StringBuilder();
         for(String mot : mots) newLigne.append(mot).append(" ");
-        return newLigne.substring(0, ligne.length()-1);
+        return newLigne.substring(0, ligne.length());
     }
 
     /**

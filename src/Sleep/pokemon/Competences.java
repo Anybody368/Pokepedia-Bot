@@ -12,7 +12,10 @@ public enum Competences {
     GARDE_MANGER("Garde-Manger S"),
     PLAT_SUPER_BON("Plat Super Bon S"),
     METRONOME("Métronome"),
-    SUPER_SOUTIEN("Super Soutien");
+    SUPER_SOUTIEN("Super Soutien"),
+    STOCKAGE("Stockage (Charge de Puiss. S)"),
+    RAYON_LUNE("Rayon Lune (Charge d'Énergie S"),
+    FANTOMASQUE("Fantômasque (Baies à gogo)");
     private final String m_nom;
 
     Competences(String nom)
