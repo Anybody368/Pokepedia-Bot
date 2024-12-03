@@ -13,7 +13,7 @@ public enum PokeTypes {
     ACIER("Acier", "Myrte"),
     COMBAT("Combat", "Ceriz"),
     PSY("Psy", "Mago"),
-    TENEBRES("Ténébres", "Wiki"),
+    TENEBRES("Ténèbres", "Wiki"),
     SPECTRE("Spectre", "Remu"),
     FEE("Fée", "Pêcha"),
     DRAGON("Dragon", "Nanone"),

@@ -12,7 +12,7 @@ public class Dodo {
     private final ArrayList<LieuxDodo> m_localisations;
     public static final int NBR_ILES = 6;
 
-    public Dodo(String nom, int rarete, int recherche, int fragment, int bonbon, ArrayList<Iles> iles)
+    public Dodo(String nom, int rarete, int recherche, int fragment, int bonbon, ArrayList<Iles> iles, Boolean yes)
     {
         m_nom = nom;
         m_rarete = rarete;
@@ -28,13 +28,22 @@ public class Dodo {
             String rang = sc.nextLine();
             if(rang.equals("n"))
             {
-                m_localisations.add(new LieuxDodo(ile.getNom()));
+                m_localisations.add(new LieuxDodo(ile));
             }
             else
             {
-                m_localisations.add(new LieuxDodo(ile.getNom(), rang));
+                m_localisations.add(new LieuxDodo(ile, rang));
             }
         }
+    }
+
+    public Dodo(String nom, int rarete, int recherche, int fragment, int bonbon, ArrayList<LieuxDodo> lieux) {
+        m_nom = nom;
+        m_rarete = rarete;
+        m_ptsRecherche = recherche;
+        m_qttFragment = fragment;
+        m_qttBonbons = bonbon;
+        m_localisations = lieux;
     }
 
     public String getNom() {
@@ -57,7 +66,7 @@ public class Dodo {
                 {
                     r.append("<br>");
                 }
-                r.append("[[").append(ile.getIle()).append("]] ([[Fichier:Sprite Rang ").append(ile.getRang()).
+                r.append("[[").append(ile.getNomIle()).append("]] ([[Fichier:Sprite Rang ").append(ile.getRang()).
                         append(" Sleep.png|Rang ").append(ile.getRang()).append("|25px]]").append(ile.getNiveau()).append(")");
             }
         }

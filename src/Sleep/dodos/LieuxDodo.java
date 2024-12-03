@@ -1,15 +1,15 @@
 package Sleep.dodos;
 
 public class LieuxDodo {
-    private final String m_ile;
+    private final Iles m_ile;
     private final String m_rang;
     private final int m_niveau;
 
     private final static String NA = "n";
 
-    public LieuxDodo(String nomIle, String rangComplet)
+    public LieuxDodo(Iles ile, String rangComplet)
     {
-        m_ile = nomIle;
+        m_ile = ile;
         if(rangComplet.length() <= 3)
         {
             m_rang = switch (rangComplet.charAt(0))
@@ -29,9 +29,9 @@ public class LieuxDodo {
         }
     }
 
-    public LieuxDodo(String nomIle)
+    public LieuxDodo(Iles ile)
     {
-        m_ile = nomIle;
+        m_ile = ile;
         m_rang = NA;
         m_niveau = -1;
 
@@ -42,8 +42,8 @@ public class LieuxDodo {
         return !(m_rang.equals(NA));
     }
 
-    public String getIle() {
-        return m_ile;
+    public String getNomIle() {
+        return m_ile.getNom();
     }
 
     public String getRang() {

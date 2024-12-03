@@ -27,6 +27,37 @@ public class Pokemon {
     private final int m_ptsAmitie;
     private final String m_bonbon;
 
+    /**
+     * Constructeur (à peine surchargé) des données d'un Pokémon dans Pokémon Sleep sans input supplémentaire
+     * @param nom : Nom du Pokémon
+     * @param numDex : Numéro du Pokémon dans le Pokédex National
+     * @param type : Type du Pokémon dans Sleep
+     * @param dodoType : Catégorie de dodo du Pokémon (Ptidodo, Bondodo, ou Grododo)
+     * @param specialite : Baies, Ingrédients, ou Compétences
+     * @param ingredients : Liste des ingrédients du Pokémon à créer au préalable
+     * @param dodos : Liste des dodos du Pokémon pré-remplis
+     * @param frequence : Fréquence de base du Pokémon au format "h:min:sec" ou "min:sec"
+     * @param capacite : Capacité maximale du Pokémon (combien d'objets peut-il tenir par défaut)
+     * @param competence : Compétence Principale du Pokémon
+     * @param ptsAmitie : Combien de Pokébiscuits max faut-il pour devenir ami avec ce Pokémon
+     * @param bonbon : Nom de Pokémon utilisé pour les bonbons de celui-ci (utile pour les Pokémon évolués)
+     */
+    public Pokemon(String nom, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<Dodo> dodos, ArrayList<Iles> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon)
+    {
+        m_nom = nom;
+        m_numDex = Util.numDexComplet(numDex);
+        m_type = type;
+        m_typeDodo = dodoType;
+        m_specialite = specialite;
+        remplissageFreqence(frequence);
+        m_capacite = capacite;
+        m_competence = competence;
+        m_ptsAmitie = ptsAmitie;
+        m_bonbon = bonbon;
+        m_iles = iles;
+        m_listeDodos = dodos;
+        m_listeIngredients = ingredients;
+    }
 
     /**
      * Constructeur (à peine surchargé) des données d'un Pokémon dans Pokémon Sleep
@@ -71,7 +102,7 @@ public class Pokemon {
             int fragment = sc.nextInt();
             System.out.println("Nombre de bonbons du dodo " + nomDodo);
             int qttBonbon = sc.nextInt();
-            m_listeDodos.add(new Dodo(nomDodo, numDodo, recherche, fragment, qttBonbon, iles));
+            m_listeDodos.add(new Dodo(nomDodo, numDodo, recherche, fragment, qttBonbon, iles, true));
             sc.nextLine();
         }
         m_listeIngredients = ingredients;
