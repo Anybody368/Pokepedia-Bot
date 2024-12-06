@@ -17,6 +17,7 @@ import java.util.stream.IntStream;
 public class AffichageNewPoke extends  JFrame {
     public AffichageNewPoke() {
         super("Ajout de Pokémon");
+        JFrame frame = this;
         setSize(1000, 300);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -123,8 +124,10 @@ public class AffichageNewPoke extends  JFrame {
             int ptsAmitie = (int) recPoke.getSelectedItem();
             String bonbon = nomBonbon.getText();
 
+            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             Pokemon Poke = new Pokemon(nom, numDex, type, typeDodo, spec, ingredients, dodos, iles, freq, capacite, comp, ptsAmitie, bonbon);
             Poke.ajoutPokeWiki();
+            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             confirmation();
         });
         panel.add(confirm);
@@ -134,6 +137,7 @@ public class AffichageNewPoke extends  JFrame {
     }
 
     private void confirmation() {
+        System.out.println("Ajout terminé !");
         JLabel label = (JLabel) getContentPane().getComponent(getContentPane().getComponentCount() -2);
         label.setText("Pokémon bien ajouté !");
         label.setBackground(Color.green);
