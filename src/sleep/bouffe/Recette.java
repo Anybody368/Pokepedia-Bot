@@ -5,6 +5,7 @@ import utilitaire.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static utilitaire.Wiki.POKEPEDIA;
 
@@ -24,16 +25,24 @@ public class Recette {
         m_description = description;
     }
 
-    public void plublieRecette()
+    public HashMap<Page, String> getModifiedPages()
     {
-        ajoutCuisine();
-        ajoutIngredients();
+        HashMap<Page, String> pages = new HashMap<>(2);
+        Page pageCuisine = new Page("Cuisine (Pokémon Sleep)", POKEPEDIA);
+        pages.put(pageCuisine, ajoutCuisine(pageCuisine.getContent()));
+        Page pageIngredients = new Page("Ingrédient (Pokémon Sleep)", POKEPEDIA);
+        pages.put(pageIngredients, ajoutIngredients(pageIngredients.getContent()));
+
+        return pages;
     }
 
-    private void ajoutCuisine()
+    private String ajoutCuisine(String content)
     {
-        Page cuisineSleep = new Page("Cuisine (Pokémon sleep)", POKEPEDIA);
-        String content = cuisineSleep.getContent();
+        if(content.isEmpty())
+        {
+            System.out.println("Erreur dans la récupération de la page de Cuisine");
+            System.exit(1);
+        }
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
         int l = lignes.indexOf("==== " + m_categorie.getNom() + " ====");
@@ -51,21 +60,22 @@ public class Recette {
         }
 
         lignes.add(l, "|-");
-        lignes.add(l+1, "| [[Fichier:Sprite " + m_nom + " sleep.png|50px]]");
+        lignes.add(l+1, "| [[Fichier:Sprite " + m_nom + " Sleep.png|50px]]");
         lignes.add(l+2, "| " + m_nom);
         lignes.add(l+3, "| " + m_description);
         lignes.add(l+4, ligneIngredients());
         lignes.add(l+5, "| " + Util.decompMilliers(m_puissance));
 
-        String newContenu = Util.reconstructionCodeSource(lignes);
-        cuisineSleep.setContent(newContenu, "Ajout de " + m_nom);
-        System.out.println("Page " + cuisineSleep.getTitle() + " mise à jour");
+        return Util.reconstructionCodeSource(lignes);
     }
 
-    private void ajoutIngredients()
+    private String ajoutIngredients(String content)
     {
-        Page pageIngredients = new Page("Ingrédient (Pokémon sleep)", POKEPEDIA);
-        String content = pageIngredients.getContent();
+        if(content.isEmpty())
+        {
+            System.out.println("Erreur dans la récupération de la page d'ingrédients");
+            System.exit(1);
+        }
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
         for(IngredientPoke ingredient : m_ingredients)
@@ -89,13 +99,11 @@ public class Recette {
                 l++;
             }
 
-            lignes.add(l, "| colspan=\"2\" | [[Fichier:Sprite " + m_nom + " sleep.png|60px]] " + m_nom);
+            lignes.add(l, "| colspan=\"2\" | [[Fichier:Sprite " + m_nom + " Sleep.png|60px]] " + m_nom);
             lignes.add(l+1, "| ×" + ingredient.getQttNv1());
         }
 
-        String newContenu = Util.reconstructionCodeSource(lignes);
-        pageIngredients.setContent(newContenu, "Ajout de " + m_nom);
-        System.out.println("Page " + pageIngredients.getTitle() + " mise à jour");
+        return Util.reconstructionCodeSource(lignes);
     }
 
     private String ligneIngredients()
@@ -103,9 +111,14 @@ public class Recette {
         StringBuilder r = new StringBuilder("| ");
         for(IngredientPoke ingredient : m_ingredients)
         {
-            r.append("[[Fichier:Sprite ").append(ingredient.getNom()).append(" sleep.png|30px]] [[")
+            r.append("[[Fichier:Sprite ").append(ingredient.getNom()).append(" Sleep.png|30px]] [[")
                     .append(ingredient.getNom()).append("]] ×").append(ingredient.getQttNv1()).append("<br>");
         }
         return r.substring(0, r.length()-4);
+    }
+
+    public String getName()
+    {
+        return m_nom;
     }
 }
