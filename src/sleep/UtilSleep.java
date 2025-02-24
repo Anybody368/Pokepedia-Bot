@@ -17,6 +17,6 @@ public class UtilSleep {
 
     public static String ligneEtoiles(int nbrEtoiles)
     {
-        return "|" + " [[Fichier:Miniature Étoile sleep.png|20px]]".repeat(nbrEtoiles);
+        return "|" + " [[Fichier:Miniature Étoile Sleep.png|20px]]".repeat(nbrEtoiles);
     }
 }

@@ -45,7 +45,7 @@ public class PokemonRegional extends Pokemon{
     @Override
     protected String getStringMiniaNomPoke()
     {
-        return "{{Miniature|" + getNumDex() + "|" + m_region.getNom() + "|jeu=sleep}} [[" + getNom() + " " + m_region.getComplet() + "]]";
+        return "{{Miniature|" + getNumDex() + "|" + m_region.getNom() + "|jeu=Sleep}} [[" + getNom() + " " + m_region.getComplet() + "]]";
     }
 
     @Override

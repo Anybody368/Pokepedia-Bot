@@ -109,7 +109,7 @@ public class Pokemon {
     {
         final int LIGNES_INFORMATIONS = 11;
 
-        Page listeSoutien = new Page("Liste des Pokémon de soutien de Pokémon sleep", POKEPEDIA);
+        Page listeSoutien = new Page("Liste des Pokémon de soutien de Pokémon Sleep", POKEPEDIA);
         String content = listeSoutien.getContent();
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
@@ -204,7 +204,7 @@ public class Pokemon {
             lignes.set(l, ligneAct);
 
             //On continue jusqu'au tableau récapitulatif des paliers de Ronflex
-            l = lignes.indexOf("| [[Fichier:Sprite Rang Basique sleep.png|30px]] Basique 1");
+            l = lignes.indexOf("| [[Fichier:Sprite Rang Basique Sleep.png|30px]] Basique 1");
             ligneAct = lignes.get(l);
 
             //À partir de la liste des paliers qui gagnent un/des dodo(s), on incrémente les valeurs du tableau en conséquence
@@ -265,7 +265,7 @@ public class Pokemon {
      */
     private void ajoutPokeIngredients()
     {
-        Page listeIngredients = new Page("Ingrédient (Pokémon sleep)", POKEPEDIA);
+        Page listeIngredients = new Page("Ingrédient (Pokémon Sleep)", POKEPEDIA);
         String content = listeIngredients.getContent();
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
@@ -316,9 +316,9 @@ public class Pokemon {
         return new String[]{"|-",
                 "| " + m_numDex,
                 "| style=\"text-align:left;\" | " + getStringMiniaNomPoke(),
-                "| {{Type|" + m_type.getNom() + "|sleep}}",
+                "| {{Type|" + m_type.getNom() + "|Sleep}}",
                 "| " + m_specialite.getNom(),
-                "| [[Fichier:Sprite Baie " + m_type.getBaie() + " sleep.png|30px]] [[Baie " + m_type.getBaie() + "]]",
+                "| [[Fichier:Sprite Baie " + m_type.getBaie() + " Sleep.png|30px]] [[Baie " + m_type.getBaie() + "]]",
                 listeIngredientsWiki(),
                 frequenceWiki(),
                 "| " + m_capacite,
@@ -363,12 +363,12 @@ public class Pokemon {
         if (nbrDodos == 1) {
             r.add("| " + getStringMiniaNomPoke());
             r.add("| class=\"" + m_typeDodo.getNom().toLowerCase() + "\" | [[Fichier:Icône Type " +
-                    m_typeDodo.getNom().toLowerCase() + " sleep.png|50px]] " + m_typeDodo.getNom());
+                    m_typeDodo.getNom().toLowerCase() + " Sleep.png|50px]] " + m_typeDodo.getNom());
         }
         else {
             r.add("| rowspan=\"" + nbrDodos + "\" | " + getStringMiniaNomPoke());
             r.add("| rowspan=\"" + nbrDodos + "\" class=\"" + m_typeDodo.getNom().toLowerCase() + "\" | [[Fichier:Icône Type " +
-                    m_typeDodo.getNom().toLowerCase() + " sleep.png|50px]] " + m_typeDodo.getNom());
+                    m_typeDodo.getNom().toLowerCase() + " Sleep.png|50px]] " + m_typeDodo.getNom());
         }
 
         //lignes pour chaque dodo
@@ -377,7 +377,7 @@ public class Pokemon {
             if(!dodo.estDispoSurIle(numIle)) continue;
             if(r.size() != 3) r.add("|-");
             r.add(UtilSleep.ligneEtoiles(dodo.getRarete()));
-            r.add("| [[Fichier:Sprite Rang " + dodo.getRangIle(numIle) + " sleep.png|30px]] " + dodo.getPalierIle(numIle));
+            r.add("| [[Fichier:Sprite Rang " + dodo.getRangIle(numIle) + " Sleep.png|30px]] " + dodo.getPalierIle(numIle));
         }
 
         return r;
@@ -385,7 +385,7 @@ public class Pokemon {
 
     protected String getStringMiniaNomPoke()
     {
-        return "{{Miniature|" + m_numDex + "|jeu=sleep}} [[" + m_nom + "]]";
+        return "{{Miniature|" + m_numDex + "|jeu=Sleep}} [[" + m_nom + "]]";
     }
 
     /**
@@ -397,7 +397,7 @@ public class Pokemon {
         StringBuilder r = new StringBuilder("| style=\"text-align:left;\" | ");
         for(IngredientPoke i : m_listeIngredients)
         {
-            r.append("[[Fichier:Sprite ").append(i.getNom()).append(" sleep.png|30px]] [[").append(i.getNom()).append("]]<br>");
+            r.append("[[Fichier:Sprite ").append(i.getNom()).append(" Sleep.png|30px]] [[").append(i.getNom()).append("]]<br>");
         }
         return r.substring(0, r.length()-4);
     }

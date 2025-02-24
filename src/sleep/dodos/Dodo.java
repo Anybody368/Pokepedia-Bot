@@ -86,7 +86,7 @@ public class Dodo {
                     r.append("<br>");
                 }
                 r.append("[[").append(ile.getNomIle()).append("]] ([[Fichier:Sprite Rang ").append(ile.getRang()).
-                        append(" sleep.png|Rang ").append(ile.getRang()).append("|25px]]").append(ile.getNiveau()).append(")");
+                        append(" Sleep.png|Rang ").append(ile.getRang()).append("|25px]]").append(ile.getNiveau()).append(")");
             }
         }
         return r.toString();

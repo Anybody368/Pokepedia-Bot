@@ -35,7 +35,7 @@ public class PokeForme extends Pokemon{
     @Override
      protected String getStringMiniaNomPoke()
      {
-         return "{{Miniature|" + super.getNumDex() + "|" + m_nomForme + addPrecision() + "|jeu=sleep}} [[" + super.getNom() + "]] (" + m_nomForme + ")";
+         return "{{Miniature|" + super.getNumDex() + "|" + m_nomForme + addPrecision() + "|jeu=Sleep}} [[" + super.getNom() + "]] (" + m_nomForme + ")";
      }
 
     @Override
