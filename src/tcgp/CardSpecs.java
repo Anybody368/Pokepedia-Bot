@@ -78,20 +78,19 @@ public class CardSpecs {
 
     public String getCodeBoosters()
     {
-        if(m_boosters.size() == 1)
+        if(m_boosters.getFirst() == Booster.NONE)
         {
-            return("le [[booster (JCC)|booster]] [[" + m_boosters.getFirst().getName() + "]]");
+            return "";
         }
-        else if (m_boosters.size() == 2)
-        {
-            return("les [[booster (JCC)|booster]]s [[" + m_boosters.getFirst().getName() + "]] et [[" + m_boosters.getLast().getName()
-                + "]]");
+
+        StringBuilder code = new StringBuilder("| booster=");
+        code.append(m_boosters.getFirst().getName()).append("\n");
+
+        for (int i = 1; i < m_boosters.size(); i++) {
+            code.append("| booster").append(i+1).append("=").append(m_boosters.get(i).getName()).append("\n");
         }
-        else
-        {
-            return("les [[booster (JCC)|booster]]s [[" + m_boosters.getFirst().getName() + "]], [[" + m_boosters.get(1).getName()
-                + "]] et [[" + m_boosters.getLast().getName() + "]]");
-        }
+
+        return code.toString();
     }
 
     public boolean isSecret()
@@ -99,8 +98,8 @@ public class CardSpecs {
         return(m_number > m_expansion.getNbrCards() && m_expansion.getNbrCards() != -1);
     }
 
-    public boolean isLastCard()
+    public boolean isSpecialExtension()
     {
-        return (m_number == m_expansion.getTrueNbrCards());
+        return (m_expansion.isSpecial());
     }
 }

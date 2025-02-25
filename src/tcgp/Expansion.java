@@ -44,4 +44,8 @@ public enum Expansion {
     {
         return m_trueNbrCards;
     }
+
+    public boolean isSpecial() {
+        return m_nbrCards == -1;
+    }
 }

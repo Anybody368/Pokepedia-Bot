@@ -10,7 +10,11 @@ public enum Booster {
     PIKACHU("Pikachu", PUISSANCE_GENETIQUE),
     MEW("Mew", ILE_FABULEUSE),
     DIALGA("Dialga", SPATIO_TEMPOREL),
-    PALKIA("Palkia", SPATIO_TEMPOREL);
+    PALKIA("Palkia", SPATIO_TEMPOREL),
+
+    //Jokers pour Promo-A
+    OTHER("{{?}}", null),
+    NONE("ERREUR", null);
 
     private final String m_name;
     private final Expansion m_expansion;

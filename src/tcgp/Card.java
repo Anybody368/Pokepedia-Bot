@@ -22,6 +22,7 @@ public class Card {
     private Category m_subSubCategory = null;
     private String m_prevolution = null;
     private boolean m_hasAbility;
+    private boolean m_isReused = false;
     private final ArrayList<CardAttack> m_attacks = new ArrayList<>();
     private final ArrayList<CardSpecs> m_specs = new ArrayList<>(5);
 
@@ -98,6 +99,9 @@ public class Card {
 
     private void fillRest(String en_text)
     {
+        //On vérifie si l'illustration de base est réutilisée (on considèrera que ça ne peut être que la version de base)
+        m_isReused = en_text.contains("illustration was first featured");
+
         ArrayList<String> illustrator = new ArrayList<>(5);
         if(en_text.contains("\n|illustrator=") && !en_text.contains("|image set="))
         {
@@ -145,8 +149,13 @@ public class Card {
                 if(pack.equals("Any"))
                 {
                     boosters = Booster.getBoostersFromExpansion(exp);
-                }
-                else
+                } else if (pack.contains("Vol.")) {
+                    boosters = new ArrayList<>();
+                    boosters.add(Booster.OTHER);
+                } else if (pack.equals("N/A")) {
+                    boosters = new ArrayList<>();
+                    boosters.add(Booster.NONE);
+                } else
                 {
                     boosters = new ArrayList<>();
                     boosters.add(Booster.getBoosterFromName(PokeData.getFrenchName(pack)));
@@ -201,7 +210,8 @@ public class Card {
             {
                 energies.add(TCGType.typeFromEnglishName(energiesString[i].substring(0, energiesString[i].length()-2)));
             }
-            m_attacks.add(new CardAttack(damage, energies));
+            boolean hasEffect = !(searchValueOf(en_text, "|effect=", currentLine).isBlank());
+            m_attacks.add(new CardAttack(damage, energies, hasEffect));
         }
     }
 
@@ -219,6 +229,17 @@ public class Card {
             }
         }
         return names;
+    }
+
+    private String getPageName(CardSpecs spec)
+    {
+        if(m_subCategory == Category.EX)
+        {
+            return(m_frName + "-ex (" + spec.getExtensionName() + " " + spec.getNbrCardToString() + ")");
+        }
+        else {
+            return(m_frName + " (" + spec.getExtensionName() + " " + spec.getNbrCardToString() + ")");
+        }
     }
 
     public ArrayList<String> getPagesNames(Expansion exp)
@@ -261,30 +282,27 @@ public class Card {
 
     private String getPokepediaCode(CardSpecs spec, String en_title)
     {
-        StringBuilder code = new StringBuilder("{{Édité par robot}}\n\n");
-        code.append("{{Ruban Carte JCC\n| extension=").append(spec.getExtensionName()).append("\n| jeu=jccp\n");
-        if(spec.getNbrCard() != 1)
-        {
-            code.append("| carteprécédente={{?}}\n| pageprécédente={{?}} (").append(spec.getExtensionName()).append(" ")
-                    .append(spec.getRelativeNbrCard(-1)).append(")\n");
-        }
-        if(!spec.isLastCard())
-        {
-            code.append("| cartesuivante={{?}}\n| pagesuivante={{?}} (").append(spec.getExtensionName()).append(" ")
-                    .append(spec.getRelativeNbrCard(1)).append(")\n");
-        }
-        code.append("}}\n");
 
-        code.append(makeInfobox(spec)).append("\n");
-        code.append(makeBody(spec)).append("\n");
-        code.append("[[en:").append(en_title).append("]]\n");
+        String code = "{{Édité par robot}}\n\n{{Article carte\n" + makeInfobox(spec) + "\n" +
+                makeFacultes() + "\n" + makeAnecdotes(spec);
 
-        return code.toString();
+        if(m_specs.size() > 1)
+        {
+            code += makeCartesIdentiques(spec);
+        }
+        code += "}}\n\n";
+
+        if(!spec.isSecret())
+        {
+            code += "[[en:" + en_title + "]]\n";
+        }
+
+        return code;
     }
 
     private String makeInfobox(CardSpecs spec)
     {
-        StringBuilder code = new StringBuilder("{{Infobox Carte\n");
+        StringBuilder code = new StringBuilder("<!-- Infobox -->\n");
         code.append(makeNameSection());
 
         code.append("\n| extension=").append(spec.getExtensionName()).append("\n| jeu=jccp\n| numerocarte=")
@@ -298,8 +316,12 @@ public class Card {
 
         if(m_category == Category.POKEMON)
         {
-            code.append("\n| type=").append(m_type.getNom()).append("\n| pv=").append(m_HP).append("\n| stade=").append(m_stage)
-                    .append("\n| retraite=").append(m_retreat);
+            code.append("\n| type=").append(m_type.getNom()).append("\n| pv=").append(m_HP).append("\n| stade=").append(m_stage);
+            if(m_prevolution != null)
+            {
+                code.append("\n| niveau-précédent=").append(m_prevolution);
+            }
+            code.append("\n| retraite=").append(m_retreat);
             if(m_weakness != null)
             {
                 code.append("\n| faiblesse=").append(m_weakness.getNom());
@@ -308,6 +330,11 @@ public class Card {
         if(m_subSubCategory == Category.FOSSIL)
         {
             code.append("\n| pv=").append(m_HP);
+        }
+
+        if(spec.isSecret())
+        {
+            code.append("\n| full-art=oui");
         }
 
         code.append("\n| catégorie=").append(m_category.getName());
@@ -319,7 +346,7 @@ public class Card {
                 code.append("\n| sous-catégorie2=").append(m_subSubCategory.getName());
             }
         }
-        code.append("\n| illus=").append(spec.getIllustrator()).append("\n}}");
+        code.append("\n| illus=").append(spec.getIllustrator()).append("\n");
 
         return code.toString();
     }
@@ -342,128 +369,84 @@ public class Card {
         return("| nom=" + m_frName + "\n| nomen=" + m_enName + "\n| nomja=" + m_jpName);
     }
 
-    private String makeBody(CardSpecs spec)
+    private String makeFacultes()
     {
-        StringBuilder code = new StringBuilder(makeBodyIntro(spec));
+        StringBuilder code = new StringBuilder("<!-- Facultés -->\n");
 
-        code.append("\n\n__TOC__\n== Facultés ==\n\n");
         if(m_category == Category.POKEMON) {
-            code.append(makeCodeAttacks());
-            if (m_subCategory == Category.EX) {
-                code.append("=== Règle pour les [[Pokémon-ex]] ===\n\nQuand votre Pokémon-ex est mis [[K.O. (JCC)|K.O.]], votre adversaire gagne 2 points.\n\n");
-            }
-        } else if (m_subSubCategory == Category.FOSSIL) {
-            code.append("{{Infobox Faculté (JCC)\n| description=Jouez cette carte comme si c'était un Pokémon {{type|incolore|jcci}} de base avec ")
-                    .append(m_HP).append("""
-                             [[PV]]. N'importe quand pendant votre tour, vous pouvez défausser cette carte du jeu. Cette carte ne peut pas battre en [[retraite]].
-                            }}
-                            
-                            === Règle supplémentaire ===
-                            {{Infobox Faculté (JCC)
-                            | description=Vous pouvez jouer autant de [[carte Objet|cartes Objet]] que vous le voulez pendant votre tour.
-                            }}""");
-        } else if (m_subCategory == Category.ITEM) {
-            code.append("{{?}}\n\n=== Règle supplémentaire ===\n{{Infobox Faculté (JCC)\n| description=Vous pouvez jouer autant")
-                    .append(" de [[carte Objet|cartes Objet]] que vous le voulez pendant votre tour.\n}}\n\n");
-        } else if (m_subCategory == Category.SUPPORTER) {
-            code.append("{{?}}\n\n=== Règle supplémentaire ===\n{{Infobox Faculté (JCC)\n| description=Vous ne pouvez jouer qu'une")
-                    .append(" seule [[carte Supporter]] pendant votre tour.\n}}\n\n");
-        } else if (m_subCategory == Category.TOOL) {
-            code.append("{{?}}\n\n=== Règle supplémentaire ===\n{{Infobox Faculté (JCC)\n| description=Les Outils Pokémon")
-                    .append(" se jouent en les attachant à vos Pokémon. Vous ne pouvez en attacher qu'un à un Pokémon. ")
-                    .append("L'Outil Pokémon lui reste attaché.\n}}\n\n");
-        }
-
-        if(m_category == Category.POKEMON && m_subCategory != Category.EX)
-        {
-            code.append("== Description du Pokémon ==\n\n:''{{?}}''\nCette description est identique à celle de {{Jeu|{{?}}}}.\n\n");
-        }
-
-        code.append("== Anecdote ==\n\n* Cette carte peut être obtenue dans ").append(spec.getCodeBoosters())
-                .append(" de l'[[extension]] [[").append(spec.getExtensionName()).append("]].\n\n").append(makeVoirAussi(spec));
-
-        return code.toString();
-    }
-
-    private String makeBodyIntro(CardSpecs spec)
-    {
-        if(m_subCategory == Category.EX)
-        {
-            String res = ("'''"+m_frName+"{{Symbole JCC|ex JCCP}}''' est une [[carte Pokémon|carte]] [[Pokémon-ex]] de l'[[extension]] [["
-                    +spec.getExtensionName()+"]], à l'effigie du Pokémon [["+m_frName+"]].");
-
-            if(m_prevolution != null)
+            if(m_hasAbility)
             {
-                res += " Elle doit être posée sur un {{Requête JCC|[[Nom de carte formaté::"+ m_prevolution +"]]|texte="+ m_prevolution +"|jeu=jccp}} pour pouvoir être jouée.";
+                code.append("| talent-nom={{?}}\n| talent-description={{?}}\n");
             }
-            return res;
-        }
-        if(m_category == Category.POKEMON)
-        {
-            String res = ("'''"+m_frName+"''' est une [[carte Pokémon]] de l'[[extension]] [["
-                +spec.getExtensionName()+"]], à l'effigie du Pokémon [["+m_frName+"]].");
-            if(m_prevolution != null)
+
+            for (int i = 0; i < m_attacks.size(); i++) {
+                code.append(m_attacks.get(i).getAttackCode(i+1));
+            }
+
+            if(m_subCategory != Category.EX)
             {
-                res += " Elle doit être posée sur un {{Requête JCC|[[Nom de carte formaté::"+ m_prevolution +"]]|texte="+ m_prevolution +"|jeu=jccp}} pour pouvoir être jouée.";
+                code.append("\n<!-- Description -->\n| description={{?}}\n| description-jeu={{?}}\n");
             }
-            return res;
-        }
-        if(m_subCategory == Category.ITEM)
-        {
-            return("'''"+m_frName+"''' est une [[carte Dresseur (JCC)|carte]] [[Carte Objet|Objet]] de l'[[extension]] [["+spec.getExtensionName()+"]].");
-        }
-        if(m_subCategory == Category.SUPPORTER)
-        {
-            return("'''"+m_frName+"''' est une [[carte Dresseur (JCC)|carte]] [[Carte Supporter|Supporter]] de l'[[extension]] [["+spec.getExtensionName()+"]].");
-        }
-        if(m_subCategory == Category.TOOL)
-        {
-            return("'''"+m_frName+"''' est une [[carte Dresseur (JCC)|carte]] [[Carte Outil Pokémon|Outil Pokémon]] de l'[[extension]] [["+spec.getExtensionName()+"]].");
-        }
-        System.err.println("Attention, cas non pris en charge dans makeBodyIntro");
-        return "T'as oublié un cas frère";
-    }
-
-    private String makeCodeAttacks() {
-        StringBuilder code = new StringBuilder();
-        if(m_hasAbility)
-        {
-            code.append("{{Infobox Faculté (JCC)\n| faculté=Talent\n| nom={{?}}\n| description={{?}}\n}}\n\n");
-        }
-        if(m_attacks.size() == 1) {
-            code.append("=== [[Attaque (JCC)|Attaque]] ===\n\n");
-        } else {
-            code.append("=== [[Attaque (JCC)|Attaques]] ===\n\n");
         }
 
-        for(CardAttack attack : m_attacks)
-        {
-            code.append("{{Infobox Faculté (JCC)\n").append(attack.getEnergyCostCode()).append("\n| nom={{?}}\n| dégâts=")
-                    .append(attack.getDamage()).append("\n}}\n\n");
+        else {
+            code.append("| faculté-description=");
+            if(m_subSubCategory == Category.FOSSIL)
+            {
+                code.append("Jouez cette carte comme si c'était un Pokémon {{type|incolore|jcci}} de base avec 40 [[PV]]. " +
+                        "N'importe quand pendant votre tour, vous pouvez défausser cette carte du jeu. Cette carte ne peut pas battre en [[retraite]].\n");
+            } else {
+                code.append("{{?}}\n");
+            }
         }
 
         return code.toString();
     }
 
-    private String makeVoirAussi(CardSpecs spec)
+    private String makeAnecdotes(CardSpecs spec)
     {
-        String code = "== Voir aussi ==\n\n";
-        if(m_category == Category.POKEMON)
+        String code = "<!-- Anecdotes -->\n" + spec.getCodeBoosters();
+        if(spec.isSpecialExtension() && m_specs.size() >= 2)
         {
-            code += "* Pour plus d'informations sur le Pokémon : [["+ m_frName +"]].\n";
+            String originalName = getPageName(m_specs.getFirst());
+            code += "| réédition=" + originalName + "\n| réédition-illustration=différente\n";
         }
-        code += "* Pour plus d'informations sur l'extension : [["+ spec.getExtensionName() +"]].\n";
-        if(m_subCategory == Category.EX)
+        if((!spec.isSecret()) && m_isReused)
         {
-            code += "* [[Pokémon-ex]].\n";
-        }
-        code += "\n{{Bandeau JCC}}\n";
-
-        if(spec.isSecret())
-        {
-            code += "\n[[Catégorie:Carte Full Art]]\n";
+            code += "| illustration-réutilisée={{?}}\n";
         }
 
+        if(m_category == Category.DRESSEUR)
+        {
+            code += "| anecdotes=\n* {{?}}\n";
+        }
         return code;
     }
+
+    private String makeCartesIdentiques(CardSpecs spec)
+    {
+        StringBuilder code = new StringBuilder("\n<!-- Cartes identiques -->\n");
+        int counter = 1;
+        boolean isEmpty = true;
+        for(String name : getPagesNames())
+        {
+            if(name.equals(getPageName(spec)) || !name.contains(spec.getExtensionName())) continue;
+
+            code.append("| carte-identique");
+            if(counter != 1)
+            {
+                code.append(counter);
+            }
+            code.append("=").append(name).append("\n");
+            isEmpty = false;
+            counter++;
+        }
+        if(isEmpty)
+        {
+            return "";
+        }
+        return code.toString();
+    }
 }
+
+//TODO : s'occuper de la Promo A
