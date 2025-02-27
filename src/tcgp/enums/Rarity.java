@@ -1,4 +1,4 @@
-package tcgp;
+package tcgp.enums;
 
 public enum Rarity {
     ONE_DIAMOND("1 losange"),

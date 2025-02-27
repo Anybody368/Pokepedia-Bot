@@ -1,4 +1,4 @@
-package tcgp;
+package tcgp.enums;
 
 public enum Expansion {
     PROMO_A("Promo-A", "Promo-A", -1, -1),

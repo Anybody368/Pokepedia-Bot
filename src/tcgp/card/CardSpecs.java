@@ -1,4 +1,8 @@
-package tcgp;
+package tcgp.card;
+
+import tcgp.enums.Booster;
+import tcgp.enums.Expansion;
+import tcgp.enums.Rarity;
 
 import java.util.ArrayList;
 

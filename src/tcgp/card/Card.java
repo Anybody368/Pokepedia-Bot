@@ -1,5 +1,16 @@
-package tcgp;
+package tcgp.card;
 
+import tcgp.category.*;
+import tcgp.category.pokemon.PokeEXStrategy;
+import tcgp.category.pokemon.PokemonStrategy;
+import tcgp.category.trainer.FossilStrategy;
+import tcgp.category.trainer.ItemStrategy;
+import tcgp.category.trainer.SupporterStrategy;
+import tcgp.category.trainer.ToolStrategy;
+import tcgp.enums.Booster;
+import tcgp.enums.Expansion;
+import tcgp.enums.Rarity;
+import tcgp.enums.TCGType;
 import utilitaire.PokeData;
 import utilitaire.Util;
 
@@ -12,18 +23,8 @@ public class Card {
     private String m_frName;
     private String m_enName;
     private String m_jpName;
-    private TCGType m_type;
-    private TCGType m_weakness = null;
-    private int m_HP;
-    private int m_stage;
-    private int m_retreat;
-    private Category m_category;
-    private Category m_subCategory = null;
-    private Category m_subSubCategory = null;
-    private String m_prevolution = null;
-    private boolean m_hasAbility;
+    private final CategoryStrategy m_category;
     private boolean m_isReused = false;
-    private final ArrayList<CardAttack> m_attacks = new ArrayList<>();
     private final ArrayList<CardSpecs> m_specs = new ArrayList<>(5);
 
     /**
@@ -32,24 +33,90 @@ public class Card {
      * @param en_text : Contenu de la page de Bulbapedia
      */
     public Card(String en_text) {
-        fillCategories(en_text);
+        m_enName = searchValueOf(en_text, "|en name=");
+
+        String type = searchValueOf(en_text, "TCG Card Infobox/", "/");
+        if(type.equals("Pokémon"))
+        {
+            m_category = getPokeData(en_text);
+        } else {
+            if (m_enName.equals("Old Amber") || m_enName.endsWith(" Fossil")) {
+                int hp = Integer.parseInt(searchValueOf(en_text, "|hp="));
+                m_category = new FossilStrategy(hp);
+            } else {
+                String subType = searchValueOf(en_text, "|subtype=");
+                m_category = switch (subType) {
+                    case "Item" -> new ItemStrategy();
+                    case "Supporter" -> new SupporterStrategy();
+                    case "Pokémon Tool" -> new ToolStrategy();
+                    default -> null;
+                };
+            }
+        }
+
         fillNames(en_text);
         fillRest(en_text);
-        if(m_category == Category.POKEMON)
+    }
+
+    private PokemonStrategy getPokeData(String en_text)
+    {
+        int hp = Integer.parseInt(searchValueOf(en_text, "|hp="));
+        TCGType type = TCGType.typeFromEnglishName(searchValueOf(en_text, "|type="));
+        TCGType weakness = TCGType.typeFromEnglishName(searchValueOf(en_text, "|weakness="));
+        int retreat = Integer.parseInt(searchValueOf(en_text, "|retreat cost="));
+        int stage = switch (searchValueOf(en_text, "|evo stage="))
         {
-            fillCapacities(en_text);
+            case "Basic" -> 0;
+            case "Stage 1" -> 1;
+            case "Stage 2" -> 2;
+            default -> -1;
+        };
+        boolean hasAbility = en_text.contains("{{Cardtext/Ability");
+
+        String prevolution = null;
+        if(en_text.contains("|prevo name="))
+        {
+            prevolution = PokeData.getFrenchName(Util.searchValueOf(en_text, "|prevo name="));
         }
+
+        ArrayList<CardAttack> attacks = fillAttacks(en_text);
+
+        String name = searchValueOf(en_text, "|en name=");
+        if(name.contains("{{TCGP Icon|ex}}"))
+        {
+            return new PokeEXStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
+        }
+        return new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
+    }
+
+    private ArrayList<CardAttack> fillAttacks(String en_text)
+    {
+        ArrayList<CardAttack> attacks = new ArrayList<>();
+        int currentLine = 0;
+        while ((currentLine = en_text.indexOf("{{Cardtext/Attack", currentLine+1)) != -1)
+        {
+            String damage = searchValueOf(en_text, "|damage=", currentLine);
+            String[] energiesString = searchValueOf(en_text, "|cost=", currentLine).split("[{]{2}e[|]");
+            ArrayList<TCGType> energies = new ArrayList<>();
+            for(int i = 1; i < energiesString.length; i++)
+            {
+                energies.add(TCGType.typeFromEnglishName(energiesString[i].substring(0, energiesString[i].length()-2)));
+            }
+            boolean hasEffect = !(searchValueOf(en_text, "|effect=", currentLine).isBlank());
+            attacks.add(new CardAttack(damage, energies, hasEffect));
+        }
+
+        return attacks;
     }
 
     private void fillNames(String en_text) {
 
-        m_enName = searchValueOf(en_text, "|en name=");
-        if(m_subCategory == Category.EX)
+        if(m_category instanceof PokeEXStrategy)
         {
             m_enName = m_enName.split(" ")[0];
         }
 
-        if(m_category == Category.POKEMON) {
+        if(m_category instanceof PokemonStrategy) {
             m_frName = PokeData.getFrenchName(m_enName);
         }
         else
@@ -57,44 +124,9 @@ public class Card {
             System.out.println("Indiquez le nom français de la carte " + m_enName);
             Scanner scanner = new Scanner(System.in);
             m_frName = scanner.nextLine();
-
-            if(m_subCategory == Category.ITEM)
-            {
-                String[] split = m_enName.split(" ");
-                if(m_enName.equals("Old Amber") || (split.length == 2 && split[1].equals("Fossil")))
-                {
-                    m_subSubCategory = Category.FOSSIL;
-                }
-            }
         }
+
         m_jpName = searchValueOf(en_text, "|ja name=").split("[{]")[0];
-    }
-
-    private void fillCategories(String en_text)
-    {
-        int indexStart = en_text.indexOf("{{TCG Card Infobox")+19;
-        int indexEnd = en_text.indexOf("/", indexStart);
-        String infoboxType = en_text.substring(indexStart, indexEnd);
-
-        if(infoboxType.equals("Pokémon"))
-        {
-            m_category = Category.POKEMON;
-            String name = searchValueOf(en_text, "|en name=");
-            if(name.contains("{{TCGP Icon|ex}}"))
-            {
-                m_subCategory = Category.EX;
-            }
-        }
-        else
-        {
-            m_category = Category.DRESSEUR;
-            String subCategory = searchValueOf(en_text, "|subtype=");
-            switch (subCategory) {
-                case "Item" -> m_subCategory = Category.ITEM;
-                case "Supporter" -> m_subCategory = Category.SUPPORTER;
-                case "Pokémon Tool" -> m_subCategory = Category.TOOL;
-            }
-        }
     }
 
     private void fillRest(String en_text)
@@ -166,53 +198,6 @@ public class Card {
 
             currentLine = en_text.indexOf("{{TCG Card Infobox", currentLine+1);
         }
-
-        //Pour les fossiles, on récupère les PV
-        if(m_subSubCategory == Category.FOSSIL)
-        {
-            m_HP = Integer.parseInt(searchValueOf(en_text, "|hp="));
-        }
-
-        //Et enfin tous les trucs pour les Pokémon
-        if(m_category == Category.POKEMON)
-        {
-            m_HP = Integer.parseInt(searchValueOf(en_text, "|hp="));
-            m_type = TCGType.typeFromEnglishName(searchValueOf(en_text, "|type="));
-            m_weakness = TCGType.typeFromEnglishName(searchValueOf(en_text, "|weakness="));
-            m_retreat = Integer.parseInt(searchValueOf(en_text, "|retreat cost="));
-            m_stage = switch (searchValueOf(en_text, "|evo stage="))
-            {
-                case "Basic" -> 0;
-                case "Stage 1" -> 1;
-                case "Stage 2" -> 2;
-                default -> -1;
-            };
-        }
-
-        //Si c'est un Pokémon Évolué
-        if(en_text.contains("|prevo name="))
-        {
-            String name =
-            m_prevolution = PokeData.getFrenchName(Util.searchValueOf(en_text, "|prevo name="));
-        }
-    }
-
-    private void fillCapacities(String en_text)
-    {
-        m_hasAbility = en_text.contains("{{Cardtext/Ability");
-        int currentLine = 0;
-        while ((currentLine = en_text.indexOf("{{Cardtext/Attack", currentLine+1)) != -1)
-        {
-            String damage = searchValueOf(en_text, "|damage=", currentLine);
-            String[] energiesString = searchValueOf(en_text, "|cost=", currentLine).split("[{]{2}e[|]");
-            ArrayList<TCGType> energies = new ArrayList<>();
-            for(int i = 1; i < energiesString.length; i++)
-            {
-                energies.add(TCGType.typeFromEnglishName(energiesString[i].substring(0, energiesString[i].length()-2)));
-            }
-            boolean hasEffect = !(searchValueOf(en_text, "|effect=", currentLine).isBlank());
-            m_attacks.add(new CardAttack(damage, energies, hasEffect));
-        }
     }
 
     public ArrayList<String> getPagesNames()
@@ -220,20 +205,14 @@ public class Card {
         ArrayList<String> names = new ArrayList<>();
         for(CardSpecs spec : m_specs)
         {
-            if(m_subCategory == Category.EX)
-            {
-                names.add(m_frName + "-ex (" + spec.getExtensionName() + " " + spec.getNbrCardToString() + ")");
-            }
-            else {
-                names.add(m_frName + " (" + spec.getExtensionName() + " " + spec.getNbrCardToString() + ")");
-            }
+            names.add(getPageName(spec));
         }
         return names;
     }
 
     private String getPageName(CardSpecs spec)
     {
-        if(m_subCategory == Category.EX)
+        if(m_category instanceof PokeEXStrategy)
         {
             return(m_frName + "-ex (" + spec.getExtensionName() + " " + spec.getNbrCardToString() + ")");
         }
@@ -248,11 +227,7 @@ public class Card {
         for(CardSpecs spec : m_specs)
         {
             if(exp == spec.getExpansion()) {
-                if (m_subCategory == Category.EX) {
-                    names.add(m_frName + "-ex (" + spec.getExtensionName() + " " + spec.getNbrCardToString() + ")");
-                } else {
-                    names.add(m_frName + " (" + spec.getExtensionName() + " " + spec.getNbrCardToString() + ")");
-                }
+                names.add(getPageName(spec));
             }
         }
         return names;
@@ -303,7 +278,7 @@ public class Card {
     private String makeInfobox(CardSpecs spec)
     {
         StringBuilder code = new StringBuilder("<!-- Infobox -->\n");
-        code.append(makeNameSection());
+        code.append(m_category.makeNameSection(m_enName, m_frName, m_jpName));
 
         code.append("\n| extension=").append(spec.getExtensionName()).append("\n| jeu=jccp\n| numerocarte=")
                 .append(spec.getNbrCardToString()).append("\n| maxsetcarte=").append(spec.getExtensionSize())
@@ -314,93 +289,23 @@ public class Card {
             code.append("\n| secrète=oui");
         }
 
-        if(m_category == Category.POKEMON)
-        {
-            code.append("\n| type=").append(m_type.getNom()).append("\n| pv=").append(m_HP).append("\n| stade=").append(m_stage);
-            if(m_prevolution != null)
-            {
-                code.append("\n| niveau-précédent=").append(m_prevolution);
-            }
-            code.append("\n| retraite=").append(m_retreat);
-            if(m_weakness != null)
-            {
-                code.append("\n| faiblesse=").append(m_weakness.getNom());
-            }
-        }
-        if(m_subSubCategory == Category.FOSSIL)
-        {
-            code.append("\n| pv=").append(m_HP);
-        }
+        code.append(m_category.makeInfobox());
 
         if(spec.isSecret())
         {
             code.append("\n| full-art=oui");
         }
 
-        code.append("\n| catégorie=").append(m_category.getName());
-        if(m_subCategory != null)
-        {
-            code.append("\n| sous-catégorie=").append(m_subCategory.getName());
-            if(m_subSubCategory != null)
-            {
-                code.append("\n| sous-catégorie2=").append(m_subSubCategory.getName());
-            }
-        }
+        code.append(m_category.makeCategorySection());
+
         code.append("\n| illus=").append(spec.getIllustrator()).append("\n");
 
         return code.toString();
     }
 
-    private String makeNameSection()
-    {
-        if(m_subCategory == Category.EX)
-        {
-            final String symbEx = "{{Symbole JCC|ex JCCP}}";
-            return("| nom=" + m_frName + symbEx + "\n| nomréel=" + m_frName + "\n| nomen=" + m_enName + symbEx +
-                    "\n| nomja=" + m_jpName + symbEx);
-        }
-
-        //Tant qu'il n'y a pas de fossiles spéciaux
-        if(m_subSubCategory == Category.FOSSIL)
-        {
-            return("| nom=" + m_frName + "\n| sujet=" + m_frName + "\n| nomen=" + m_enName + "\n| nomja=" + m_jpName);
-        }
-
-        return("| nom=" + m_frName + "\n| nomen=" + m_enName + "\n| nomja=" + m_jpName);
-    }
-
     private String makeFacultes()
     {
-        StringBuilder code = new StringBuilder("<!-- Facultés -->\n");
-
-        if(m_category == Category.POKEMON) {
-            if(m_hasAbility)
-            {
-                code.append("| talent-nom={{?}}\n| talent-description={{?}}\n");
-            }
-
-            for (int i = 0; i < m_attacks.size(); i++) {
-                code.append(m_attacks.get(i).getAttackCode(i+1));
-            }
-
-            if(m_subCategory != Category.EX)
-            {
-                code.append("\n<!-- Description -->\n| description={{?}}\n| description-jeu={{?}}\n");
-            }
-        }
-
-        else {
-            code.append("| faculté-description=");
-            if(m_subSubCategory == Category.FOSSIL)
-            {
-                code.append("Jouez cette carte comme si c'était un Pokémon {{type|incolore|jcci}} de base avec 40 [[PV]]. " +
-                        "N'importe quand pendant votre tour, vous pouvez défausser cette carte du jeu. Cette carte ne peut pas battre en [[retraite]].\n");
-            } else {
-                code.append("{{?}}\n");
-            }
-        }
-
-        return code.toString();
+        return "<!-- Facultés -->\n" + m_category.makeFacultes();
     }
 
     private String makeAnecdotes(CardSpecs spec)
@@ -416,10 +321,7 @@ public class Card {
             code += "| illustration-réutilisée={{?}}\n";
         }
 
-        if(m_category == Category.DRESSEUR)
-        {
-            code += "| anecdotes=\n* {{?}}\n";
-        }
+        code += m_category.makeAnecdotes();
         return code;
     }
 
@@ -448,5 +350,3 @@ public class Card {
         return code.toString();
     }
 }
-
-//TODO : s'occuper de la Promo A

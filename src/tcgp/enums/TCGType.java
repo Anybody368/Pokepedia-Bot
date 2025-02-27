@@ -1,4 +1,4 @@
-package tcgp;
+package tcgp.enums;
 
 public enum TCGType {
     INCOLORE("Incolore", "Colorless"),

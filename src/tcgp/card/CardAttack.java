@@ -1,4 +1,6 @@
-package tcgp;
+package tcgp.card;
+
+import tcgp.enums.TCGType;
 
 import java.util.ArrayList;
 

@@ -1,8 +1,8 @@
-package tcgp;
+package tcgp.enums;
 
 import java.util.ArrayList;
 
-import static tcgp.Expansion.*;
+import static tcgp.enums.Expansion.*;
 
 public enum Booster {
     DRACAUFEU("Dracaufeu", PUISSANCE_GENETIQUE),
