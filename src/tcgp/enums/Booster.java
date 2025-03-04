@@ -11,6 +11,7 @@ public enum Booster {
     MEW("Mew", ILE_FABULEUSE),
     DIALGA("Dialga", SPATIO_TEMPOREL),
     PALKIA("Palkia", SPATIO_TEMPOREL),
+    ARCEUS("Arceus", LUMIERE_TRIOMPHALE),
 
     //Jokers pour Promo-A
     OTHER("{{?}}", null),

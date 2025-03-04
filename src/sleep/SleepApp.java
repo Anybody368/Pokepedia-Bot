@@ -1,9 +1,12 @@
 package sleep;
 
 import sleep.bouffe.*;
+import sleep.dodos.*;
+import sleep.pokemon.*;
 import sleep.view.AffichageNewPoke;
 import utilitaire.Login;
 import utilitaire.Page;
+import utilitaire.PokeTypes;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,18 +24,19 @@ public class SleepApp {
         ArrayList<IngredientPoke> ingr = new ArrayList<>();
 
         iles.add(Iles.ILE_VERTEPOUSSE);
+        iles.add(Iles.GROTTE_SEPIA);
 
-        dodos.add(new Dodo("en Boule", 1, 27, 75, 3, iles, true));
-        dodos.add(new Dodo("Cadeau", 2, 228, 676, 5, iles, true));
-        //dodos.add(new Dodo("Queues Enveloppantes", 3, 10059, 14143, 11, iles, true));
-        //dodos.add(new Dodo("sur Gros Bidou", 4, 13927, 19580, 12, iles, true));
+        dodos.add(new Dodo("Souriant", 1, 147, 119, 3, iles, true));
+        dodos.add(new Dodo("Gros Bâilleur", 2, 493, 390, 5, iles, true));
+        dodos.add(new Dodo("Vautre-Boue", 3, 2303, 1809, 7, iles, true));
+        dodos.add(new Dodo("sur Gros Bidou", 4, 3076, 2415, 8, iles, true));
 
-        ingr.add(new IngredientPoke(ListeIngredients.LAIT_MEUMEU, 1, 2, 4));
-        ingr.add(new IngredientPoke(ListeIngredients.CACAO_RELAXANT, 0, 1, 2));
-        ingr.add(new IngredientPoke(ListeIngredients.VIANDE_VEGETALE, 0, 0, 3));
+        ingr.add(new IngredientPoke(ListeIngredients.CACAO_RELAXANT, 2, 5, 7));
+        ingr.add(new IngredientPoke(ListeIngredients.CAFE_REVEIL, 0, 4, 7));
+        ingr.add(new IngredientPoke(ListeIngredients.POMME_DE_TERRE, 0, 0, 9));
 
-        Pokemon goupix = new PokeForme("Évoli", "Fêtes", "", 133, PokeTypes.NORMAL, TypesDodo.BONDODO, Specialites.BAIES, ingr, dodos, iles, "51:40", 20, Competences.AIMANT_FRAGMENT_DE_REVE, 5, "Évoli");
-        goupix.ajoutPokeWiki();*/
+        Pokemon newPoke = new PokemonRegional("Axoloto", Regions.PALDEA, 194, PokeTypes.POISON, TypesDodo.PTIDODO, Specialites.INGREDIENTS, ingr, dodos, iles, "1:46:40", 9, Competences.CHARGE_ENERGIE, 5, "Axoloto");
+        newPoke.ajoutPokeWiki();*/
 
         //Ajout manuel de recettes
         /*ArrayList<IngredientPoke> ingr = new ArrayList<>();

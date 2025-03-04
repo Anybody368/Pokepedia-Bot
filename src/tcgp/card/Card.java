@@ -147,7 +147,7 @@ public class Card {
         }
 
         int currentLine = en_text.indexOf("{{TCG Card Infobox/Expansion Header");
-        Expansion exp = null;
+        Expansion exp = Expansion.PROMO_A;
         while(!illustrator.isEmpty())
         {
             if(searchValueOf(en_text, "Expansion ", "/", currentLine).equals("Header"))
@@ -178,15 +178,14 @@ public class Card {
 
                 String pack = searchValueOf(en_text, "|pack=", "|", currentLine);
                 ArrayList<Booster> boosters;
-                if(pack.equals("Any"))
-                {
-                    boosters = Booster.getBoostersFromExpansion(exp);
+                if (pack.equals("N/A") || !exp.hasMultipleBoosters() || pack.equals("TBD")) {
+                    boosters = new ArrayList<>();
+                    boosters.add(Booster.NONE);
                 } else if (pack.contains("Vol.")) {
                     boosters = new ArrayList<>();
                     boosters.add(Booster.OTHER);
-                } else if (pack.equals("N/A")) {
-                    boosters = new ArrayList<>();
-                    boosters.add(Booster.NONE);
+                } else if(pack.equals("Any")) {
+                    boosters = Booster.getBoostersFromExpansion(exp);
                 } else
                 {
                     boosters = new ArrayList<>();
@@ -259,7 +258,7 @@ public class Card {
     {
 
         String code = "{{Édité par robot}}\n\n{{Article carte\n" + makeInfobox(spec) + "\n" +
-                makeFacultes() + "\n" + makeAnecdotes(spec);
+                makeFacultes() + makeAnecdotes(spec);
 
         if(m_specs.size() > 1)
         {
@@ -310,7 +309,7 @@ public class Card {
 
     private String makeAnecdotes(CardSpecs spec)
     {
-        String code = "<!-- Anecdotes -->\n" + spec.getCodeBoosters();
+        String code = "\n<!-- Anecdotes -->\n" + spec.getCodeBoosters();
         if(spec.isSpecialExtension() && m_specs.size() >= 2)
         {
             String originalName = getPageName(m_specs.getFirst());
@@ -322,6 +321,11 @@ public class Card {
         }
 
         code += m_category.makeAnecdotes();
+
+        if(code.equals("\n<!-- Anecdotes -->\n"))
+        {
+            return "";
+        }
         return code;
     }
 

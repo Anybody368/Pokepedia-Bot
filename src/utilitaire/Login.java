@@ -10,8 +10,6 @@ public class Login {
 	private static String askPassword(String username) {
 		Scanner sc = new Scanner(System.in);
 		System.out.println("Entrez le mot de passe pour " + username);
-		String mdp = sc.nextLine();
-		//sc.close();
-		return mdp;
+        return sc.nextLine();
 	}
 }
