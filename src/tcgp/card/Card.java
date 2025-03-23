@@ -60,6 +60,7 @@ public class Card {
 
     private PokemonStrategy getPokeData(String en_text)
     {
+        PokemonStrategy category;
         int hp = Integer.parseInt(searchValueOf(en_text, "|hp="));
         TCGType type = TCGType.typeFromEnglishName(searchValueOf(en_text, "|type="));
         TCGType weakness = TCGType.typeFromEnglishName(searchValueOf(en_text, "|weakness="));
@@ -84,9 +85,13 @@ public class Card {
         String name = searchValueOf(en_text, "|en name=");
         if(name.contains("{{TCGP Icon|ex}}"))
         {
-            return new PokeEXStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
+            category = new PokeEXStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
+        } else {
+            category = new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
         }
-        return new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
+        //TODO : Ajouter le cas ou un Pokémon est shiny
+
+        return category;
     }
 
     private ArrayList<CardAttack> fillAttacks(String en_text)
@@ -171,6 +176,7 @@ public class Card {
                         default -> null;
                     };
                     case "Crown" -> Rarity.CROWN;
+                    //TODO Ajouter les raretés des Shiny
                     default -> Rarity.NONE;
                 };
 
