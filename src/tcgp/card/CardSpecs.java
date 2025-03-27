@@ -106,4 +106,6 @@ public class CardSpecs {
     {
         return (m_expansion.isSpecial());
     }
+
+    public boolean isShiny() { return (m_rarity == Rarity.SHINY_ONE || m_rarity == Rarity.SHINY_TWO); }
 }

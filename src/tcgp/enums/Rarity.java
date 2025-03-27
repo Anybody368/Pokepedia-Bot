@@ -9,7 +9,8 @@ public enum Rarity {
     TWO_STAR("2 étoiles"),
     THREE_STAR("3 étoiles"),
     CROWN("couronne"),
-    //TODO : Ajouter les raretés pour Shiny
+    SHINY_ONE("chromatique 1"),
+    SHINY_TWO("chromatique 2"),
     NONE("aucune");
     private final String m_name;
 

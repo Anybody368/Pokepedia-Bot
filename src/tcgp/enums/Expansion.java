@@ -5,7 +5,8 @@ public enum Expansion {
     PUISSANCE_GENETIQUE("Puissance Génétique", "Genetic Apex", 226, true),
     ILE_FABULEUSE("L'Île Fabuleuse", "Mythical Island", 68, false),
     SPATIO_TEMPOREL("Choc Spatio-Temporel", "Space-Time Smackdown", 155, true),
-    LUMIERE_TRIOMPHALE("Lumière Triomphale", "Triumphant Light", 75, false);
+    LUMIERE_TRIOMPHALE("Lumière Triomphale", "Triumphant Light", 75, false),
+    REJOUISSANCES_RAYONNANTES("Réjouissances Rayonnantes", "Shining Revelry", 72, false);
 
     private final String m_frName;
     private final String m_enName;

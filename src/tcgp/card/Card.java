@@ -89,7 +89,7 @@ public class Card {
         } else {
             category = new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
         }
-        //TODO : Ajouter le cas ou un Pokémon est shiny
+        //TONOTDO : Ajouter le cas ou un Pokémon est shiny
 
         return category;
     }
@@ -118,7 +118,7 @@ public class Card {
 
         if(m_category instanceof PokeEXStrategy)
         {
-            m_enName = m_enName.split(" ")[0];
+            m_enName = m_enName.substring(0, m_enName.length()-17);
         }
 
         if(m_category instanceof PokemonStrategy) {
@@ -175,8 +175,13 @@ public class Card {
                         case "3" -> Rarity.THREE_STAR;
                         default -> null;
                     };
+                    case "Shiny" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine)) {
+                        case "1" -> Rarity.SHINY_ONE;
+                        case "2" -> Rarity.SHINY_TWO;
+                        default -> null;
+                    };
                     case "Crown" -> Rarity.CROWN;
-                    //TODO Ajouter les raretés des Shiny
+
                     default -> Rarity.NONE;
                 };
 
@@ -327,6 +332,11 @@ public class Card {
         }
 
         code += m_category.makeAnecdotes();
+
+        if(spec.isShiny())
+        {
+            code += "| chromatique=oui\n";
+        }
 
         if(code.equals("\n<!-- Anecdotes -->\n"))
         {

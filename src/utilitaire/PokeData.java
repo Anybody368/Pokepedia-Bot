@@ -75,11 +75,18 @@ public class PokeData {
 
     public static String getFrenchName(String englishName)
     {
+        String extra = "";
+        if(englishName.startsWith("Paldean")) {
+            extra = " de Paldea";
+            englishName = englishName.substring(8);
+            System.out.println(englishName);
+        }
+
         for(int i = 0; i < pokemon.length; i++)
         {
             if(pokemon_en[i].equals(englishName))
             {
-                return pokemon[i];
+                return pokemon[i] + extra;
             }
         }
         System.err.println("Erreur, nom Pokémon anglais pas trouvé");
