@@ -74,4 +74,14 @@ public class PokemonStrategy implements CategoryStrategy {
     public String makeAnecdotes() {
         return "";
     }
+
+    @Override
+    public String getTitleBonus() {
+        return "";
+    }
+
+    @Override
+    public boolean isPokemon() {
+        return true;
+    }
 }

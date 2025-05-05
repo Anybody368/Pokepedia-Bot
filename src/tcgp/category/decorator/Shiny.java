@@ -12,4 +12,9 @@ public class Shiny extends BaseDecorator{
     public String makeAnecdotes() {
         return super.makeAnecdotes() + "| chromatique=oui\n";
     }
+
+    @Override
+    public boolean isPokemon() {
+        return false;
+    }
 }

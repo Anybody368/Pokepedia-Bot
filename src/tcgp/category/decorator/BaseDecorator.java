@@ -34,4 +34,9 @@ public abstract class BaseDecorator implements CategoryStrategy {
     public String makeAnecdotes() {
         return m_wrapped.makeAnecdotes();
     }
+
+    @Override
+    public String getTitleBonus() {
+        return m_wrapped.getTitleBonus();
+    }
 }

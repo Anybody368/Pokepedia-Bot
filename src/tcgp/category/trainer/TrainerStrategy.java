@@ -27,4 +27,14 @@ public abstract class TrainerStrategy implements CategoryStrategy {
     public String makeAnecdotes() {
         return "| anecdotes=\n* {{?}}\n";
     }
+
+    @Override
+    public String getTitleBonus() {
+        return "";
+    }
+
+    @Override
+    public boolean isPokemon() {
+        return false;
+    }
 }

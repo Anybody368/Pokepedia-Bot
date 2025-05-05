@@ -1,6 +1,7 @@
 package tcgp.card;
 
 import tcgp.category.*;
+import tcgp.category.decorator.RegionalForm;
 import tcgp.category.pokemon.PokeEXStrategy;
 import tcgp.category.pokemon.PokemonStrategy;
 import tcgp.category.trainer.FossilStrategy;
@@ -12,6 +13,7 @@ import tcgp.enums.Expansion;
 import tcgp.enums.Rarity;
 import tcgp.enums.TCGType;
 import utilitaire.PokeData;
+import utilitaire.Region;
 import utilitaire.Util;
 
 import java.util.ArrayList;
@@ -58,9 +60,9 @@ public class Card {
         fillRest(en_text);
     }
 
-    private PokemonStrategy getPokeData(String en_text)
+    private CategoryStrategy getPokeData(String en_text)
     {
-        PokemonStrategy category;
+        CategoryStrategy category;
         int hp = Integer.parseInt(searchValueOf(en_text, "|hp="));
         TCGType type = TCGType.typeFromEnglishName(searchValueOf(en_text, "|type="));
         TCGType weakness = TCGType.typeFromEnglishName(searchValueOf(en_text, "|weakness="));
@@ -75,9 +77,17 @@ public class Card {
         boolean hasAbility = en_text.contains("{{Cardtext/Ability");
 
         String prevolution = null;
-        if(en_text.contains("|prevo name="))
+        if(en_text.contains("|prevo name=") && stage != 0)
         {
-            prevolution = PokeData.getFrenchName(Util.searchValueOf(en_text, "|prevo name="));
+            String enPrevo = Util.searchValueOf(en_text, "|prevo name=");
+            Region prevoRegion = Region.findRegionalFromEn(enPrevo);
+            if(prevoRegion != null)
+            {
+                enPrevo = enPrevo.substring(prevoRegion.getEnAdjective().length() +1);
+                prevolution = PokeData.getFrenchName(enPrevo) + " " + prevoRegion.getFrAdjective();
+            } else {
+                prevolution = PokeData.getFrenchName(enPrevo);
+            }
         }
 
         ArrayList<CardAttack> attacks = fillAttacks(en_text);
@@ -89,7 +99,11 @@ public class Card {
         } else {
             category = new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
         }
-        //TONOTDO : Ajouter le cas ou un Pokémon est shiny
+
+        Region region = Region.findRegionalFromEn(m_enName);
+        if(region != null) {
+            category = new RegionalForm(category, region);
+        }
 
         return category;
     }
@@ -101,11 +115,19 @@ public class Card {
         while ((currentLine = en_text.indexOf("{{Cardtext/Attack", currentLine+1)) != -1)
         {
             String damage = searchValueOf(en_text, "|damage=", currentLine);
-            String[] energiesString = searchValueOf(en_text, "|cost=", currentLine).split("[{]{2}e[|]");
+            String energiesLine = searchValueOf(en_text, "|cost=", currentLine);
             ArrayList<TCGType> energies = new ArrayList<>();
-            for(int i = 1; i < energiesString.length; i++)
-            {
-                energies.add(TCGType.typeFromEnglishName(energiesString[i].substring(0, energiesString[i].length()-2)));
+            if(energiesLine.contains("repeat")) {
+                TCGType type = TCGType.typeFromEnglishName(searchValueOf(energiesLine, "{{e|", "}}"));
+                for (int i = 0; i < Integer.parseInt(searchValueOf(energiesLine, "}}|", "}}")); i++) {
+                    energies.add(type);
+                }
+            }
+            else {
+                String[] energiesString = energiesLine.split("[{]{2}e[|]");
+                for (int i = 1; i < energiesString.length; i++) {
+                    energies.add(TCGType.typeFromEnglishName(energiesString[i].substring(0, energiesString[i].length() - 2)));
+                }
             }
             boolean hasEffect = !(searchValueOf(en_text, "|effect=", currentLine).isBlank());
             attacks.add(new CardAttack(damage, energies, hasEffect));
@@ -116,13 +138,18 @@ public class Card {
 
     private void fillNames(String en_text) {
 
-        if(m_category instanceof PokeEXStrategy)
+        if(m_enName.contains("{{TCGP Icon|ex}}"))
         {
             m_enName = m_enName.substring(0, m_enName.length()-17);
         }
 
-        if(m_category instanceof PokemonStrategy) {
-            m_frName = PokeData.getFrenchName(m_enName);
+        if(m_category.isPokemon()) {
+            if(m_category instanceof RegionalForm) {
+                String name = m_enName.substring(((RegionalForm) m_category).getRegionEnSize());
+                m_frName = PokeData.getFrenchName(name) + " " + ((RegionalForm) m_category).getFrAdjective();
+            } else {
+                m_frName = PokeData.getFrenchName(m_enName);
+            }
         }
         else
         {
@@ -222,13 +249,7 @@ public class Card {
 
     private String getPageName(CardSpecs spec)
     {
-        if(m_category instanceof PokeEXStrategy)
-        {
-            return(m_frName + "-ex (" + spec.getExtensionName() + " " + spec.getNbrCardToString() + ")");
-        }
-        else {
-            return(m_frName + " (" + spec.getExtensionName() + " " + spec.getNbrCardToString() + ")");
-        }
+        return(m_frName + m_category.getTitleBonus() + " (" + spec.getExtensionFrName() + " " + spec.getNbrCardToString() + ")");
     }
 
     public ArrayList<String> getPagesNames(Expansion exp)
@@ -277,10 +298,8 @@ public class Card {
         }
         code += "}}\n\n";
 
-        if(!spec.isSecret())
-        {
-            code += "[[en:" + en_title + "]]\n";
-        }
+        int nameEnd = en_title.indexOf(" (");
+        code += "[[en:" + en_title.substring(0, nameEnd) + " (" + spec.getExtensionEnName() + " " + spec.getNbrCard() + ")]]\n";
 
         return code;
     }
@@ -290,7 +309,7 @@ public class Card {
         StringBuilder code = new StringBuilder("<!-- Infobox -->\n");
         code.append(m_category.makeNameSection(m_enName, m_frName, m_jpName));
 
-        code.append("\n| extension=").append(spec.getExtensionName()).append("\n| jeu=jccp\n| numerocarte=")
+        code.append("\n| extension=").append(spec.getExtensionFrName()).append("\n| jeu=jccp\n| numerocarte=")
                 .append(spec.getNbrCardToString()).append("\n| maxsetcarte=").append(spec.getExtensionSize())
                 .append("\n| rareté=").append(spec.getRarityName());
 
@@ -352,7 +371,7 @@ public class Card {
         boolean isEmpty = true;
         for(String name : getPagesNames())
         {
-            if(name.equals(getPageName(spec)) || !name.contains(spec.getExtensionName())) continue;
+            if(name.equals(getPageName(spec)) || !name.contains(spec.getExtensionFrName())) continue;
 
             code.append("| carte-identique");
             if(counter != 1)

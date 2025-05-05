@@ -16,7 +16,9 @@ public enum Competences {
     STOCKAGE("Stockage (Charge de Puiss. S)"),
     RAYON_LUNE("Rayon Lune (Charge d'Énergie S"),
     FANTOMASQUE("Fantômasque (Baies à gogo)"),
-    BAIES_A_GOGO("Baies à gogo");
+    BAIES_A_GOGO("Baies à gogo"),
+    PRIERE_LUNAIRE("Prière Lunaire (Én. Partagée S"),
+    MAUVAIS_REVE("Mauvais Rêve (Ch. de Puiss. M)");
     private final String m_nom;
 
     Competences(String nom)

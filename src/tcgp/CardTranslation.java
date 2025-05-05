@@ -1,5 +1,7 @@
 package tcgp;
 
+import tcgp.card.Card;
+import tcgp.enums.Expansion;
 import utilitaire.Login;
 import utilitaire.Page;
 import utilitaire.Wiki;
@@ -9,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class CardTranslation {
 
@@ -38,11 +41,11 @@ public class CardTranslation {
                 }
 
                 Card carte = new Card(content);
-                ArrayList<String> pagesContent = carte.getPokepediaCodes(nomPage, Expansion.SPATIO_TEMPOREL);
-                ArrayList<String> pagesNames = carte.getPagesNames(Expansion.SPATIO_TEMPOREL);
+                ArrayList<String> pagesContent = carte.getPokepediaCodes(nomPage);
+                ArrayList<String> pagesNames = carte.getPagesNames();
                 for (int i = 0; i < pagesNames.size(); i++) {
-                    //System.out.println(pagesNames.get(i));
-                    //System.out.println(pagesContent.get(i));
+                    System.out.println(pagesNames.get(i));
+                    System.out.println(pagesContent.get(i));
 
                     pokePages.put(new Page(pagesNames.get(i), Wiki.POKEPEDIA), pagesContent.get(i));
                     System.out.println(pagesNames.get(i) + " chargée");
@@ -68,6 +71,11 @@ public class CardTranslation {
             else
             {
                 System.err.println("Echec de la création de " + k.getTitle());
+            }
+            try {
+                TimeUnit.MILLISECONDS.sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         });
     }

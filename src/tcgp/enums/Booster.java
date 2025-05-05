@@ -12,6 +12,8 @@ public enum Booster {
     DIALGA("Dialga", SPATIO_TEMPOREL),
     PALKIA("Palkia", SPATIO_TEMPOREL),
     ARCEUS("Arceus", LUMIERE_TRIOMPHALE),
+    SOLGALEO("Solgaleo", GARDIENS_ASTRAUX),
+    LUNALA("Lunala", GARDIENS_ASTRAUX),
 
     //Jokers pour Promo-A
     OTHER("{{?}}", null),

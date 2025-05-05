@@ -29,4 +29,9 @@ public class PokeEXStrategy extends PokemonStrategy {
         String init = super.makeFacultes();
         return init.substring(0, init.length() - 66);
     }
+
+    @Override
+    public String getTitleBonus() {
+        return "-ex";
+    }
 }

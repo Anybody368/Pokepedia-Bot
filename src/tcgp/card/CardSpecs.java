@@ -22,9 +22,14 @@ public class CardSpecs {
         m_boosters = boosters;
     }
 
-    public String getExtensionName()
+    public String getExtensionFrName()
     {
         return m_expansion.getNameFr();
+    }
+
+    public String getExtensionEnName()
+    {
+        return m_expansion.getNameEn();
     }
 
     public Expansion getExpansion()

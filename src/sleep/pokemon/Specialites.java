@@ -3,7 +3,8 @@ package sleep.pokemon;
 public enum Specialites {
     BAIES("Baies"),
     INGREDIENTS("Ingrédients"),
-    COMPETENCES("Compétences");
+    COMPETENCES("Compétences"),
+    TOUTES("Toutes");
     private final String m_nom;
 
     Specialites(String nom)
