@@ -82,7 +82,7 @@ public class PokeData {
                 return pokemon[i];
             }
         }
-        System.err.println("Erreur, nom Pokémon anglais pas trouvé");
+        System.err.println("Erreur, nom Pokémon anglais pas trouvé : (" + englishName + ")");
         return null;
     }
 

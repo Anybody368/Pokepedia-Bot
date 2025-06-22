@@ -7,7 +7,8 @@ public enum Expansion {
     SPATIO_TEMPOREL("Choc Spatio-Temporel", "Space-Time Smackdown", 155, true),
     LUMIERE_TRIOMPHALE("Lumière Triomphale", "Triumphant Light", 75, false),
     REJOUISSANCES_RAYONNANTES("Réjouissances Rayonnantes", "Shining Revelry", 72, false),
-    GARDIENS_ASTRAUX("Gardiens Astraux", "Celestial Guardians", 155, true);
+    GARDIENS_ASTRAUX("Gardiens Astraux", "Celestial Guardians", 155, true),
+    CRISE_INTERDIMENSIONELLE("Crise Interdimensionnelle", "Extradimensional Crisis", 69, false);
 
     private final String m_frName;
     private final String m_enName;

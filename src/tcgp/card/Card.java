@@ -2,6 +2,7 @@ package tcgp.card;
 
 import tcgp.category.*;
 import tcgp.category.decorator.RegionalForm;
+import tcgp.category.decorator.UltraBeast;
 import tcgp.category.pokemon.PokeEXStrategy;
 import tcgp.category.pokemon.PokemonStrategy;
 import tcgp.category.trainer.FossilStrategy;
@@ -26,7 +27,6 @@ public class Card {
     private String m_enName;
     private String m_jpName;
     private final CategoryStrategy m_category;
-    private boolean m_isReused = false;
     private final ArrayList<CardSpecs> m_specs = new ArrayList<>(5);
 
     /**
@@ -105,6 +105,10 @@ public class Card {
             category = new RegionalForm(category, region);
         }
 
+        if(en_text.contains("{{Cardtext/UltraBeast")) {
+            category = new UltraBeast(category);
+        }
+
         return category;
     }
 
@@ -163,9 +167,6 @@ public class Card {
 
     private void fillRest(String en_text)
     {
-        //On vérifie si l'illustration de base est réutilisée (on considèrera que ça ne peut être que la version de base)
-        m_isReused = en_text.contains("illustration was first featured");
-
         ArrayList<String> illustrator = new ArrayList<>(5);
         if(en_text.contains("\n|illustrator=") && !en_text.contains("|image set="))
         {
@@ -230,7 +231,13 @@ public class Card {
                     boosters.add(Booster.getBoosterFromName(PokeData.getFrenchName(pack)));
                 }
 
-                m_specs.add(new CardSpecs(exp, rar, number, illustrator.removeFirst(), boosters));
+                boolean isReused = rar.getIllustrationKeyword().equals("standard ") && en_text.contains("illustration was first featured");
+                //TODO : Trouver comment faitre pour vérifier si chaque version est réutilisée ou pas
+                /*System.out.println("This card's " + rar.getIllustrationKeyword() + "illustration was first featured");
+                boolean isReused = en_text.contains("This card's " + rar.getIllustrationKeyword() + " illustration was first featured");*/
+                //System.out.println(isReused);
+
+                m_specs.add(new CardSpecs(exp, rar, number, illustrator.removeFirst(), boosters, isReused));
             }
 
             currentLine = en_text.indexOf("{{TCG Card Infobox", currentLine+1);
@@ -345,7 +352,7 @@ public class Card {
             String originalName = getPageName(m_specs.getFirst());
             code += "| réédition=" + originalName + "\n| réédition-illustration=différente\n";
         }
-        if((!spec.isSecret()) && m_isReused)
+        if(spec.illustrationIsReused())
         {
             code += "| illustration-réutilisée={{?}}\n";
         }

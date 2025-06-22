@@ -12,14 +12,16 @@ public class CardSpecs {
     private final int m_number;
     private final String m_illustrator;
     private final ArrayList<Booster> m_boosters;
+    private final boolean m_isReused;
 
-    public CardSpecs(Expansion exp, Rarity rar, int cardNbr, String illust, ArrayList<Booster> boosters)
+    public CardSpecs(Expansion exp, Rarity rar, int cardNbr, String illust, ArrayList<Booster> boosters, boolean isReused)
     {
         m_expansion = exp;
         m_rarity = rar;
         m_number = cardNbr;
         m_illustrator = illust;
         m_boosters = boosters;
+        m_isReused = isReused;
     }
 
     public String getExtensionFrName()
@@ -113,4 +115,8 @@ public class CardSpecs {
     }
 
     public boolean isShiny() { return (m_rarity == Rarity.SHINY_ONE || m_rarity == Rarity.SHINY_TWO); }
+
+    public boolean illustrationIsReused() {
+        return m_isReused;
+    }
 }
