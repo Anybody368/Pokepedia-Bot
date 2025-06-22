@@ -18,7 +18,9 @@ public enum Competences {
     FANTOMASQUE("Fantômasque (Baies à gogo)"),
     BAIES_A_GOGO("Baies à gogo"),
     PRIERE_LUNAIRE("Prière Lunaire (Én. Partagée S"),
-    MAUVAIS_REVE("Mauvais Rêve (Ch. de Puiss. M)");
+    MAUVAIS_REVE("Mauvais Rêve (Ch. de Puiss. M)"),
+    CHANCEUX("Chanceux (Pioche à Ingrédient S)"),
+    HYPER_CUTTER("Hyper Cutter (Pioche à Ingrédient S)");
     private final String m_nom;
 
     Competences(String nom)

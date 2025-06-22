@@ -148,10 +148,23 @@ public class Pokemon {
         String[] ajout = getLignePokeRecap();
         lignes.addAll(l - 1, List.of(ajout));
 
+        //Reconstruction du texte de la page afin de publier
+        String newContenu = Util.reconstructionCodeSource(lignes);
+        //System.out.println(newContenu);
+        listeSoutien.setContent(newContenu, "Ajout de " + m_nom);
+        System.out.println("Page " + listeSoutien.getTitle() + " mise à jour");
+    }
+
+    private void ajouListeDodo()
+    {
+        Page listeSoutien = new Page("Liste des styles de dodo de Pokémon Sleep", POKEPEDIA);
+        String content = listeSoutien.getContent();
+        ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
+
         //Même procédé pour le deuxième tableau
-        l = lignes.indexOf("! Récompenses");
+        int l = lignes.indexOf("! Récompenses");
         l += 2;
-        ligneAct = lignes.get(l);
+        String ligneAct = lignes.get(l);
 
         while(ligneAct.substring(28, 32).compareTo(m_numDex) <= 0)
         {
