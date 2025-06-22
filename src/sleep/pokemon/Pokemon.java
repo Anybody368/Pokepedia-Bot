@@ -95,6 +95,7 @@ public class Pokemon {
     public void ajoutPokeWiki()
     {
         ajoutListePokeSoutien();
+        ajouListeDodo();
         ajoutPokeIles();
 
         //Si le pokémon n'est pas la forme de base de sa ligne évolutive, on ne l'ajoute pas à la page ingrédients
@@ -155,7 +156,7 @@ public class Pokemon {
         System.out.println("Page " + listeSoutien.getTitle() + " mise à jour");
     }
 
-    private void ajouListeDodo()
+    protected void ajouListeDodo()
     {
         Page listeSoutien = new Page("Liste des styles de dodo de Pokémon Sleep", POKEPEDIA);
         String content = listeSoutien.getContent();

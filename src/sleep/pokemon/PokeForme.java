@@ -23,6 +23,7 @@ public class PokeForme extends Pokemon{
     @Override
     public void ajoutPokeWiki() {
         ajoutListePokeSoutien();
+        ajouListeDodo();
     }
 
     @Override
