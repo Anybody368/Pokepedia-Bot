@@ -38,7 +38,7 @@ public class DialogDodoPoke extends JDialog {
         {
             rareteDodo.setSelectedIndex(m_numDodo-1);
         }
-        JComboBox<Object> bonbons = new JComboBox<>(IntStream.range(3, 15).boxed().toArray());
+        JComboBox<Object> bonbons = new JComboBox<>(IntStream.range(3, 26).boxed().toArray());
         JTextField ptsRech = new JTextField();
         JTextField fragReve = new JTextField();
 

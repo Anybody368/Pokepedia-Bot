@@ -28,9 +28,9 @@ public class DialogIngredientPoke extends JDialog {
 
         for (int i = 0; i < nbrIngredients; i++) {
             panel.add(new JComboBox<>(ListeIngredients.values()));
-            panel.add(new JComboBox<>(IntStream.range(0, 11).boxed().toArray()));
-            panel.add(new JComboBox<>(IntStream.range(0, 11).boxed().toArray()));
-            panel.add(new JComboBox<>(IntStream.range(0, 11).boxed().toArray()));
+            panel.add(new JComboBox<>(IntStream.range(0, 15).boxed().toArray()));
+            panel.add(new JComboBox<>(IntStream.range(0, 15).boxed().toArray()));
+            panel.add(new JComboBox<>(IntStream.range(0, 15).boxed().toArray()));
         }
 
         ArrayList<IngredientPoke> listeIngr = new ArrayList<>();
