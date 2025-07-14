@@ -22,6 +22,8 @@ public class IngredientPoke {
         m_quantite60 = 0;
     }
 
+    public ListeIngredients getIngredient() {return m_ingredient;}
+
     public String getNom()
     {
         return m_ingredient.getNom();

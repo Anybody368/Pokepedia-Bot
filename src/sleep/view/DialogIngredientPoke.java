@@ -10,6 +10,12 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
 public class DialogIngredientPoke extends JDialog {
+    // Stocker les JComboBox pour accès ultérieur
+    private final ArrayList<JComboBox<ListeIngredients>> comboIngr = new ArrayList<>();
+    private final ArrayList<JComboBox<Object>> comboNiv1 = new ArrayList<>();
+    private final ArrayList<JComboBox<Object>> comboNiv30 = new ArrayList<>();
+    private final ArrayList<JComboBox<Object>> comboNiv60 = new ArrayList<>();
+
     public DialogIngredientPoke(JFrame owner)
     {
         super(owner, "Ingrédients du Pokémon");
@@ -17,7 +23,7 @@ public class DialogIngredientPoke extends JDialog {
         setModal(true);
     }
 
-    public ArrayList<IngredientPoke> showDialog(int nbrIngredients)
+    public void showDialog(int nbrIngredients, ArrayList<IngredientPoke> ingredientsExistants)
     {
         setSize(700, 50 + 50*nbrIngredients);
         JPanel panel = new JPanel(new GridLayout(0, 4));
@@ -27,29 +33,70 @@ public class DialogIngredientPoke extends JDialog {
         panel.add(new JLabel("Qtt Niveau 60"));
 
         for (int i = 0; i < nbrIngredients; i++) {
-            panel.add(new JComboBox<>(ListeIngredients.values()));
-            panel.add(new JComboBox<>(IntStream.range(0, 15).boxed().toArray()));
-            panel.add(new JComboBox<>(IntStream.range(0, 15).boxed().toArray()));
-            panel.add(new JComboBox<>(IntStream.range(0, 15).boxed().toArray()));
+            JComboBox<ListeIngredients> ingrBox = new JComboBox<>(ListeIngredients.values());
+            JComboBox<Object> niv1Box = new JComboBox<>(IntStream.range(0, 15).boxed().toArray());
+            JComboBox<Object> niv30Box = new JComboBox<>(IntStream.range(0, 15).boxed().toArray());
+            JComboBox<Object> niv60Box = new JComboBox<>(IntStream.range(0, 15).boxed().toArray());
+            comboIngr.add(ingrBox);
+            comboNiv1.add(niv1Box);
+            comboNiv30.add(niv30Box);
+            comboNiv60.add(niv60Box);
+            panel.add(ingrBox);
+            panel.add(niv1Box);
+            panel.add(niv30Box);
+            panel.add(niv60Box);
         }
 
-        ArrayList<IngredientPoke> listeIngr = new ArrayList<>();
+        // Pré-remplissage si la taille correspond
+        if (ingredientsExistants.size() == nbrIngredients) {
+            remplirComboBoxAvecIngredients(ingredientsExistants);
+        }
+
+        ingredientsExistants.clear();
 
         JButton bouton = new JButton("Confirmer");
-        AtomicReference<String> test = new AtomicReference<>("");
         bouton.addActionListener(ActionEvent -> {
-            for(int i = 1; i <= nbrIngredients; i++)
+            for(int i = 0; i < nbrIngredients; i++)
             {
-                listeIngr.add(newIngr(i));
-                dispose();
+                ingredientsExistants.add(
+                    new IngredientPoke(
+                        (ListeIngredients) comboIngr.get(i).getSelectedItem(),
+                        comboNiv1.get(i).getSelectedIndex(),
+                        comboNiv30.get(i).getSelectedIndex(),
+                        comboNiv60.get(i).getSelectedIndex()
+                    )
+                );
             }
+            dispose();
             setVisible(false);
         });
 
         panel.add(bouton);
         setContentPane(panel);
         setVisible(true);
-        return listeIngr;
+    }
+
+    // Nouvelle fonction pour pré-remplir les JComboBox (utilise les ArrayList membres)
+    private void remplirComboBoxAvecIngredients(ArrayList<IngredientPoke> ingredientsExistants) {
+        for (int i = 0; i < ingredientsExistants.size(); i++) {
+            IngredientPoke ingr = ingredientsExistants.get(i);
+            comboIngr.get(i).setSelectedItem(ingr.getIngredient());
+            try {
+                comboNiv1.get(i).setSelectedIndex(Integer.parseInt(ingr.getQttNv1().equals("—") ? "0" : ingr.getQttNv1()));
+            } catch (NumberFormatException e) {
+                comboNiv1.get(i).setSelectedIndex(0);
+            }
+            try {
+                comboNiv30.get(i).setSelectedIndex(Integer.parseInt(ingr.getQttNv30().equals("—") ? "0" : ingr.getQttNv30()));
+            } catch (NumberFormatException e) {
+                comboNiv30.get(i).setSelectedIndex(0);
+            }
+            try {
+                comboNiv60.get(i).setSelectedIndex(Integer.parseInt(ingr.getQttNv60().equals("—") ? "0" : ingr.getQttNv60()));
+            } catch (NumberFormatException e) {
+                comboNiv60.get(i).setSelectedIndex(0);
+            }
+        }
     }
 
     private IngredientPoke newIngr(int num)
