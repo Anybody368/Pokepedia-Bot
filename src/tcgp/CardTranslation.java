@@ -17,12 +17,17 @@ public class CardTranslation {
 
     public static void main(String[] args)
     {
-        if(args.length != 1)
+        if(args.length < 1)
         {
-            System.err.println("Veuillez indiquer le nom du fichier texte à utiliser.");
+            System.err.println("Veuillez indiquer le nom du fichier texte à utiliser.\nVous pouvez falcutativement ajouter votre Login et MDP à la suite.");
             System.exit(1);
         }
-        Login.login("Anyboty");
+
+        if(args.length == 3) {
+            Login.login(args[1], args[2]);
+        } else {
+            Login.login();
+        }
         HashMap<Page, String> pokePages = new HashMap<>();
 
         try {
