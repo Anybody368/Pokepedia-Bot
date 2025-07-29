@@ -31,7 +31,7 @@ public class AffichageNewPoke extends  JFrame {
         JComboBox<TypesDodo> dodoPoke = new JComboBox<>(TypesDodo.values());
         JComboBox<Competences> compPoke = new JComboBox<>(Competences.values());
         JComboBox<Object> stockPoke = new JComboBox<>(IntStream.range(5, 31).boxed().toArray());
-        JComboBox<Integer> recPoke = new JComboBox<>(new Integer[] {5, 7, 12, 16, 20, 22, 25, 30});
+        JComboBox<Integer> recPoke = new JComboBox<>(new Integer[] {5, 7, 10, 12, 16, 20, 22, 25, 30});
         JComboBox<Integer> heures = new JComboBox<>(new Integer[] {0, 1});
         JComboBox<Object> minutes = new JComboBox<>(IntStream.range(0, 60).boxed().toArray());
         JComboBox<Object> secondes = new JComboBox<>(IntStream.range(0, 60).boxed().toArray());
@@ -87,12 +87,14 @@ public class AffichageNewPoke extends  JFrame {
             panel.add(new JLabel());
         }
 
+        final ArrayList<IngredientPoke> ingredients = new ArrayList<>();
+
         JButton confirm = new JButton("Confirmer");
         confirm.addActionListener(ActionEvent -> {
             int numDex = Integer.parseInt(numPoke.getText());
 
             DialogIngredientPoke getIngredients = new DialogIngredientPoke(this);
-            ArrayList<IngredientPoke> ingredients = getIngredients.showDialog(nbrIngr.getSelectedIndex()+1);
+            getIngredients.showDialog(nbrIngr.getSelectedIndex()+1, ingredients);
 
             ArrayList<Iles> iles = new ArrayList<>();
             int j = 0;
@@ -124,11 +126,21 @@ public class AffichageNewPoke extends  JFrame {
             int ptsAmitie = (int) recPoke.getSelectedItem();
             String bonbon = nomBonbon.getText();
 
-            setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-            Pokemon Poke = new Pokemon(nom, numDex, type, typeDodo, spec, ingredients, dodos, iles, freq, capacite, comp, ptsAmitie, bonbon);
-            Poke.ajoutPokeWiki();
-            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-            confirmation();
+            frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            new SwingWorker<Void, Void>() {
+                @Override
+                protected Void doInBackground() throws Exception {
+                    Pokemon Poke = new Pokemon(nom, numDex, type, typeDodo, spec, ingredients, dodos, iles, freq, capacite, comp, ptsAmitie, bonbon);
+                    Poke.ajoutPokeWiki();
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                    confirmation(nom);
+                }
+            }.execute();
         });
         panel.add(confirm);
 
@@ -136,10 +148,11 @@ public class AffichageNewPoke extends  JFrame {
         setVisible(true);
     }
 
-    private void confirmation() {
-        System.out.println("Ajout terminé !");
+    private void confirmation(String nomPoke) {
+        System.out.println("Ajout de " + nomPoke + " terminé !");
         JLabel label = (JLabel) getContentPane().getComponent(getContentPane().getComponentCount() -2);
-        label.setText("Pokémon bien ajouté !");
+        label.setText(nomPoke + " bien ajouté !");
+        label.setOpaque(true);
         label.setBackground(Color.green);
     }
 }

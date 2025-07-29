@@ -20,7 +20,9 @@ public enum Competences {
     PRIERE_LUNAIRE("Prière Lunaire (Én. Partagée S"),
     MAUVAIS_REVE("Mauvais Rêve (Ch. de Puiss. M)"),
     CHANCEUX("Chanceux (Pioche à Ingrédient S)"),
-    HYPER_CUTTER("Hyper Cutter (Pioche à Ingrédient S)");
+    HYPER_CUTTER("Hyper Cutter (Pioche à Ingrédient S)"),
+    PLUS("Plus (Aimant à Ingrédient S)"),
+    MOINS("Moins (Garde-Manger S)");
     private final String m_nom;
 
     Competences(String nom)
