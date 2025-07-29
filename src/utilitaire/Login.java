@@ -5,11 +5,11 @@ import java.util.Scanner;
 public class Login {
 
 	public static void  login(String login, String password) {
-		API.login(login, password);
+		if(API.login(login, password)) System.out.println("Conexion au compte " + login + " réussie.");
 	}
 
 	public static void login(String login) {
-		API.login(login,  askPassword(login));
+		if(API.login(login,  askPassword(login))) System.out.println("Conexion au compte " + login + " réussie.");
 	}
 
 	public static void login() {
