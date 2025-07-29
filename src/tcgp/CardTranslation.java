@@ -44,9 +44,9 @@ public class CardTranslation {
                 Page page = new Page(nomPage, Wiki.BULBAPEDIA);
                 String content = page.getContent();
                 //System.out.println(content);
-                if(content.isEmpty())
+                if((content == null) || content.isEmpty())
                 {
-                    System.err.println("Erreur : La page "+nomPage+" n'a pas pu être lue");
+                    System.err.println("Erreur : La page " + nomPage + " n'a pas pu être lue");
                     continue;
                 }
 
@@ -60,7 +60,7 @@ public class CardTranslation {
                     pokePages.put(new Page(pagesNames.get(i), Wiki.POKEPEDIA), pagesContent.get(i));
                     System.out.println(pagesNames.get(i) + " chargée");
                 }
-                System.out.println(nomPage + " Convertie");
+                System.out.println(nomPage + " convertie");
             }
             scan.close();
         } catch (FileNotFoundException e) {
@@ -69,16 +69,22 @@ public class CardTranslation {
         }
 
         Scanner confirm = new Scanner(System.in);
-        System.out.println("Toutes les pages sont prêtes, appuyez sur \"Entrer\" pour lancer la publication.");
+        System.out.println("Toutes les pages sont prêtes, appuyez sur \"Entrée\" pour lancer la publication.");
         confirm.nextLine();
         confirm.close();
 
         pokePages.forEach( (k, v) -> {
-            if(k.setContent(v, "Création automatique de la page à compléter"))
-            {
-                System.out.println(k.getTitle() + " créé avec succès !");
-            } else {
-                System.err.println("Echec de la création de " + k.getTitle());
+            System.out.println(k.getTitle());
+            System.out.println(v);
+            if ((k != null) && (k.getContent() != null)) {
+                if(k.setContent(v, "Création automatique de la page à compléter"))
+                {
+                    System.out.println(k.getTitle() + " créé avec succès !");
+                }
+                else
+                {
+                    System.err.println("Échec de la création de " + k.getTitle());
+                }
             }
             try {
                 TimeUnit.MILLISECONDS.sleep(1000);
