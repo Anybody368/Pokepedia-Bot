@@ -74,8 +74,6 @@ public class CardTranslation {
         confirm.close();
 
         pokePages.forEach( (k, v) -> {
-            System.out.println(k.getTitle());
-            System.out.println(v);
             if ((k != null) && (k.getContent() != null)) {
                 if(k.setContent(v, "Création automatique de la page à compléter"))
                 {

@@ -22,6 +22,10 @@ public class CardAttack {
 
     public String getEnergyCostCode()
     {
+        if(m_energies.isEmpty()) {
+            return "{{type|Aucun|jcc}}";
+        }
+
         StringBuilder code = new StringBuilder();
         for(TCGType energy : m_energies)
         {

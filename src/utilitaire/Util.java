@@ -146,6 +146,10 @@ public class Util {
     public static String searchValueOf(String content, String searchRegex, String endRegex, int from)
     {
         int startIndex = content.indexOf(searchRegex, from)+searchRegex.length();
+        if(startIndex == -1) {
+            return null;
+        }
+
         int endIndex = content.indexOf(endRegex, startIndex);
         return content.substring(startIndex, endIndex);
     }

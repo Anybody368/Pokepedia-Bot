@@ -122,16 +122,17 @@ public class Card {
             String damage = searchValueOf(en_text, "|damage=", currentLine);
             String energiesLine = searchValueOf(en_text, "|cost=", currentLine);
             ArrayList<TCGType> energies = new ArrayList<>();
-            if(energiesLine.contains("repeat")) {
-                TCGType type = TCGType.typeFromEnglishName(searchValueOf(energiesLine, "{{e|", "}}"));
-                for (int i = 0; i < Integer.parseInt(searchValueOf(energiesLine, "}}|", "}}")); i++) {
-                    energies.add(type);
-                }
-            }
-            else {
-                String[] energiesString = energiesLine.split("[{]{2}e[|]");
-                for (int i = 1; i < energiesString.length; i++) {
-                    energies.add(TCGType.typeFromEnglishName(energiesString[i].substring(0, energiesString[i].length() - 2)));
+            if(energiesLine != null && energiesLine.length() > 3) {
+                if (energiesLine.contains("repeat")) {
+                    TCGType type = TCGType.typeFromEnglishName(searchValueOf(energiesLine, "{{e|", "}}"));
+                    for (int i = 0; i < Integer.parseInt(searchValueOf(energiesLine, "}}|", "}}")); i++) {
+                        energies.add(type);
+                    }
+                } else {
+                    String[] energiesString = energiesLine.split("[{]{2}e[|]");
+                    for (int i = 1; i < energiesString.length; i++) {
+                        energies.add(TCGType.typeFromEnglishName(energiesString[i].substring(0, energiesString[i].length() - 2)));
+                    }
                 }
             }
             boolean hasEffect = !(searchValueOf(en_text, "|effect=", currentLine).isBlank());
