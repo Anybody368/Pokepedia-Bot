@@ -1,5 +1,6 @@
 package tcgp.card;
 
+import tcgp.Dictionary;
 import tcgp.category.*;
 import tcgp.category.decorator.RegionalForm;
 import tcgp.category.decorator.UltraBeast;
@@ -157,9 +158,7 @@ public class Card {
         }
         else
         {
-            System.out.println("Indiquez le nom français de la carte " + m_enName);
-            Scanner scanner = new Scanner(System.in);
-            m_frName = scanner.nextLine();
+            m_frName = Dictionary.getTranslation(m_enName);
         }
 
         m_jpName = searchValueOf(en_text, "|ja name=").split("[{]")[0];

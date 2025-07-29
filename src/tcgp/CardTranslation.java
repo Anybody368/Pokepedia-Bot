@@ -6,6 +6,8 @@ import utilitaire.Login;
 import utilitaire.Page;
 import utilitaire.Wiki;
 
+import static tcgp.Dictionary.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -28,6 +30,9 @@ public class CardTranslation {
         } else {
             Login.login();
         }
+
+        loadDictionary();
+
         HashMap<Page, String> pokePages = new HashMap<>();
 
         try {
@@ -72,9 +77,7 @@ public class CardTranslation {
             if(k.setContent(v, "Création automatique de la page à compléter"))
             {
                 System.out.println(k.getTitle() + " créé avec succès !");
-            }
-            else
-            {
+            } else {
                 System.err.println("Echec de la création de " + k.getTitle());
             }
             try {
