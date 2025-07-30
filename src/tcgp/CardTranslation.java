@@ -4,6 +4,7 @@ import tcgp.card.Card;
 import tcgp.enums.Expansion;
 import utilitaire.Login;
 import utilitaire.Page;
+import utilitaire.PokeTypes;
 import utilitaire.Wiki;
 
 import static tcgp.Dictionary.*;
@@ -21,7 +22,7 @@ public class CardTranslation {
     {
         if(args.length < 1)
         {
-            System.err.println("Veuillez indiquer le nom du fichier texte à utiliser.\nVous pouvez falcutativement ajouter votre Login et MDP à la suite.");
+            System.err.println("Veuillez indiquer le nom du fichier texte à utiliser.\nVous pouvez facultativement ajouter votre Login et MDP à la suite.");
             System.exit(1);
         }
 
@@ -32,6 +33,7 @@ public class CardTranslation {
         }
 
         loadDictionary();
+        System.out.println();
 
         HashMap<Page, String> pokePages = new HashMap<>();
 

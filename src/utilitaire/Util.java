@@ -128,26 +128,29 @@ public class Util {
         return r.substring(0, r.length()-1);
     }
 
-    public static String searchValueOf(String content, String searchRegex)
+    public static String searchValueOf(String content, String searchRegex, boolean nullIsTolerated)
     {
-        return searchValueOf(content, searchRegex, "\n", 0);
+        return searchValueOf(content, searchRegex, "\n", 0, nullIsTolerated);
     }
 
-    public static String searchValueOf(String content, String searchRegex, int from)
+    public static String searchValueOf(String content, String searchRegex, int from, boolean nullIsTolerated)
     {
-        return searchValueOf(content, searchRegex, "\n", from);
+        return searchValueOf(content, searchRegex, "\n", from, nullIsTolerated);
     }
 
-    public static String searchValueOf(String content, String searchRegex, String endRegex)
+    public static String searchValueOf(String content, String searchRegex, String endRegex, boolean nullIsTolerated)
     {
-        return searchValueOf(content, searchRegex, endRegex, 0);
+        return searchValueOf(content, searchRegex, endRegex, 0, nullIsTolerated);
     }
 
-    public static String searchValueOf(String content, String searchRegex, String endRegex, int from)
+    public static String searchValueOf(String content, String searchRegex, String endRegex, int from, boolean nullIsTolerated)
     {
         int startIndex = content.indexOf(searchRegex, from)+searchRegex.length();
         if(startIndex == -1) {
-            return null;
+            if(nullIsTolerated) {
+                return null;
+            }
+            throw new ElementNotFoundException(searchRegex, "result in text");
         }
 
         int endIndex = content.indexOf(endRegex, startIndex);

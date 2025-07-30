@@ -14,7 +14,7 @@ public class RegionalForm extends BaseDecorator{
     @Override
     public String makeNameSection(String en_name, String fr_name, String jp_name) {
         String original = super.makeNameSection(en_name, fr_name, jp_name);
-        String name = Util.searchValueOf(original, "| nom=");
+        String name = Util.searchValueOf(original, "| nom=", false);
         String result;
         int reelPlace;
         if((reelPlace = original.indexOf("| nomréel=")) != -1) {

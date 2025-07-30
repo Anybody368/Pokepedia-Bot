@@ -14,12 +14,12 @@ import tcgp.enums.Booster;
 import tcgp.enums.Expansion;
 import tcgp.enums.Rarity;
 import tcgp.enums.TCGType;
+import utilitaire.ElementNotFoundException;
 import utilitaire.PokeData;
 import utilitaire.Region;
 import utilitaire.Util;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import static utilitaire.Util.searchValueOf;
 
@@ -36,18 +36,18 @@ public class Card {
      * @param en_text : Contenu de la page de Bulbapedia
      */
     public Card(String en_text) {
-        m_enName = searchValueOf(en_text, "|en name=");
+        m_enName = searchValueOf(en_text, "|en name=", false);
 
-        String type = searchValueOf(en_text, "TCG Card Infobox/", "/");
+        String type = searchValueOf(en_text, "TCG Card Infobox/", "/", false);
         if(type.equals("Pokémon"))
         {
             m_category = getPokeData(en_text);
         } else {
             if (m_enName.equals("Old Amber") || m_enName.endsWith(" Fossil")) {
-                int hp = Integer.parseInt(searchValueOf(en_text, "|hp="));
+                int hp = Integer.parseInt(searchValueOf(en_text, "|hp=", false));
                 m_category = new FossilStrategy(hp);
             } else {
-                String subType = searchValueOf(en_text, "|subtype=");
+                String subType = searchValueOf(en_text, "|subtype=", true);
                 m_category = switch (subType) {
                     case "Item" -> new ItemStrategy();
                     case "Supporter" -> new SupporterStrategy();
@@ -64,11 +64,14 @@ public class Card {
     private CategoryStrategy getPokeData(String en_text)
     {
         CategoryStrategy category;
-        int hp = Integer.parseInt(searchValueOf(en_text, "|hp="));
-        TCGType type = TCGType.typeFromEnglishName(searchValueOf(en_text, "|type="));
-        TCGType weakness = TCGType.typeFromEnglishName(searchValueOf(en_text, "|weakness="));
-        int retreat = Integer.parseInt(searchValueOf(en_text, "|retreat cost="));
-        int stage = switch (searchValueOf(en_text, "|evo stage="))
+        int hp = Integer.parseInt(searchValueOf(en_text, "|hp=", false));
+        TCGType type = TCGType.typeFromEnglishName(searchValueOf(en_text, "|type=", false), "Pokémon type");
+        TCGType weakness = null;
+        if(en_text.contains("|weakness=")) {
+            weakness = TCGType.typeFromEnglishName(searchValueOf(en_text, "|weakness=", false), "weakness type");
+        }
+        int retreat = Integer.parseInt(searchValueOf(en_text, "|retreat cost=", false));
+        int stage = switch (searchValueOf(en_text, "|evo stage=", false))
         {
             case "Basic" -> 0;
             case "Stage 1" -> 1;
@@ -80,20 +83,20 @@ public class Card {
         String prevolution = null;
         if(en_text.contains("|prevo name=") && stage != 0)
         {
-            String enPrevo = Util.searchValueOf(en_text, "|prevo name=");
+            String enPrevo = Util.searchValueOf(en_text, "|prevo name=", false);
             Region prevoRegion = Region.findRegionalFromEn(enPrevo);
             if(prevoRegion != null)
             {
                 enPrevo = enPrevo.substring(prevoRegion.getEnAdjective().length() +1);
-                prevolution = PokeData.getFrenchName(enPrevo) + " " + prevoRegion.getFrAdjective();
+                prevolution = PokeData.getFrenchName(enPrevo, "pre-evolution regional Pokémon") + " " + prevoRegion.getFrAdjective();
             } else {
-                prevolution = PokeData.getFrenchName(enPrevo);
+                prevolution = PokeData.getFrenchName(enPrevo, "pre-evolution Pokémon");
             }
         }
 
         ArrayList<CardAttack> attacks = fillAttacks(en_text);
 
-        String name = searchValueOf(en_text, "|en name=");
+        String name = searchValueOf(en_text, "|en name=", false);
         if(name.contains("{{TCGP Icon|ex}}"))
         {
             category = new PokeEXStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
@@ -119,23 +122,23 @@ public class Card {
         int currentLine = 0;
         while ((currentLine = en_text.indexOf("{{Cardtext/Attack", currentLine+1)) != -1)
         {
-            String damage = searchValueOf(en_text, "|damage=", currentLine);
-            String energiesLine = searchValueOf(en_text, "|cost=", currentLine);
+            String damage = searchValueOf(en_text, "|damage=", currentLine, false);
+            String energiesLine = searchValueOf(en_text, "|cost=", currentLine, true);
             ArrayList<TCGType> energies = new ArrayList<>();
             if(energiesLine != null && energiesLine.length() > 3) {
                 if (energiesLine.contains("repeat")) {
-                    TCGType type = TCGType.typeFromEnglishName(searchValueOf(energiesLine, "{{e|", "}}"));
-                    for (int i = 0; i < Integer.parseInt(searchValueOf(energiesLine, "}}|", "}}")); i++) {
+                    TCGType type = TCGType.typeFromEnglishName(searchValueOf(energiesLine, "{{e|", "}}", false), "attack cost type");
+                    for (int i = 0; i < Integer.parseInt(searchValueOf(energiesLine, "}}|", "}}", false)); i++) {
                         energies.add(type);
                     }
                 } else {
                     String[] energiesString = energiesLine.split("[{]{2}e[|]");
                     for (int i = 1; i < energiesString.length; i++) {
-                        energies.add(TCGType.typeFromEnglishName(energiesString[i].substring(0, energiesString[i].length() - 2)));
+                        energies.add(TCGType.typeFromEnglishName(energiesString[i].substring(0, energiesString[i].length() - 2), "attack cost type"));
                     }
                 }
             }
-            boolean hasEffect = !(searchValueOf(en_text, "|effect=", currentLine).isBlank());
+            boolean hasEffect = !(searchValueOf(en_text, "|effect=", currentLine, false).isBlank());
             attacks.add(new CardAttack(damage, energies, hasEffect));
         }
 
@@ -152,9 +155,9 @@ public class Card {
         if(m_category.isPokemon()) {
             if(m_category instanceof RegionalForm) {
                 String name = m_enName.substring(((RegionalForm) m_category).getRegionEnSize());
-                m_frName = PokeData.getFrenchName(name) + " " + ((RegionalForm) m_category).getFrAdjective();
+                m_frName = PokeData.getFrenchName(name, "regional Pokémon name") + " " + ((RegionalForm) m_category).getFrAdjective();
             } else {
-                m_frName = PokeData.getFrenchName(m_enName);
+                m_frName = PokeData.getFrenchName(m_enName, "Pokémon name");
             }
         }
         else
@@ -162,7 +165,7 @@ public class Card {
             m_frName = Dictionary.getTranslation(m_enName);
         }
 
-        m_jpName = searchValueOf(en_text, "|ja name=").split("[{]")[0];
+        m_jpName = searchValueOf(en_text, "|ja name=", false).split("[{]")[0];
     }
 
     private void fillRest(String en_text)
@@ -170,12 +173,12 @@ public class Card {
         ArrayList<String> illustrator = new ArrayList<>(5);
         if(en_text.contains("\n|illustrator=") && !en_text.contains("|image set="))
         {
-            illustrator.add(searchValueOf(en_text, "|illustrator="));
+            illustrator.add(searchValueOf(en_text, "|illustrator=", false));
         } else {
             int illustLine = 0;
             while((illustLine = en_text.indexOf("{{TCG Card Infobox/Tabbed Image", illustLine+1)) != -1)
             {
-                illustrator.add(searchValueOf(en_text, "illustrator=", "|", illustLine));
+                illustrator.add(searchValueOf(en_text, "illustrator=", "|", illustLine, false));
             }
         }
 
@@ -183,27 +186,27 @@ public class Card {
         Expansion exp = Expansion.PROMO_A;
         while(!illustrator.isEmpty())
         {
-            if(searchValueOf(en_text, "Expansion ", "/", currentLine).equals("Header"))
+            if(searchValueOf(en_text, "Expansion ", "/", currentLine, false).equals("Header"))
             {
-                exp = Expansion.ExpansionFromEnglishName(searchValueOf(en_text, "|", "}}", currentLine));
+                exp = Expansion.ExpansionFromEnglishName(searchValueOf(en_text, "|", "}}", currentLine, false), "card expansion");
             } else {
                 Rarity rar;
-                String rarity = searchValueOf(en_text, "rarity=", "|", currentLine);
+                String rarity = searchValueOf(en_text, "rarity=", "|", currentLine, false);
                 rar = switch (rarity) {
-                    case "Diamond" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine)) {
+                    case "Diamond" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine, false)) {
                         case "1" -> Rarity.ONE_DIAMOND;
                         case "2" -> Rarity.TWO_DIAMOND;
                         case "3" -> Rarity.THREE_DIAMOND;
                         case "4" -> Rarity.FOUR_DIAMOND;
                         default -> null;
                     };
-                    case "Star" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine)) {
+                    case "Star" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine, false)) {
                         case "1" -> Rarity.ONE_STAR;
                         case "2" -> Rarity.TWO_STAR;
                         case "3" -> Rarity.THREE_STAR;
                         default -> null;
                     };
-                    case "Shiny" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine)) {
+                    case "Shiny" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine, false)) {
                         case "1" -> Rarity.SHINY_ONE;
                         case "2" -> Rarity.SHINY_TWO;
                         default -> null;
@@ -213,9 +216,13 @@ public class Card {
                     default -> Rarity.NONE;
                 };
 
-                int number = Integer.parseInt(searchValueOf(en_text, "number=", "/", currentLine));
+                if(rar == null) {
+                    throw new RuntimeException("Rarity count is not valid, check Bulbapedia code");
+                }
 
-                String pack = searchValueOf(en_text, "|pack=", "|", currentLine);
+                int number = Integer.parseInt(searchValueOf(en_text, "number=", "/", currentLine, false));
+
+                String pack = searchValueOf(en_text, "|pack=", "|", currentLine, false);
                 ArrayList<Booster> boosters;
                 if (pack.equals("N/A") || !exp.hasMultipleBoosters() || pack.equals("TBD")) {
                     boosters = new ArrayList<>();
@@ -228,11 +235,11 @@ public class Card {
                 } else
                 {
                     boosters = new ArrayList<>();
-                    boosters.add(Booster.getBoosterFromName(PokeData.getFrenchName(pack)));
+                    boosters.add(Booster.getBoosterFromName(PokeData.getFrenchName(pack, "booster name"), "card booster"));
                 }
 
                 boolean isReused = rar.getIllustrationKeyword().equals("standard ") && en_text.contains("illustration was first featured");
-                //TODO : Trouver comment faitre pour vérifier si chaque version est réutilisée ou pas
+                //TODO : Trouver comment faire pour vérifier si chaque version est réutilisée ou pas
                 /*System.out.println("This card's " + rar.getIllustrationKeyword() + "illustration was first featured");
                 boolean isReused = en_text.contains("This card's " + rar.getIllustrationKeyword() + " illustration was first featured");*/
                 //System.out.println(isReused);

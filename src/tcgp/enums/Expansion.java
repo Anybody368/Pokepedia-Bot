@@ -1,5 +1,7 @@
 package tcgp.enums;
 
+import utilitaire.ElementNotFoundException;
+
 public enum Expansion {
     PROMO_A("Promo-A", "Promo-A", -1, true),
     PUISSANCE_GENETIQUE("Puissance Génétique", "Genetic Apex", 226, true),
@@ -24,7 +26,7 @@ public enum Expansion {
         m_hasMultipleBoosters = hasMultipleBoosters;
     }
 
-    public static Expansion ExpansionFromEnglishName(String name)
+    public static Expansion ExpansionFromEnglishName(String name, String context)
     {
         for(Expansion exp : values())
         {
@@ -33,8 +35,7 @@ public enum Expansion {
                 return exp;
             }
         }
-        System.err.println("Erreur : Extension pas trouvée");
-        return PROMO_A;
+        throw new ElementNotFoundException(name, context);
     }
 
     public String getNameFr() {

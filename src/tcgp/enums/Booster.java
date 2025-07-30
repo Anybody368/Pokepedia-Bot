@@ -1,5 +1,7 @@
 package tcgp.enums;
 
+import utilitaire.ElementNotFoundException;
+
 import java.util.ArrayList;
 
 import static tcgp.enums.Expansion.*;
@@ -28,7 +30,7 @@ public enum Booster {
         m_expansion = exp;
     }
 
-    public static Booster getBoosterFromName(String name)
+    public static Booster getBoosterFromName(String name, String context)
     {
         for (Booster b : values()) {
             if(b.m_name.equals(name))
@@ -36,7 +38,7 @@ public enum Booster {
                 return b;
             }
         }
-        return null;
+        throw new ElementNotFoundException(name, context);
     }
 
     public static ArrayList<Booster> getBoostersFromExpansion(Expansion exp)

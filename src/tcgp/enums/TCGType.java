@@ -1,5 +1,7 @@
 package tcgp.enums;
 
+import utilitaire.ElementNotFoundException;
+
 public enum TCGType {
     INCOLORE("Incolore", "Colorless"),
     FEU("Feu", "Fire"),
@@ -26,7 +28,7 @@ public enum TCGType {
         return m_nomType;
     }
 
-    public static TCGType typeFromEnglishName(String name)
+    public static TCGType typeFromEnglishName(String name, String context)
     {
         for(TCGType type : values())
         {
@@ -35,7 +37,6 @@ public enum TCGType {
                 return type;
             }
         }
-        System.err.println("Erreur : Type pas trouvé");
-        return null;
+        throw new ElementNotFoundException(name, context);
     }
 }

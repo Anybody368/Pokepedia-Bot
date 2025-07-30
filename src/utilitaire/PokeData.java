@@ -73,7 +73,7 @@ public class PokeData {
         return text;
     }
 
-    public static String getFrenchName(String englishName)
+    public static String getFrenchName(String englishName, String context)
     {
         for(int i = 0; i < pokemon.length; i++)
         {
@@ -82,8 +82,7 @@ public class PokeData {
                 return pokemon[i];
             }
         }
-        System.err.println("Erreur, nom Pokémon anglais pas trouvé : (" + englishName + ")");
-        return null;
+        throw new ElementNotFoundException(englishName, context);
     }
 
     /**

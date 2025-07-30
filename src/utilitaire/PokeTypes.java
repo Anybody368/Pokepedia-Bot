@@ -40,15 +40,15 @@ public enum PokeTypes {
         return m_nomBaie;
     }
 
-    public static PokeTypes typeFromEnglishName(String name)
+    public static PokeTypes typeFromEnglishName(String name, String context)
     {
         for(PokeTypes type : values())
         {
-            if(name.equals(type.m_nomEn))
+            if(name.equalsIgnoreCase(type.m_nomEn))
             {
                 return type;
             }
         }
-        return null;
+        throw new ElementNotFoundException(name, context);
     }
 }
