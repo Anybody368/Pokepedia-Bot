@@ -67,7 +67,7 @@ public class Card {
         int hp = Integer.parseInt(searchValueOf(en_text, "|hp=", false));
         TCGType type = TCGType.typeFromEnglishName(searchValueOf(en_text, "|type=", false), "Pokémon type");
         TCGType weakness = null;
-        if(en_text.contains("|weakness=")) {
+        if(en_text.contains("|weakness=") && !searchValueOf(en_text, "|weakness=", false).isBlank()) {
             weakness = TCGType.typeFromEnglishName(searchValueOf(en_text, "|weakness=", false), "weakness type");
         }
         int retreat = Integer.parseInt(searchValueOf(en_text, "|retreat cost=", false));
@@ -125,7 +125,7 @@ public class Card {
             String damage = searchValueOf(en_text, "|damage=", currentLine, false);
             String energiesLine = searchValueOf(en_text, "|cost=", currentLine, true);
             ArrayList<TCGType> energies = new ArrayList<>();
-            if(energiesLine != null && energiesLine.length() > 3) {
+            if(energiesLine != null && !energiesLine.isEmpty() && !energiesLine.equalsIgnoreCase("{{e|None}}")) {
                 if (energiesLine.contains("repeat")) {
                     TCGType type = TCGType.typeFromEnglishName(searchValueOf(energiesLine, "{{e|", "}}", false), "attack cost type");
                     for (int i = 0; i < Integer.parseInt(searchValueOf(energiesLine, "}}|", "}}", false)); i++) {

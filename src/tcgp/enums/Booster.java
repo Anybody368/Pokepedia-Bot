@@ -16,6 +16,8 @@ public enum Booster {
     ARCEUS("Arceus", LUMIERE_TRIOMPHALE),
     SOLGALEO("Solgaleo", GARDIENS_ASTRAUX),
     LUNALA("Lunala", GARDIENS_ASTRAUX),
+    HO_OH("Ho-Oh", SAGESSE_CIEL_MER),
+    LUGIA("Lugia", SAGESSE_CIEL_MER),
 
     //Jokers pour Promo-A
     OTHER("{{?}}", null),

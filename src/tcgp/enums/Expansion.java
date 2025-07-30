@@ -11,7 +11,8 @@ public enum Expansion {
     REJOUISSANCES_RAYONNANTES("Réjouissances Rayonnantes", "Shining Revelry", 72, false),
     GARDIENS_ASTRAUX("Gardiens Astraux", "Celestial Guardians", 155, true),
     CRISE_INTERDIMENSIONELLE("Crise Interdimensionnelle", "Extradimensional Crisis", 69, false),
-    CLAIRIERE_EVOLI("La Clairière d'Évoli", "Eevee Grove", 69, false);
+    CLAIRIERE_EVOLI("La Clairière d'Évoli", "Eevee Grove", 69, false),
+    SAGESSE_CIEL_MER("Sagesse entre Ciel et Mer", "Wisdom of Sea and Sky", 161, true);
 
     private final String m_frName;
     private final String m_enName;

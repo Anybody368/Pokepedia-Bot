@@ -17,6 +17,7 @@ import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 public class CardTranslation {
+    private static final boolean SHOULD_OVERWRITE = false;
 
     public static void main(String[] args)
     {
@@ -73,10 +74,10 @@ public class CardTranslation {
         Scanner confirm = new Scanner(System.in);
         System.out.println("Toutes les pages sont prêtes, appuyez sur \"Entrée\" pour lancer la publication.");
         confirm.nextLine();
-        confirm.close();
 
         pokePages.forEach( (k, v) -> {
-            if ((k != null) && (k.getContent() != null)) {
+            System.out.println("Publication de " + k.getTitle() + " en cours...");
+            if (SHOULD_OVERWRITE || !k.doesPageExists()) {
                 if(k.setContent(v, "Création automatique de la page à compléter"))
                 {
                     System.out.println(k.getTitle() + " créé avec succès !");
@@ -85,6 +86,8 @@ public class CardTranslation {
                 {
                     System.err.println("Échec de la création de " + k.getTitle());
                 }
+            } else {
+                System.out.println("Page déjà existante, elle est ignorée.");
             }
             try {
                 TimeUnit.MILLISECONDS.sleep(1000);
