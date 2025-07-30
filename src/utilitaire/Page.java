@@ -210,6 +210,35 @@ public class Page {
 		}
 		return success;
 	}
-	
 
+	public boolean doesPageExists() {
+		Hashtable<String, String> parameters = new Hashtable<String, String>();
+		parameters.put("action", "query");
+		parameters.put("titles", title);
+		parameters.put("format", "xml");
+
+		Document document = API.post(parameters, m_from);
+		Element root = (Element) document.getElementsByTagName("api").item(0);
+		NodeList nodeList = root.getElementsByTagName("query");
+		if(nodeList.getLength()>0) {
+			nodeList = ((Element) nodeList.item(0)).getElementsByTagName("pages");
+			if (nodeList.getLength() > 0) {
+				nodeList = ((Element) nodeList.item(0)).getElementsByTagName("page");
+				if (nodeList.getLength() > 0) {
+					Element pageElement = (Element) nodeList.item(0);
+					String idx = pageElement.getAttribute("_idx");
+
+					return !idx.equals("-1");
+				} else {
+					System.err.println("error : page");
+				}
+			} else {
+				System.err.println("error : pages");
+			}
+		} else {
+			System.err.println("error : query");
+		}
+
+		throw new RuntimeException("Error in API response for page existence");
+	}
 }

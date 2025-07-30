@@ -277,7 +277,7 @@ public class API {
 	 *
 	 * @param parameters la liste des parametres à envoyer en post
 	 * @param file       un fichier à uploader.
-	 * @param from
+	 * @param from		 wiki où la requête doit être faite
 	 * @return la reponse xml de l'api
 	 */
 	public static Document post(Hashtable<String, String> parameters, File file, Wiki from) {
