@@ -43,7 +43,7 @@ public class LieuxDodo {
     }
 
     public String getNomIle() {
-        return m_ile.getNom();
+        return m_ile.getNom(true);
     }
 
     public String getRang() {

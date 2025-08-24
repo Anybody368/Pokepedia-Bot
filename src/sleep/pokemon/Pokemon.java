@@ -203,7 +203,7 @@ public class Pokemon {
                 continue;
             }
 
-            Page pageIle = new Page(ile.getNom(), POKEPEDIA);
+            Page pageIle = new Page(ile.getNom(false), POKEPEDIA);
             String content = pageIle.getContent();
             ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 

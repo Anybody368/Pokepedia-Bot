@@ -5,7 +5,7 @@ public interface CategoryStrategy {
     String makeInfobox();
     String makeCategorySection();
     String makeNameSection(String en_name, String fr_name, String jp_name);
-    String makeFacultes();
+    String makeFacultes(String fr_name);
     String makeAnecdotes();
     String getTitleBonus();
     boolean isPokemon();

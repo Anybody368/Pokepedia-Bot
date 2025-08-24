@@ -19,7 +19,7 @@ public abstract class TrainerStrategy implements CategoryStrategy {
     }
 
     @Override
-    public String makeFacultes() {
+    public String makeFacultes(String fr_name) {
         return "| faculté-description={{?}}\n";
     }
 

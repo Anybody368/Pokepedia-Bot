@@ -4,6 +4,8 @@ import org.jetbrains.annotations.Nullable;
 import tcgp.card.CardAttack;
 import tcgp.enums.TCGType;
 import tcgp.category.CategoryStrategy;
+import utilitaire.Game;
+import utilitaire.Util;
 
 import java.util.ArrayList;
 
@@ -16,8 +18,9 @@ public class PokemonStrategy implements CategoryStrategy {
     private final String m_prevolution;
     private final boolean m_hasAbility;
     private final ArrayList<CardAttack> m_attacks;
+    private final Game m_descriptionGame;
 
-    public PokemonStrategy(TCGType type, @Nullable TCGType weakness, int hp, int stage, int retreat, @Nullable String prevolution, boolean hasAbility, ArrayList<CardAttack> attacks)
+    public PokemonStrategy(TCGType type, @Nullable TCGType weakness, int hp, int stage, int retreat, @Nullable String prevolution, boolean hasAbility, ArrayList<CardAttack> attacks, Game desciptionGame)
     {
         m_type = type;
         m_weakness = weakness;
@@ -27,6 +30,7 @@ public class PokemonStrategy implements CategoryStrategy {
         m_prevolution = prevolution;
         m_hasAbility = hasAbility;
         m_attacks = attacks;
+        m_descriptionGame = desciptionGame;
     }
 
     @Override
@@ -55,7 +59,7 @@ public class PokemonStrategy implements CategoryStrategy {
     }
 
     @Override
-    public String makeFacultes() {
+    public String makeFacultes(String fr_name) {
         StringBuilder code = new StringBuilder();
         if(m_hasAbility)
         {
@@ -65,7 +69,14 @@ public class PokemonStrategy implements CategoryStrategy {
         for (int i = 0; i < m_attacks.size(); i++) {
             code.append(m_attacks.get(i).getAttackCode(i+1));
         }
-        code.append("\n<!-- Description -->\n| description={{?}}\n| description-jeu={{?}}\n");
+
+        code.append("\n<!-- Description -->\n| description=");
+        if(m_descriptionGame != null && m_descriptionGame != Game.SHINING_PEARL && m_descriptionGame != Game.BRILLIANT_DIAMOND) {
+            String description = Util.getFrenchPokemonDescription(fr_name, m_descriptionGame);
+            code.append(description).append("\n| description-jeu=").append(m_descriptionGame.getFrenchAcronym()).append("\n");
+        } else {
+            code.append("{{?}}\n| description-jeu={{?}}\n");
+        }
 
         return code.toString();
     }

@@ -24,7 +24,7 @@ public class FossilStrategy extends ItemStrategy {
     }
 
     @Override
-    public String makeFacultes() {
+    public String makeFacultes(String fr_name) {
         return "Jouez cette carte comme si c'était un Pokémon {{type|incolore|jcci}} de base avec " + m_HP + " [[PV]]. " +
                 "N'importe quand pendant votre tour, vous pouvez défausser cette carte du jeu. Cette carte ne peut pas battre en [[retraite]].\n";
     }

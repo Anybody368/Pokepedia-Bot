@@ -9,7 +9,7 @@ public class PokeEXStrategy extends PokemonStrategy {
 
     public PokeEXStrategy(TCGType type, TCGType weakness, int hp, int stage, int retreat, String prevolution, boolean hasAbility, ArrayList<CardAttack> attacks)
     {
-        super(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
+        super(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks, null);
     }
 
     @Override
@@ -25,8 +25,8 @@ public class PokeEXStrategy extends PokemonStrategy {
     }
 
     @Override
-    public String makeFacultes() {
-        String init = super.makeFacultes();
+    public String makeFacultes(String fr_name) {
+        String init = super.makeFacultes(fr_name);
         return init.substring(0, init.length() - 66);
     }
 

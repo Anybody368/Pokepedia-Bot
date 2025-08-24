@@ -79,7 +79,7 @@ public class AffichageNewPoke extends  JFrame {
 
         for(Iles ile : Iles.values())
         {
-            panel.add(new JCheckBox(ile.getNom()));
+            panel.add(new JCheckBox(ile.getNom(true)));
         }
 
         for(int i = 0; i < (panel.getComponentCount()+1)%4; i++)

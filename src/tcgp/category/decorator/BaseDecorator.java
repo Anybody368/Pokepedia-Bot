@@ -26,8 +26,8 @@ public abstract class BaseDecorator implements CategoryStrategy {
     }
 
     @Override
-    public String makeFacultes() {
-        return m_wrapped.makeFacultes();
+    public String makeFacultes(String fr_name) {
+        return m_wrapped.makeFacultes(fr_name);
     }
 
     @Override

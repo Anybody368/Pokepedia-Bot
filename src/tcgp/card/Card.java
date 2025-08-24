@@ -14,10 +14,7 @@ import tcgp.enums.Booster;
 import tcgp.enums.Expansion;
 import tcgp.enums.Rarity;
 import tcgp.enums.TCGType;
-import utilitaire.ElementNotFoundException;
-import utilitaire.PokeData;
-import utilitaire.Region;
-import utilitaire.Util;
+import utilitaire.*;
 
 import java.util.ArrayList;
 
@@ -101,7 +98,9 @@ public class Card {
         {
             category = new PokeEXStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
         } else {
-            category = new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
+            Game descriptionGame = Game.getGameFromEnglishName(searchValueOf(en_text, "[[Pokédex]] entry comes from {{g|", "}}", false),
+                    "game the description is from");
+            category = new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks, descriptionGame);
         }
 
         Region region = Region.findRegionalFromEn(m_enName);
@@ -348,7 +347,7 @@ public class Card {
 
     private String makeFacultes()
     {
-        return "<!-- Facultés -->\n" + m_category.makeFacultes();
+        return "<!-- Facultés -->\n" + m_category.makeFacultes(m_frName);
     }
 
     private String makeAnecdotes(CardSpecs spec)

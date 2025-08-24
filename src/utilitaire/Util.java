@@ -166,4 +166,21 @@ public class Util {
         }
         return result.toString();
     }
+
+    public static String getFrenchPokemonDescription(String pokemon, Game game) {
+
+        Page pokemonPage;
+        if(game.getGeneration() < 8) {
+            pokemon = pokemon + "/Génération_" + game.getGeneration();
+        }
+        pokemonPage = new Page(pokemon, Wiki.POKEPEDIA);
+        String code = pokemonPage.getContent();
+
+        String description = searchValueOf(code, ";{{Jeu|" + game.getFrenchAcronym() + "}}\n:", true);
+        if(description.startsWith(" ")) {
+            description = description.substring(1);
+        }
+
+        return description;
+    }
 }

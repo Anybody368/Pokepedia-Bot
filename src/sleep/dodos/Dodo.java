@@ -10,7 +10,6 @@ public class Dodo {
     private final int m_qttFragment;
     private final int m_qttBonbons;
     private final ArrayList<LieuxDodo> m_localisations;
-    public static final int NBR_ILES = 6;
 
     /**
      * Constructeur utilisé pour le format console
@@ -33,7 +32,7 @@ public class Dodo {
 
         m_localisations = new ArrayList<>();
         for (Iles ile : iles) {
-            System.out.println("Quel est le rang pour débloquer le dodo " + m_nom + " sur : " + ile.getNom());
+            System.out.println("Quel est le rang pour débloquer le dodo " + m_nom + " sur : " + ile.getNom(true));
             System.out.println("(\"n\" si absent de cette ile)");
             String rang = sc.nextLine();
             if(rang.equals("n"))
