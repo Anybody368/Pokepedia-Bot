@@ -2,6 +2,16 @@ package tcgp.enums;
 
 import static tcgp.enums.RarityClass.*;
 
+/**
+ * The Rarity enumeration is used to tell the rarity of a specific card
+ *
+ * <p>The NONE value is used for cards within special expansions like Promo-A</p>
+ *
+ * <p>m_class is supposed to be used in order to properly determine whether a card's illustration is reused or not.
+ * This hasn't been really implemented yet, although it's already used for "STANDARD" cards</p>
+ *
+ * @author Samuel Chanal
+ */
 public enum Rarity {
     ONE_DIAMOND("1 losange", STANDARD),
     TWO_DIAMOND("2 losanges", STANDARD),

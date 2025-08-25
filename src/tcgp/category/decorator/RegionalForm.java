@@ -4,8 +4,23 @@ import tcgp.category.CategoryStrategy;
 import utilitaire.Region;
 import utilitaire.Util;
 
+/**
+ * The RegionalForm class is a subclass of BaseDecorator used for cards of regional Pokémon (like Alolan Rattata).
+ *
+ * <p>On top of stocking the Region, this class has a couple of extra public methods that can only be accessed with a
+ * cast with the current implementation. For this reason, it should also always be the last decoration applied to the card.
+ * It's not a good design, but for now it works.</p>
+ *
+ * @author Samuel Chanal
+ */
 public class RegionalForm extends BaseDecorator{
     private final Region m_region;
+
+    /**
+     * Main constructor with all the relevant data
+     * @param wrapped the main category (or previous decoration) of the card
+     * @param region the Region this Pokémon form is from
+     */
     public RegionalForm(CategoryStrategy wrapped, Region region) {
         super(wrapped);
         m_region = region;

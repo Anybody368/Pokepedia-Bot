@@ -2,6 +2,11 @@ package tcgp.category.trainer;
 
 import tcgp.category.CategoryStrategy;
 
+/**
+ * The TrainerStrategy abstract class is used for cards for pretty much all cards that are not Pokémon
+ *
+ * @author Samuel Chanal
+ */
 public abstract class TrainerStrategy implements CategoryStrategy {
     @Override
     public String makeInfobox() {
@@ -19,7 +24,7 @@ public abstract class TrainerStrategy implements CategoryStrategy {
     }
 
     @Override
-    public String makeFacultes(String fr_name) {
+    public String makeFaculties(String fr_name) {
         return "| faculté-description={{?}}\n";
     }
 

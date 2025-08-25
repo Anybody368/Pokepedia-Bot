@@ -1,5 +1,14 @@
 package tcgp.category.trainer;
 
+/**
+ * The FossilStrategy class is a subclass of ItemStrategy used for cards of Pokémon fossils in order to write the Poképedia
+ * page of their card.
+ *
+ * <p>This subclass stores the HP of the fossil, and writes some additional information common to all fossils cards.
+ * This means that, should fossils with different rules appear, this class will need to be changed accordingly</p>
+ *
+ * @author Samuel Chanal
+ */
 public class FossilStrategy extends ItemStrategy {
     private final int m_HP;
 
@@ -24,7 +33,7 @@ public class FossilStrategy extends ItemStrategy {
     }
 
     @Override
-    public String makeFacultes(String fr_name) {
+    public String makeFaculties(String fr_name) {
         return "Jouez cette carte comme si c'était un Pokémon {{type|incolore|jcci}} de base avec " + m_HP + " [[PV]]. " +
                 "N'importe quand pendant votre tour, vous pouvez défausser cette carte du jeu. Cette carte ne peut pas battre en [[retraite]].\n";
     }

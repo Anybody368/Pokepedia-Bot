@@ -9,6 +9,11 @@ import utilitaire.Util;
 
 import java.util.ArrayList;
 
+/**
+ * The PokemonStrategy class is used for cards of regular Pokémon in order to write the Poképedia page of their card.
+ *
+ * @author Samuel Chanal
+ */
 public class PokemonStrategy implements CategoryStrategy {
     private final TCGType m_type;
     private final TCGType m_weakness;
@@ -20,6 +25,20 @@ public class PokemonStrategy implements CategoryStrategy {
     private final ArrayList<CardAttack> m_attacks;
     private final Game m_descriptionGame;
 
+
+    /**
+     * Main constructor with all the relevant data
+     * @param type the TCGType of the Pokémon
+     * @param weakness the TCGType of the Pokémon's weakness (might be null)
+     * @param hp the Health Points of the Pokémon
+     * @param stage the evolution stage of the Pokémon (0 for basic, 1 for first evolution, etc.)
+     * @param retreat the cost of retreat for that pokémon, usually between 0 and 4
+     * @param prevolution French name of the Pokémon this Pokémon evolves from (should be null if stage = 0)
+     * @param hasAbility whether that Pokémon has an ability or not
+     * @param attacks the list of CardAttacks this Pokémon has
+     * @param desciptionGame the Game this Pokémon's description is from (null if that card doesn't have a description
+     *                       or the game is undetermined)
+     */
     public PokemonStrategy(TCGType type, @Nullable TCGType weakness, int hp, int stage, int retreat, @Nullable String prevolution, boolean hasAbility, ArrayList<CardAttack> attacks, Game desciptionGame)
     {
         m_type = type;
@@ -59,7 +78,7 @@ public class PokemonStrategy implements CategoryStrategy {
     }
 
     @Override
-    public String makeFacultes(String fr_name) {
+    public String makeFaculties(String fr_name) {
         StringBuilder code = new StringBuilder();
         if(m_hasAbility)
         {

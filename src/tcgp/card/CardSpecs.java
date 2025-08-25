@@ -6,6 +6,14 @@ import tcgp.enums.Rarity;
 
 import java.util.ArrayList;
 
+/**
+ * The CardSpecs class holds all the data of a specific version of a Card.
+ *
+ * <p>Each Card may have one or more CardSpecs, and each CardSpecs will generate one Poképedia article.</p>
+ *
+ * @author Samuel Chanal
+ */
+
 public class CardSpecs {
     private final Expansion m_expansion;
     private final Rarity m_rarity;
@@ -14,6 +22,15 @@ public class CardSpecs {
     private final ArrayList<Booster> m_boosters;
     private final boolean m_isReused;
 
+    /**
+     * Main constructor of a CardSpecs with all the relevant data
+     * @param exp the Expansion of the card
+     * @param rar the rarity of the card
+     * @param cardNbr the number of the card within its expansion
+     * @param illust the name of the illustrator
+     * @param boosters the list of Boosters this card is available in withing its expansion
+     * @param isReused whether the illustration of this card is taken from a previous card or not, usually outside TCGP
+     */
     public CardSpecs(Expansion exp, Rarity rar, int cardNbr, String illust, ArrayList<Booster> boosters, boolean isReused)
     {
         m_expansion = exp;
@@ -24,12 +41,12 @@ public class CardSpecs {
         m_isReused = isReused;
     }
 
-    public String getExtensionFrName()
+    public String getExpansionFrName()
     {
         return m_expansion.getNameFr();
     }
 
-    public String getExtensionEnName()
+    public String getExpansionEnName()
     {
         return m_expansion.getNameEn();
     }
@@ -39,7 +56,7 @@ public class CardSpecs {
         return m_expansion;
     }
 
-    public String getExtensionSize()
+    public String getExpansionSize()
     {
         int nbr = m_expansion.getNbrCards();
         if(nbr == -1)
@@ -59,16 +76,20 @@ public class CardSpecs {
         return m_number;
     }
 
-    public String getRelativeNbrCard(int diff)
-    {
-        return numberToWikiFormat(m_number+diff);
-    }
-
+    /**
+     * Getter for the card's number using Poképedia's card number format
+     * @return a String containing the formatted card number
+     */
     public String getNbrCardToString()
     {
         return numberToWikiFormat(m_number);
     }
 
+    /**
+     * Turns the number of the card in Poképedia's format, with three numbers
+     * @param nbr number to be converted
+     * @return a string containing the number, preceded by 0s if necessary
+     */
     private String numberToWikiFormat(int nbr)
     {
         if(nbr < 10)
@@ -87,6 +108,10 @@ public class CardSpecs {
         return m_illustrator;
     }
 
+    /**
+     * Generates the raw text of this specific card's Booster for the Poképedia article
+     * @return a String containing the list of boosters this card is available in for Poképedia (might be empty)
+     */
     public String getCodeBoosters()
     {
         if(m_boosters.getFirst() == Booster.NONE)
@@ -104,12 +129,16 @@ public class CardSpecs {
         return code.toString();
     }
 
+    /**
+     * Returns a boolean whether the card is considered as secret (meaning Full-art in regular expansions)
+     * @return true if the card's number exceed the expansion size and said expansion is regular, false otherwise
+     */
     public boolean isSecret()
     {
-        return(m_number > m_expansion.getNbrCards() && m_expansion.getNbrCards() != -1);
+        return(m_number > m_expansion.getNbrCards() && !isFromSpecialExpansion());
     }
 
-    public boolean isSpecialExtension()
+    public boolean isFromSpecialExpansion()
     {
         return (m_expansion.isSpecial());
     }

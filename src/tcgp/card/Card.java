@@ -20,6 +20,20 @@ import java.util.ArrayList;
 
 import static utilitaire.Util.searchValueOf;
 
+/**
+ * The Card class represent a card in TCGP as defined by Bulbapedia.
+ *
+ * <p>A given card can have specific versions from different Expansions and/or different authors and rarity.</p>
+ *
+ * <p>Its intended use is to be filled using the Bulbapedia page of a card, then use the gathered data to generate the
+ * equivalent pages for Poképedia, with some empty spots for data that can't be translated from English or that is missing.</p>
+ *
+ * <p>The program may throw an ElementNotFoundException during the first phase, this usually means that there is an error
+ * in the Bulbapedia page structure. The page will need to be corrected before attempting to make the card again</p>
+ *
+ * @author Samuel Chanal
+ */
+
 public class Card {
     private String m_frName;
     private String m_enName;
@@ -28,9 +42,8 @@ public class Card {
     private final ArrayList<CardSpecs> m_specs = new ArrayList<>(5);
 
     /**
-     * Remplis les informations d'une carte depuis la page de Bulbapédia
-     *
-     * @param en_text : Contenu de la page de Bulbapedia
+     * Main Constructor used to fill the data of a card with the information contained in Bulbapedia's page
+     * @param en_text Bulbapedia's page raw text
      */
     public Card(String en_text) {
         m_enName = searchValueOf(en_text, "|en name=", false);
@@ -58,6 +71,11 @@ public class Card {
         fillRest(en_text);
     }
 
+    /**
+     * Finds the specific category and data for the card of a Pokémon
+     * @param en_text Bulbapedia's page raw text
+     * @return the category of the card containing its specific data
+     */
     private CategoryStrategy getPokeData(String en_text)
     {
         CategoryStrategy category;
@@ -115,6 +133,11 @@ public class Card {
         return category;
     }
 
+    /**
+     * Fills the data about the Pokémon attacks
+     * @param en_text Bulbapedia's page raw text
+     * @return a list of CardAttack
+     */
     private ArrayList<CardAttack> fillAttacks(String en_text)
     {
         ArrayList<CardAttack> attacks = new ArrayList<>();
@@ -144,6 +167,10 @@ public class Card {
         return attacks;
     }
 
+    /**
+     * Fills the name of a card in English, Japanese, and French (asking for user's input if needed)
+     * @param en_text Bulbapedia's page raw text
+     */
     private void fillNames(String en_text) {
 
         if(m_enName.contains("{{TCGP Icon|ex}}"))
@@ -167,6 +194,10 @@ public class Card {
         m_jpName = searchValueOf(en_text, "|ja name=", false).split("[{]")[0];
     }
 
+    /**
+     * Fills the remaining data about the card, mostly the data specific to each version of a given card
+     * @param en_text Bulbapedia's page raw text
+     */
     private void fillRest(String en_text)
     {
         ArrayList<String> illustrator = new ArrayList<>(5);
@@ -250,6 +281,10 @@ public class Card {
         }
     }
 
+    /**
+     * Used to get the Poképedia title of all versions of the card
+     * @return a list of Strings containing the titles used to create/update Poképedia articles for the cards
+     */
     public ArrayList<String> getPagesNames()
     {
         ArrayList<String> names = new ArrayList<>();
@@ -260,11 +295,23 @@ public class Card {
         return names;
     }
 
+    /**
+     * Used to get the Poképedia title of a specific versions of the card
+     * @param spec version of the card
+     * @return the title used to create/update the Poképedia article for this specific card
+     */
     private String getPageName(CardSpecs spec)
     {
-        return(m_frName + m_category.getTitleBonus() + " (" + spec.getExtensionFrName() + " " + spec.getNbrCardToString() + ")");
+        return(m_frName + m_category.getTitleBonus() + " (" + spec.getExpansionFrName() + " " + spec.getNbrCardToString() + ")");
     }
 
+    /**
+     * Used to get the Poképedia title of all versions of the card from a specific Expansion (useless now that you can make sure
+     * the program won't update existing cards)
+     * @param exp Expansion you want the titles for
+     * @return a list of Strings containing the titles used to create/update Poképedia articles for the cards in this expansion (might be empty)
+     */
+    @Deprecated
     public ArrayList<String> getPagesNames(Expansion exp)
     {
         ArrayList<String> names = new ArrayList<>();
@@ -277,6 +324,11 @@ public class Card {
         return names;
     }
 
+    /**
+     * Used to generate the raw text of the Poképedia articles for all versions of the card
+     * @param en_title name of Bulbapedia's article for the interwiki link
+     * @return a list of Strings of the raw text that can be used to create/update the different articles
+     */
     public ArrayList<String> getPokepediaCodes(String en_title)
     {
         ArrayList<String> codes = new ArrayList<>();
@@ -287,6 +339,13 @@ public class Card {
         return codes;
     }
 
+    /**
+     * Used to generate the raw text of the Poképedia articles for the versions of the card that belong to exp
+     * @param en_title name of Bulbapedia's article for the interwiki link
+     * @param exp Expansion you want the raw text for
+     * @return a list of Strings of the raw text that can be used to create/update the different articles
+     */
+    @Deprecated
     public ArrayList<String> getPokepediaCodes(String en_title, Expansion exp)
     {
         ArrayList<String> codes = new ArrayList<>();
@@ -299,6 +358,12 @@ public class Card {
         return codes;
     }
 
+    /**
+     * Used to generate the raw text of the Poképedia article for a specific version of the card
+     * @param spec version of the card
+     * @param en_title name of Bulbapedia's article for the interwiki link
+     * @return a String of the raw text of the specific card that can be used to create/update its article
+     */
     private String getPokepediaCode(CardSpecs spec, String en_title)
     {
 
@@ -312,18 +377,23 @@ public class Card {
         code += "}}\n\n";
 
         int nameEnd = en_title.indexOf(" (");
-        code += "[[en:" + en_title.substring(0, nameEnd) + " (" + spec.getExtensionEnName() + " " + spec.getNbrCard() + ")]]\n";
+        code += "[[en:" + en_title.substring(0, nameEnd) + " (" + spec.getExpansionEnName() + " " + spec.getNbrCard() + ")]]\n";
 
         return code;
     }
 
+    /**
+     * Generates the "Infobox" section of a Poképedia article for a specific version of the card
+     * @param spec version of the card
+     * @return a String containing the "Infobox" section
+     */
     private String makeInfobox(CardSpecs spec)
     {
         StringBuilder code = new StringBuilder("<!-- Infobox -->\n");
         code.append(m_category.makeNameSection(m_enName, m_frName, m_jpName));
 
-        code.append("\n| extension=").append(spec.getExtensionFrName()).append("\n| jeu=jccp\n| numerocarte=")
-                .append(spec.getNbrCardToString()).append("\n| maxsetcarte=").append(spec.getExtensionSize())
+        code.append("\n| extension=").append(spec.getExpansionFrName()).append("\n| jeu=jccp\n| numerocarte=")
+                .append(spec.getNbrCardToString()).append("\n| maxsetcarte=").append(spec.getExpansionSize())
                 .append("\n| rareté=").append(spec.getRarityName());
 
         if(spec.isSecret())
@@ -345,15 +415,24 @@ public class Card {
         return code.toString();
     }
 
+    /**
+     * Generates the "Facultés" section of a Poképedia article for any version of the card
+     * @return a String containing the "Facultés" section
+     */
     private String makeFacultes()
     {
-        return "<!-- Facultés -->\n" + m_category.makeFacultes(m_frName);
+        return "<!-- Facultés -->\n" + m_category.makeFaculties(m_frName);
     }
 
+    /**
+     * Generates the "Anecdotes" section of a Poképedia article for a specific version of the card
+     * @param spec version of the card
+     * @return a String containing the "Anecdotes" section, or an empty String if there are no anecdotes
+     */
     private String makeAnecdotes(CardSpecs spec)
     {
         String code = "\n<!-- Anecdotes -->\n" + spec.getCodeBoosters();
-        if(spec.isSpecialExtension() && m_specs.size() >= 2)
+        if(spec.isFromSpecialExpansion() && m_specs.size() >= 2)
         {
             String originalName = getPageName(m_specs.getFirst());
             code += "| réédition=" + originalName + "\n| réédition-illustration=différente\n";
@@ -377,6 +456,11 @@ public class Card {
         return code;
     }
 
+    /**
+     * Generates the "Cartes identiques" section of a Poképedia article for a specific version of the card
+     * @param spec version of the card
+     * @return a String containing the "Cartes identiques" section, or an empty String if there are no identical card within the Expansion
+     */
     private String makeCartesIdentiques(CardSpecs spec)
     {
         StringBuilder code = new StringBuilder("\n<!-- Cartes identiques -->\n");
@@ -384,7 +468,7 @@ public class Card {
         boolean isEmpty = true;
         for(String name : getPagesNames())
         {
-            if(name.equals(getPageName(spec)) || !name.contains(spec.getExtensionFrName())) continue;
+            if(name.equals(getPageName(spec)) || !name.contains(spec.getExpansionFrName())) continue;
 
             code.append("| carte-identique");
             if(counter != 1)

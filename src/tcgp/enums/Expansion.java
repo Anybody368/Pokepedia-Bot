@@ -2,6 +2,13 @@ package tcgp.enums;
 
 import utilitaire.ElementNotFoundException;
 
+/**
+ * The Expansion enumeration is used to tell where a specific card is from.
+ *
+ * <p>It needs to be updated whenever new expansions come out before using the program.</p>
+ *
+ * @author Samuel Chanal
+ */
 public enum Expansion {
     PROMO_A("Promo-A", "Promo-A", -1, true),
     PUISSANCE_GENETIQUE("Puissance Génétique", "Genetic Apex", 226, true),
@@ -20,6 +27,14 @@ public enum Expansion {
     private final int m_nbrCards;
     private final boolean m_hasMultipleBoosters;
 
+    /**
+     * Constructor
+     * @param fr_name the French name of the expansion
+     * @param en_name the English name of the expansion
+     * @param nbrCards The amount of regular cards this expansion has (not counting secret cards). -1 for special expansions
+     *                 like Promo-A.
+     * @param hasMultipleBoosters Whether that expansion has multiple Boosters or not
+     */
     Expansion(String fr_name, String en_name, int nbrCards, boolean hasMultipleBoosters)
     {
         m_frName = fr_name;
@@ -28,6 +43,13 @@ public enum Expansion {
         m_hasMultipleBoosters = hasMultipleBoosters;
     }
 
+    /**
+     * Allows you to get the Expansion corresponding to the given English name (case-sensitive).
+     * @param name the English name for the wanted Expansion
+     * @param context the context where this method is called for debugging purposes
+     * @return the corresponding Expansion
+     * @throws ElementNotFoundException if a matching Expansion isn't found
+     */
     public static Expansion ExpansionFromEnglishName(String name, String context)
     {
         for(Expansion exp : values())

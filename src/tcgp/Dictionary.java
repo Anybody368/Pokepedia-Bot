@@ -4,6 +4,15 @@ import java.io.*;
 import java.util.Properties;
 import java.util.Scanner;
 
+/**
+ * The Dictionary class purpose is to facilitate the translation of English card names to French
+ *
+ * <p>When a card that isn't a Pokémon needs to be translated, this class will check within a Properties dictionary for
+ * the translation. If it doesn't exist, the user will be asked to provide the translation which will then be saved for
+ * next time.</p>
+ *
+ * <p>All the translations are loaded and saved in ressources/tcgpDico.properties between executions</p>
+ */
 public class Dictionary {
     private static final String FILE_PATH = "ressources"+File.separator+"tcgpDico.properties";
     private static final Properties props = new Properties();

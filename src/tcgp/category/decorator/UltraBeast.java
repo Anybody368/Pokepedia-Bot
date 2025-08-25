@@ -2,6 +2,11 @@ package tcgp.category.decorator;
 
 import tcgp.category.CategoryStrategy;
 
+/**
+ * The UltraBeast class is a subclass of BaseDecorator used for cards of UltraBeasts (like Nihilego).
+ *
+ * @author Samuel Chanal
+ */
 public class UltraBeast extends BaseDecorator{
     public UltraBeast(CategoryStrategy wrapped) {
         super(wrapped);
