@@ -63,6 +63,8 @@ public class CardListMaker {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        System.out.println(FILEPATH + " has been filled with " + links.size() + " entries from " + pageName);
     }
 
     private static String cardModelToLink(String model) {
