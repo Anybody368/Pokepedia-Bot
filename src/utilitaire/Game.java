@@ -1,5 +1,10 @@
 package utilitaire;
 
+/**
+ * The Game enumeration represents the different games of the Pokémon Franchise and their basic data.
+ *
+ * @author Samuel Chanal
+ */
 public enum Game {
     RED("Rouge", "Red", 1, "R"),
     BLUE("Bleu", "Blue", 1, "B"),
@@ -75,9 +80,16 @@ public enum Game {
         return m_frenchAcronym;
     }
 
+    /**
+     * Allows you to get the Game corresponding to the given English name (not case-sensitive).
+     * @param englishName the English name for the wanted Game
+     * @param context the context where this method is called for debugging purposes
+     * @return the corresponding Game
+     * @throws ElementNotFoundException if a matching Game isn't found
+     */
     public static Game getGameFromEnglishName(String englishName, String context) {
         for(Game g : values()) {
-            if (englishName.equals(g.m_englishName)) {
+            if (englishName.equalsIgnoreCase(g.m_englishName)) {
                 return g;
             }
         }

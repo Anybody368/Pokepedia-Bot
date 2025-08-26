@@ -49,7 +49,7 @@ public class Pokemon {
     public Pokemon(String nom, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<Dodo> dodos, ArrayList<Iles> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon)
     {
         m_nom = nom;
-        m_numDex = Util.numDexComplet(numDex);
+        m_numDex = Util.numberToPokepediaDexFormat(numDex);
         m_type = type;
         m_typeDodo = dodoType;
         m_specialite = specialite;
@@ -124,7 +124,7 @@ public class Pokemon {
         {
             //Si jamais le numdex est le même que celui recherché
             if(ligneAct.substring(ligneAct.length()-4).equals(m_numDex)) {
-                String temp = Util.incrementeRowspan(ligneAct);
+                String temp = Util.incrementRowspan(ligneAct);
                 System.out.println(temp);
                 lignes.set(l, temp);
             }
@@ -150,7 +150,7 @@ public class Pokemon {
         lignes.addAll(l - 1, List.of(ajout));
 
         //Reconstruction du texte de la page afin de publier
-        String newContenu = Util.reconstructionCodeSource(lignes);
+        String newContenu = Util.wikicodeReconstruction(lignes);
         //System.out.println(newContenu);
         listeSoutien.setContent(newContenu, "Ajout de " + m_nom);
         System.out.println("Page " + listeSoutien.getTitle() + " mise à jour");
@@ -184,7 +184,7 @@ public class Pokemon {
         lignes.add(l+1, "");
 
         //Reconstruction du texte de la page afin de publier
-        String newContenu = Util.reconstructionCodeSource(lignes);
+        String newContenu = Util.wikicodeReconstruction(lignes);
         //System.out.println(newContenu);
         listeSoutien.setContent(newContenu, "Ajout de " + m_nom);
         System.out.println("Page " + listeSoutien.getTitle() + " mise à jour");
@@ -213,8 +213,8 @@ public class Pokemon {
             String ligneAct = lignes.get(l);
 
             //mise à jour de la ligne contenant le nombre de Pokémon et de dodos disponibles
-            ligneAct = Util.incrementeValeurDansString(ligneAct, 15, 1);
-            ligneAct = Util.incrementeValeurDansString(ligneAct, 22, paliersPourIle(numIle).size());
+            ligneAct = Util.incrementValueInString(ligneAct, 15, 1);
+            ligneAct = Util.incrementValueInString(ligneAct, 22, paliersPourIle(numIle).size());
             lignes.set(l, ligneAct);
 
             //On continue jusqu'au tableau récapitulatif des paliers de Ronflex
@@ -230,10 +230,10 @@ public class Pokemon {
                     if(ligneAct.substring(ligneAct.indexOf("]]")+3).equals(pal))
                     {
                         increment++;
-                        lignes.set(l+2, Util.incrementeValeurDansString(lignes.get(l+2), 2, 1));
+                        lignes.set(l+2, Util.incrementValueInString(lignes.get(l+2), 2, 1));
                     }
                 }
-                lignes.set(l+3, Util.incrementeValeurDansString(lignes.get(l+3), 1, increment));
+                lignes.set(l+3, Util.incrementValueInString(lignes.get(l+3), 1, increment));
 
                 l += 6;
                 ligneAct = lignes.get(l);
@@ -266,7 +266,7 @@ public class Pokemon {
             lignes.addAll(l-1, ajout);
 
             //Reconstruction du texte de la page afin de publier
-            String newContenu = Util.reconstructionCodeSource(lignes);
+            String newContenu = Util.wikicodeReconstruction(lignes);
             pageIle.setContent(newContenu, "Ajout de " + m_nom);
             System.out.println("Page " + pageIle.getTitle() + " mise à jour");
 
@@ -320,7 +320,7 @@ public class Pokemon {
         }
 
         //Reconstruction du texte de la page afin de publier
-        String newContenu = Util.reconstructionCodeSource(lignes);
+        String newContenu = Util.wikicodeReconstruction(lignes);
         listeIngredients.setContent(newContenu, "Ajout de " + m_nom);
         System.out.println("Page " + listeIngredients.getTitle() + " mise à jour");
     }
@@ -330,9 +330,9 @@ public class Pokemon {
         return new String[]{"|-",
                 "| " + m_numDex,
                 "| style=\"text-align:left;\" | " + getStringMiniaNomPoke(),
-                "| {{Type|" + m_type.getNom() + "|Sleep}}",
+                "| {{Type|" + m_type.getFrenchName() + "|Sleep}}",
                 "| " + m_specialite.getNom(),
-                "| [[Fichier:Sprite Baie " + m_type.getBaie() + " Sleep.png|30px]] [[Baie " + m_type.getBaie() + "]]",
+                "| [[Fichier:Sprite Baie " + m_type.getBerry() + " Sleep.png|30px]] [[Baie " + m_type.getBerry() + "]]",
                 listeIngredientsWiki(),
                 frequenceWiki(),
                 "| " + m_capacite,

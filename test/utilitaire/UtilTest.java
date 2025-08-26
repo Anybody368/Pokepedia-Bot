@@ -7,15 +7,15 @@ import static org.junit.jupiter.api.Assertions.*;
 class UtilTest {
 
     @Test
-    void numDexComplet() {
+    void numberToPokepediaDexFormat() {
     }
 
     @Test
-    void incrementeValeurDansString() {
+    void incrementValueInString() {
     }
 
     @Test
-    void incrementeRowspan() {
+    void incrementRowspan() {
     }
 
     @Test
@@ -23,7 +23,7 @@ class UtilTest {
     }
 
     @Test
-    void decompMilliers() {
+    void numberDecomposition() {
     }
 
     @Test
@@ -43,13 +43,13 @@ class UtilTest {
     }
 
     @Test
-    void reconstructionCodeSource() {
+    void wikicodeReconstruction() {
     }
 
     @Test
     void getFrenchPokemonDescription() {
-        Game game = Game.X;
-        String pokemon = "Yanma";
+        Game game = Game.SWORD;
+        String pokemon = "Miradar";
 
         String description = Util.getFrenchPokemonDescription(pokemon, game);
 

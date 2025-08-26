@@ -44,17 +44,17 @@ public enum Expansion {
     }
 
     /**
-     * Allows you to get the Expansion corresponding to the given English name (case-sensitive).
+     * Allows you to get the Expansion corresponding to the given English name (not case-sensitive).
      * @param name the English name for the wanted Expansion
      * @param context the context where this method is called for debugging purposes
      * @return the corresponding Expansion
      * @throws ElementNotFoundException if a matching Expansion isn't found
      */
-    public static Expansion ExpansionFromEnglishName(String name, String context)
+    public static Expansion ExpansionFromEnglishName(String name, String context) throws ElementNotFoundException
     {
         for(Expansion exp : values())
         {
-            if(name.equals(exp.m_enName))
+            if(name.equalsIgnoreCase(exp.m_enName))
             {
                 return exp;
             }

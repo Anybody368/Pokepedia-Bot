@@ -1,5 +1,13 @@
 package utilitaire;
 
+/**
+ * The Region enumeration is currently used to detect regional variants of Pokémon such as Alolan Meowth.
+ *
+ * <p>Although it isn't used as such, it could be fairly easily extended to be used as a general enumeration for
+ * Pokémon regions.</p>
+ *
+ * @author Samuel Chanal
+ */
 public enum Region {
     ALOLA("Alolan", "d'Alola", "アローラ"),
     GALAR("Galarian", "de Galar", "ガラル"),
@@ -15,6 +23,11 @@ public enum Region {
         m_jaAdjective = ja;
     }
 
+    /**
+     * Searches if a Pokémon English name is a regional form by analysing the start of its name
+     * @param fullName the English name of the Pokémon
+     * @return the Region of the regional form if the Pokémon is a regional variant, null otherwise
+     */
     public static Region findRegionalFromEn(String fullName) {
         for(Region region : values())
         {
@@ -25,6 +38,11 @@ public enum Region {
         return null;
     }
 
+    /**
+     * Searches if a Pokémon French name is a regional form by analysing the end of its name
+     * @param fullName the French name of the Pokémon
+     * @return the Region of the regional form if the Pokémon is a regional variant, null otherwise
+     */
     public static Region findRegionalFromFr(String fullName) {
         for(Region region : values())
         {

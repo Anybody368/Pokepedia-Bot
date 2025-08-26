@@ -13,6 +13,17 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.*;
 
+/**
+ * The API class is made to communicate with media-wiki encyclopedias API, more specifically Poképedia and Bulbapedia.
+ *
+ * <p>It can be used to retrieve pages text, create new pages and update them, upload media, and more with admin authorisation.</p>
+ *
+ * <<p>Before using the API for any kind of upload, it is recommended to connect to your wiki account using the Login class.</p>
+ *
+ * @author Mewtwo-Ex
+ * @author GaletteLithium
+ * @author Samuel Chanal
+ */
 public class API {
 
 	private static String apiURL = "https://www.pokepedia.fr/api.php";

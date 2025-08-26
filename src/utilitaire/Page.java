@@ -11,11 +11,19 @@ import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.Hashtable;
 
+/**
+ * The Page class represents a Poképedia or Bulbapedia page and it's content, making calls to the API in order to
+ * get and modify its content.
+ *
+ * @author Mewtwo-Ex
+ * @author GaletteLithium
+ * @author Samuel Chanal
+ */
 public class Page {
-	private String title;
-	private Date touched;
+	private final String title;
+	private final Date touched;
 	private String content;
-	private Wiki m_from;
+	private final Wiki m_from;
 	
 	/**
 	 * Constructeur idéal pour les créations de page
@@ -211,6 +219,10 @@ public class Page {
 		return success;
 	}
 
+    /**
+     * Checks whether the page already exists on the wiki or not.
+     * @return true if a page with this name exists on the wiki, false otherwise
+     */
 	public boolean doesPageExists() {
 		Hashtable<String, String> parameters = new Hashtable<String, String>();
 		parameters.put("action", "query");

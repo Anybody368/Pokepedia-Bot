@@ -1,5 +1,12 @@
 package utilitaire;
 
+/**
+ * The PokeTypes enumeration represents the different types in regular Pokémon games and their basic data.
+ *
+ * <p>m_berry represents the berry used in Pokémon Sleep by Pokémon of this type</p>
+ *
+ * @author Samuel Chanal
+ */
 public enum PokeTypes {
     NORMAL("Normal", "Normal", "Kika"),
     FEU("Feu", "Fire", "Mepo"),
@@ -19,32 +26,39 @@ public enum PokeTypes {
     DRAGON("Dragon", "Dragon", "Nanone"),
     INSECTE("Insecte", "Insect", "Prine"),
     POISON("Poison", "Poison", "Maron");
-    private final String m_nomType;
-    private final String m_nomEn;
-    private final String m_nomBaie;
+    private final String m_frName;
+    private final String m_enName;
+    private final String m_berry;
 
     PokeTypes(String nom, String nomEn, String baie)
     {
-        m_nomType = nom;
-        m_nomEn = nomEn;
-        m_nomBaie = baie;
+        m_frName = nom;
+        m_enName = nomEn;
+        m_berry = baie;
     }
 
-    public String getNom()
+    public String getFrenchName()
     {
-        return m_nomType;
+        return m_frName;
     }
 
-    public String getBaie()
+    public String getBerry()
     {
-        return m_nomBaie;
+        return m_berry;
     }
 
-    public static PokeTypes typeFromEnglishName(String name, String context)
+    /**
+     * Allows you to get the Type corresponding to the given English name (not case-sensitive).
+     * @param name the English name for the wanted Type
+     * @param context the context where this method is called for debugging purposes
+     * @return the corresponding Type
+     * @throws ElementNotFoundException if a matching Type isn't found
+     */
+    public static PokeTypes typeFromEnglishName(String name, String context) throws ElementNotFoundException
     {
         for(PokeTypes type : values())
         {
-            if(name.equalsIgnoreCase(type.m_nomEn))
+            if(name.equalsIgnoreCase(type.m_enName))
             {
                 return type;
             }

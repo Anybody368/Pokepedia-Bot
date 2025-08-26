@@ -64,9 +64,9 @@ public class Recette {
         lignes.add(l+2, "| " + m_nom);
         lignes.add(l+3, "| " + m_description);
         lignes.add(l+4, ligneIngredients());
-        lignes.add(l+5, "| " + Util.decompMilliers(m_puissance));
+        lignes.add(l+5, "| " + Util.numberDecomposition(m_puissance));
 
-        return Util.reconstructionCodeSource(lignes);
+        return Util.wikicodeReconstruction(lignes);
     }
 
     private String ajoutIngredients(String content)
@@ -103,7 +103,7 @@ public class Recette {
             lignes.add(l+1, "| ×" + ingredient.getQttNv1());
         }
 
-        return Util.reconstructionCodeSource(lignes);
+        return Util.wikicodeReconstruction(lignes);
     }
 
     private String ligneIngredients()
