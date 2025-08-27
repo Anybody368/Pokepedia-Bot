@@ -66,8 +66,9 @@ By default, if an article already exists on Poképedia, it won't be overwritten.
 ## Maintenance
 
 Because this script relies heavily on regular patterns and enumerations, the code needs to be updated regularly in order
-to function properly, hopefully its conception should make things easier. After any of these changes, the program will
-need to be recompiled.
+to function properly, hopefully its conception should make things easier.
+
+Unless said otherwise, the program will need to be recompiled after modifying it.
 
 ### New expansion
 Whenever a new expansion comes out, all of its basic data should be added to [Expansion](./enums/Expansion.java) following
@@ -91,6 +92,10 @@ updated, as well as the `fillRest` method of [Card](./card/Card.java).
 Currently, all data regarding Pokémon is stored in arrays in [PokeData](../utilitaire/PokeData.java), which needs to be
 manually updated. Later on, this will be modified to load data from JSON files in order to make it easier to keep things
 up to date and easily reusable.
+
+### Editing translations
+If you want to manually add translation for Trainer cards, or you need to update/remove some, you can directly modify the
+[tcgpDico.properties](../../ressources/tcgpDico.properties) file. No need to recompile the program for this.
 
 ### Overwrite existing articles
 If you need to go over a Poképedia article that already exists for whatever reason, all you need to do is change the
