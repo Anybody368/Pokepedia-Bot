@@ -11,6 +11,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * CardListMaker is a script that aims to prepare the list of cards from a given expansion to be then translated for Poképedia
+ *
+ * <p>The expansion name can either be put as an execution parameter, or in stdin during execution</p>
+ *
+ * @author Samuel Chanal
+ */
 public class CardListMaker {
     public static void main(String[] args)
     {
