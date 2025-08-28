@@ -2,10 +2,7 @@ package tcgp;
 
 import tcgp.card.Card;
 import tcgp.enums.Expansion;
-import utilitaire.Login;
-import utilitaire.Page;
-import utilitaire.PokeTypes;
-import utilitaire.Wiki;
+import utilitaire.*;
 
 import static tcgp.Dictionary.*;
 
@@ -34,6 +31,8 @@ public class CardTranslation {
         }
 
         loadDictionary();
+        PokeData.loadPokemon();
+
         System.out.println();
 
         HashMap<Page, String> pokePages = new HashMap<>();
@@ -58,7 +57,7 @@ public class CardTranslation {
                 ArrayList<String> pagesNames = carte.getPagesNames();
                 for (int i = 0; i < pagesNames.size(); i++) {
                     //System.out.println(pagesNames.get(i));
-                    //System.out.println(pagesContent.get(i));
+                    System.out.println(pagesContent.get(i));
 
                     pokePages.put(new Page(pagesNames.get(i), Wiki.POKEPEDIA), pagesContent.get(i));
                     System.out.println(pagesNames.get(i) + " chargée");

@@ -65,4 +65,23 @@ public enum PokeTypes {
         }
         throw new ElementNotFoundException(name, context);
     }
+
+    /**
+     * Allows you to get the Type corresponding to the given French name (not case-sensitive).
+     * @param name the French name for the wanted Type
+     * @param context the context where this method is called for debugging purposes
+     * @return the corresponding Type
+     * @throws ElementNotFoundException if a matching Type isn't found
+     */
+    public static PokeTypes typeFromFrenchName(String name, String context) throws ElementNotFoundException
+    {
+        for(PokeTypes type : values())
+        {
+            if(name.equalsIgnoreCase(type.m_frName))
+            {
+                return type;
+            }
+        }
+        throw new ElementNotFoundException(name, context);
+    }
 }

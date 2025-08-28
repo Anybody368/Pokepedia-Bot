@@ -20,7 +20,7 @@ public enum Expansion {
     CRISE_INTERDIMENSIONELLE("Crise Interdimensionnelle", "Extradimensional Crisis", 69, false),
     CLAIRIERE_EVOLI("La Clairière d'Évoli", "Eevee Grove", 69, false),
     SAGESSE_CIEL_MER("Sagesse entre Ciel et Mer", "Wisdom of Sea and Sky", 161, true),
-    SOURCE_SECRETE("Source Secrète", "Secluded Springs", 0, false);
+    SOURCE_SECRETE("Source Secrète", "Secluded Springs", 71, false);
 
     private final String m_frName;
     private final String m_enName;

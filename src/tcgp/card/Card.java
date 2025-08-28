@@ -103,9 +103,9 @@ public class Card {
             if(prevoRegion != null)
             {
                 enPrevo = enPrevo.substring(prevoRegion.getEnAdjective().length() +1);
-                prevolution = PokeData.getFrenchName(enPrevo, "pre-evolution regional Pokémon") + " " + prevoRegion.getFrAdjective();
+                prevolution = PokeData.getFrenchNameFromEnglish(enPrevo, "pre-evolution regional Pokémon") + " " + prevoRegion.getFrAdjective();
             } else {
-                prevolution = PokeData.getFrenchName(enPrevo, "pre-evolution Pokémon");
+                prevolution = PokeData.getFrenchNameFromEnglish(enPrevo, "pre-evolution Pokémon");
             }
         }
 
@@ -181,9 +181,9 @@ public class Card {
         if(m_category.isPokemon()) {
             if(m_category instanceof RegionalForm) {
                 String name = m_enName.substring(((RegionalForm) m_category).getRegionEnSize());
-                m_frName = PokeData.getFrenchName(name, "regional Pokémon name") + " " + ((RegionalForm) m_category).getFrAdjective();
+                m_frName = PokeData.getFrenchNameFromEnglish(name, "regional Pokémon name") + " " + ((RegionalForm) m_category).getFrAdjective();
             } else {
-                m_frName = PokeData.getFrenchName(m_enName, "Pokémon name");
+                m_frName = PokeData.getFrenchNameFromEnglish(m_enName, "Pokémon name");
             }
         }
         else
@@ -265,7 +265,7 @@ public class Card {
                 } else
                 {
                     boosters = new ArrayList<>();
-                    boosters.add(Booster.getBoosterFromName(PokeData.getFrenchName(pack, "booster name"), "card booster"));
+                    boosters.add(Booster.getBoosterFromName(PokeData.getFrenchNameFromEnglish(pack, "booster name"), "card booster"));
                 }
 
                 boolean isReused = rar.getIllustrationKeyword().equals("standard ") && en_text.contains("illustration was first featured");
