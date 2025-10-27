@@ -217,7 +217,7 @@ public class Util {
     public static String searchValueOf(String content, String startString, String endString, int from, boolean nullIsTolerated) throws ElementNotFoundException
     {
         int startIndex = content.indexOf(startString, from)+startString.length();
-        if(startIndex == -1) {
+        if(startIndex == startString.length()-1) {
             if(nullIsTolerated) {
                 return null;
             }
@@ -263,7 +263,7 @@ public class Util {
         pokemonPage = new Page(pokemon, Wiki.POKEPEDIA);
         String code = pokemonPage.getContent();
         try {
-            String description = searchValueOf(code, ";{{Jeu|" + game.getFrenchAcronym() + "}}\n:", true);
+            String description = searchValueOf(code, ";{{Jeu|" + game.getFrenchAcronym() + "}}\n:", false);
             if (description.startsWith(" ")) {
                 description = description.substring(1);
             }

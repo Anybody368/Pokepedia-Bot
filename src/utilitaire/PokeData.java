@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * The PokeData class holds data on Pokémon names as well other data such as attacks and abilities, and methods handling them.
@@ -55,7 +56,7 @@ public class PokeData {
                 return mon;
             }
         }
-        return null;
+        throw new ElementNotFoundException(name, "Pokémon from french name");
     }
 
     public static String translateAllPokemonToFrench(String text)
@@ -80,6 +81,10 @@ public class PokeData {
             }
         }
         throw new ElementNotFoundException(englishName, context);
+    }
+
+    public static ArrayList<Region> getRegionalFormsOfPokemon(String frenchName) {
+        return getPokemonFromName(frenchName).getRegionalForms();
     }
 
     /**

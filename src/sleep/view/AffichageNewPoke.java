@@ -139,6 +139,12 @@ public class AffichageNewPoke extends  JFrame {
                 protected void done() {
                     frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     confirmation(nom);
+                    try {
+                        get(); // va relancer l'exception si doInBackground l'a levée
+                    } catch (Exception e) {
+                        e.printStackTrace(); // ici tu vois l'exception dans la console
+                        JOptionPane.showMessageDialog(frame, "Erreur : " + e.getMessage());
+                    }
                 }
             }.execute();
         });

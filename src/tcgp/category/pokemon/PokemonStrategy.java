@@ -1,10 +1,13 @@
 package tcgp.category.pokemon;
 
 import org.jetbrains.annotations.Nullable;
+import tcgp.Utilitaire;
 import tcgp.card.CardAttack;
 import tcgp.enums.TCGType;
 import tcgp.category.CategoryStrategy;
 import utilitaire.Game;
+import utilitaire.PokeData;
+import utilitaire.Region;
 import utilitaire.Util;
 
 import java.util.ArrayList;
@@ -74,7 +77,11 @@ public class PokemonStrategy implements CategoryStrategy {
 
     @Override
     public String makeNameSection(String en_name, String fr_name, String jp_name) {
-        return("| nom=" + fr_name + "\n| nomen=" + en_name + "\n| nomja=" + jp_name);
+        if(Utilitaire.actualName(fr_name).equals(fr_name)) {
+            return ("| nom=" + fr_name + "\n| nomen=" + en_name + "\n| nomja=" + jp_name);
+        } else {
+            return ("| nom=" + fr_name + "\n| nomréel=" + Utilitaire.actualName(fr_name) + "\n| nomen=" + en_name + "\n| nomja=" + jp_name);
+        }
     }
 
     @Override
@@ -91,7 +98,7 @@ public class PokemonStrategy implements CategoryStrategy {
 
         code.append("\n<!-- Description -->\n| description=");
         if(m_descriptionGame != null && m_descriptionGame != Game.SHINING_PEARL && m_descriptionGame != Game.BRILLIANT_DIAMOND) {
-            String description = Util.getFrenchPokemonDescription(fr_name, m_descriptionGame);
+            String description = Util.getFrenchPokemonDescription(Utilitaire.actualName(fr_name), m_descriptionGame);
             code.append(description).append("\n| description-jeu=").append(m_descriptionGame.getFrenchAcronym()).append("\n");
         } else {
             code.append("{{?}}\n| description-jeu={{?}}\n");

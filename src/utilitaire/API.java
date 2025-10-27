@@ -574,7 +574,7 @@ public class API {
 			parameters.put("token", token);
 
 			Document document = post(parameters, Wiki.POKEPEDIA);
-			//TODO traiter le xml de retour
+			System.out.println(document.getTextContent());
 		}
 		
 		return success;

@@ -46,7 +46,7 @@ public class CardTranslation {
                 Page page = new Page(nomPage, Wiki.BULBAPEDIA);
                 String content = page.getContent();
                 //System.out.println(content);
-                if((content == null) || content.isEmpty())
+                if((content == null) || content.isBlank())
                 {
                     System.err.println("Erreur : La page " + nomPage + " n'a pas pu être lue ou n'existe pas");
                     continue;
@@ -57,7 +57,7 @@ public class CardTranslation {
                 ArrayList<String> pagesNames = carte.getPagesNames();
                 for (int i = 0; i < pagesNames.size(); i++) {
                     //System.out.println(pagesNames.get(i));
-                    System.out.println(pagesContent.get(i));
+                    //System.out.println(pagesContent.get(i));
 
                     pokePages.put(new Page(pagesNames.get(i), Wiki.POKEPEDIA), pagesContent.get(i));
                     System.out.println(pagesNames.get(i) + " chargée");

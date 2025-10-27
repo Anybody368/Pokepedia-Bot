@@ -144,7 +144,9 @@ public class Card {
         int currentLine = 0;
         while ((currentLine = en_text.indexOf("{{Cardtext/Attack", currentLine+1)) != -1)
         {
-            String damage = searchValueOf(en_text, "|damage=", currentLine, false);
+            String damage = searchValueOf(en_text, "|damage=", currentLine, true);
+            if(damage == null) damage = "";
+
             String energiesLine = searchValueOf(en_text, "|cost=", currentLine, true);
             ArrayList<TCGType> energies = new ArrayList<>();
             if(energiesLine != null && !energiesLine.isEmpty() && !energiesLine.equalsIgnoreCase("{{e|None}}")) {
@@ -220,31 +222,33 @@ public class Card {
             {
                 exp = Expansion.ExpansionFromEnglishName(searchValueOf(en_text, "|", "}}", currentLine, false), "card expansion");
             } else {
-                Rarity rar;
-                String rarity = searchValueOf(en_text, "rarity=", "|", currentLine, false);
-                rar = switch (rarity) {
-                    case "Diamond" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine, false)) {
-                        case "1" -> Rarity.ONE_DIAMOND;
-                        case "2" -> Rarity.TWO_DIAMOND;
-                        case "3" -> Rarity.THREE_DIAMOND;
-                        case "4" -> Rarity.FOUR_DIAMOND;
-                        default -> null;
-                    };
-                    case "Star" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine, false)) {
-                        case "1" -> Rarity.ONE_STAR;
-                        case "2" -> Rarity.TWO_STAR;
-                        case "3" -> Rarity.THREE_STAR;
-                        default -> null;
-                    };
-                    case "Shiny" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine, false)) {
-                        case "1" -> Rarity.SHINY_ONE;
-                        case "2" -> Rarity.SHINY_TWO;
-                        default -> null;
-                    };
-                    case "Crown" -> Rarity.CROWN;
+                Rarity rar = Rarity.NONE;
+                String rarity = searchValueOf(en_text, "rarity=", "|", currentLine, true);
+                if(rarity != null) {
+                    rar = switch (rarity) {
+                        case "Diamond" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine, false)) {
+                            case "1" -> Rarity.ONE_DIAMOND;
+                            case "2" -> Rarity.TWO_DIAMOND;
+                            case "3" -> Rarity.THREE_DIAMOND;
+                            case "4" -> Rarity.FOUR_DIAMOND;
+                            default -> null;
+                        };
+                        case "Star" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine, false)) {
+                            case "1" -> Rarity.ONE_STAR;
+                            case "2" -> Rarity.TWO_STAR;
+                            case "3" -> Rarity.THREE_STAR;
+                            default -> null;
+                        };
+                        case "Shiny" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine, false)) {
+                            case "1" -> Rarity.SHINY_ONE;
+                            case "2" -> Rarity.SHINY_TWO;
+                            default -> null;
+                        };
+                        case "Crown" -> Rarity.CROWN;
 
-                    default -> Rarity.NONE;
-                };
+                        default -> null;
+                    };
+                }
 
                 if(rar == null) {
                     throw new RuntimeException("Rarity count is not valid, check Bulbapedia code");
@@ -252,9 +256,9 @@ public class Card {
 
                 int number = Integer.parseInt(searchValueOf(en_text, "number=", "/", currentLine, false));
 
-                String pack = searchValueOf(en_text, "|pack=", "|", currentLine, false);
+                String pack = searchValueOf(en_text, "|pack=", "|", currentLine, true);
                 ArrayList<Booster> boosters;
-                if (pack.equals("N/A") || !exp.hasMultipleBoosters() || pack.equals("TBD")) {
+                if (pack == null || pack.equals("N/A") || !exp.hasMultipleBoosters() || pack.equals("TBD") || pack.equals("—")) {
                     boosters = new ArrayList<>();
                     boosters.add(Booster.NONE);
                 } else if (pack.contains("Vol.")) {

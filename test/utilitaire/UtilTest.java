@@ -48,8 +48,8 @@ class UtilTest {
 
     @Test
     void getFrenchPokemonDescription() {
-        Game game = Game.SWORD;
-        String pokemon = "Miradar";
+        Game game = Game.OMEGA_RUBY;
+        String pokemon = "Crabicoque";
 
         String description = Util.getFrenchPokemonDescription(pokemon, game);
 

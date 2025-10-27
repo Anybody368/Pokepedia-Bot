@@ -1,5 +1,6 @@
 package tcgp.category.pokemon;
 
+import tcgp.Utilitaire;
 import tcgp.card.CardAttack;
 import tcgp.enums.TCGType;
 
@@ -34,7 +35,7 @@ public class PokeEXStrategy extends PokemonStrategy {
     @Override
     public String makeNameSection(String en_name, String fr_name, String jp_name) {
         String SYMB_EX = "{{Symbole JCC|ex JCCP}}";
-        return("| nom=" + fr_name + SYMB_EX + "\n| nomréel=" + fr_name + "\n| nomen=" + en_name + SYMB_EX +
+        return("| nom=" + fr_name + SYMB_EX + "\n| nomréel=" + Utilitaire.actualName(fr_name) + "\n| nomen=" + en_name + SYMB_EX +
                 "\n| nomja=" + jp_name + SYMB_EX);
     }
 
