@@ -34,9 +34,9 @@ public class DialogIngredientPoke extends JDialog {
 
         for (int i = 0; i < nbrIngredients; i++) {
             JComboBox<ListeIngredients> ingrBox = new JComboBox<>(ListeIngredients.values());
-            JComboBox<Object> niv1Box = new JComboBox<>(IntStream.range(0, 15).boxed().toArray());
+            JComboBox<Object> niv1Box = new JComboBox<>(IntStream.range(0, 10).boxed().toArray());
             JComboBox<Object> niv30Box = new JComboBox<>(IntStream.range(0, 15).boxed().toArray());
-            JComboBox<Object> niv60Box = new JComboBox<>(IntStream.range(0, 15).boxed().toArray());
+            JComboBox<Object> niv60Box = new JComboBox<>(IntStream.range(0, 20).boxed().toArray());
             comboIngr.add(ingrBox);
             comboNiv1.add(niv1Box);
             comboNiv30.add(niv30Box);

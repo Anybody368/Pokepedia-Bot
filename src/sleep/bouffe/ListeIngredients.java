@@ -17,7 +17,8 @@ public enum ListeIngredients {
     QUEUE_RAMOLOSS("Queue Ramoloss", 342, 14),
     SOJA_VERTEPOUSSE("Soja Vertepousse", 100, 4),
     MAIS_VERTEPOUSSE("Maïs Vertepousse", 140, 6),
-    CAFE_REVEIL("Café Réveil", 153, 6);
+    CAFE_REVEIL("Café Réveil", 153, 6),
+    CITROUILLE_DODUE("Citrouille Dodue", 250, 10);
     private final String m_nom;
     private final int m_puissance;
     private final int m_prix;

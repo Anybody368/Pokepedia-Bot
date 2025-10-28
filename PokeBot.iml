@@ -12,7 +12,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/org/jetbrains/annotations/24.0.0/annotations-24.0.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/dependencies/annotations-26.0.2-1.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

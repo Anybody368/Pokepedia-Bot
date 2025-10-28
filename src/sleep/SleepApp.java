@@ -15,7 +15,11 @@ import java.util.Scanner;
 public class SleepApp {
     public static void main(String[] args)
     {
-        Login.login("Anyboty");
+        if(args.length == 2) {
+            Login.login(args[0], args[1]);
+        } else {
+            Login.login();
+        }
         new AffichageNewPoke();
 
         //Ajout manuel de forme spéciale
@@ -40,12 +44,12 @@ public class SleepApp {
 
         //Ajout manuel de recettes
         /*ArrayList<IngredientPoke> ingr = new ArrayList<>();
-        ingr.add(new IngredientPoke(ListeIngredients.CACAO_RELAXANT, 30));
-        ingr.add(new IngredientPoke(ListeIngredients.LAIT_MEUMEU, 26));
-        ingr.add(new IngredientPoke(ListeIngredients.CAFE_REVEIL, 24));
-        ingr.add(new IngredientPoke(ListeIngredients.MIEL, 22));
+        ingr.add(new IngredientPoke(ListeIngredients.CITROUILLE_DODUE, 18));
+        ingr.add(new IngredientPoke(ListeIngredients.OEUF_EXQUIS, 24));
+        ingr.add(new IngredientPoke(ListeIngredients.MIEL, 32));
+        ingr.add(new IngredientPoke(ListeIngredients.TOMATE_ROUPILLON, 29));
 
-        Recette newRecette = new Recette("Éclair Terraiste", CategoriesRecettes.BOISSONS_DESSERTS, ingr, 20885, "Un éclair bien garni au goût amer à l'effigie d'un joyeux Terraiste.");
+        Recette newRecette = new Recette("Pancakes Grimace", CategoriesRecettes.BOISSONS_DESSERTS, ingr, 24354, "{{?}}");
         HashMap<Page, String> pages = newRecette.getModifiedPages();
 
         Scanner confirm = new Scanner(System.in);
