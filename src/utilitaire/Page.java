@@ -253,4 +253,9 @@ public class Page {
 
 		throw new RuntimeException("Error in API response for page existence");
 	}
+
+    @Override
+    public String toString() {
+        return title;
+    }
 }

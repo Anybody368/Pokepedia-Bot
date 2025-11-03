@@ -276,7 +276,7 @@ public class API {
 	 * Envoi POST vers l'api
 	 *
 	 * @param parameters la liste des parametres à envoyer en post
-	 * @param from
+	 * @param from       wiki où la requête doit être faite
 	 * @return la reponse xml de l'api
 	 */
 	public static Document post(Hashtable<String, String> parameters, Wiki from) {
@@ -639,7 +639,7 @@ public class API {
 		boolean success = false;
 		
 		if(getToken(pageid, TYPE_DELETE)) {
-			Hashtable<String, String> parameters = new Hashtable<String, String>();
+			Hashtable<String, String> parameters = new Hashtable<>();
 			parameters.put("action", "delete");
 			parameters.put("pageid", pageid+"");
 			if(reason!=null) {
@@ -653,6 +653,40 @@ public class API {
 		
 		return success;
 	}
+
+    public static ArrayList<Page> getPagesStartingWith(String title, int nameSpace, boolean includeRedirects, Wiki wiki) {
+        Hashtable<String, String> parameters = new Hashtable<>();
+        parameters.put("action", "query");
+        parameters.put("list", "allpages");
+        parameters.put("apprefix", title);
+        parameters.put("aplimit", String.valueOf(SEARCH_LIMIT));
+        parameters.put("apnamespace", String.valueOf(nameSpace));
+        if(!includeRedirects) {
+            parameters.put("apfilterredir", "nonredirects");
+        }
+
+        Document response = post(parameters, wiki);
+        ArrayList<Page> pagesList = new ArrayList<>();
+
+        Element root = (Element) response.getElementsByTagName("api").item(0);
+        NodeList nodeList = root.getElementsByTagName("error");
+        if(nodeList.getLength()>0) {
+            Element error = (Element) nodeList.item(0);
+            System.err.println("["+error.getAttribute("code")+"] : "+error.getAttribute("code"));
+        } else {
+            Element query = (Element) root.getElementsByTagName("query").item(0);
+            Element allPagesElement = (Element) query.getElementsByTagName("allpages").item(0);
+
+            NodeList allPages = allPagesElement.getElementsByTagName("p");
+            for(int i=0; i<allPages.getLength(); i++) {
+                Element p = (Element) allPages.item(i);
+                String pageName = p.getAttribute("title");
+
+                pagesList.add(new Page(pageName, wiki));
+            }
+        }
+        return pagesList;
+    }
 	
 	/**
 	 * Renvoie le chemin du dossier de backup
