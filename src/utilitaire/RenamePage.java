@@ -12,7 +12,7 @@ public class RenamePage {
         } else {
             Login.login();
         }
-        String from = "1";
+        String from;
 
         while(true) {
             Scanner sc = new Scanner(System.in);

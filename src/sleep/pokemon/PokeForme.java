@@ -4,10 +4,14 @@ import sleep.bouffe.IngredientPoke;
 import sleep.dodos.Dodo;
 import sleep.dodos.Iles;
 import sleep.dodos.TypesDodo;
+import utilitaire.Page;
 import utilitaire.PokeTypes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+
+import static utilitaire.Wiki.POKEPEDIA;
 
 public class PokeForme extends Pokemon{
     private final String m_nomForme;
@@ -21,9 +25,15 @@ public class PokeForme extends Pokemon{
     }
 
     @Override
-    public void ajoutPokeWiki() {
-        ajoutListePokeSoutien();
-        ajouListeDodo();
+    public HashMap<Page, String> getWikiModifications() {
+        HashMap<Page, String> wikiPages = new HashMap<>();
+        Page listeSoutien = new Page(m_pages[0], POKEPEDIA);
+        Page listeDodo = new Page(m_pages[1], POKEPEDIA);
+
+        wikiPages.put(listeSoutien, ajoutListePokeSoutien(listeSoutien));
+        wikiPages.put(listeDodo, ajouListeDodo(listeDodo));
+
+        return wikiPages;
     }
 
     @Override

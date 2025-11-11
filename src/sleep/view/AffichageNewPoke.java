@@ -5,6 +5,7 @@ import sleep.dodos.Dodo;
 import sleep.dodos.Iles;
 import sleep.dodos.TypesDodo;
 import sleep.pokemon.Competences;
+import utilitaire.Page;
 import utilitaire.PokeTypes;
 import sleep.pokemon.Pokemon;
 import sleep.pokemon.Specialites;
@@ -12,6 +13,7 @@ import sleep.pokemon.Specialites;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.stream.IntStream;
 
 public class AffichageNewPoke extends  JFrame {
@@ -127,11 +129,28 @@ public class AffichageNewPoke extends  JFrame {
             String bonbon = nomBonbon.getText();
 
             frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
             new SwingWorker<Void, Void>() {
                 @Override
                 protected Void doInBackground() throws Exception {
                     Pokemon Poke = new Pokemon(nom, numDex, type, typeDodo, spec, ingredients, dodos, iles, freq, capacite, comp, ptsAmitie, bonbon);
-                    Poke.ajoutPokeWiki();
+                    HashMap<Page, String> wikiPages = Poke.getWikiModifications();
+
+                    JLabel label = (JLabel) getContentPane().getComponent(getContentPane().getComponentCount() -2);
+                    label.setOpaque(false);
+
+                    wikiPages.forEach( (k, v) -> {
+                        label.setText(k.getTitle() + "...");
+                        if(k.setContent(v, "Ajout automatique de " + Poke.getNom()))
+                        {
+                            System.out.println(k.getTitle() + " modifiée avec succès !");
+                        }
+                        else
+                        {
+                            System.err.println("Echec de la modification de " + k.getTitle());
+                        }
+                    });
+
                     return null;
                 }
 

@@ -2,6 +2,8 @@ package utilitaire;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The Util class provides static functions that can have general usage while working on a wiki page.
@@ -42,27 +44,49 @@ public class Util {
      * Increments a number contained within a sentence String. Currently, does not handle the French number format if it
      * goes above 999
      * @param sentence String containing the number that needs to be incremented
-     * @param wordNumber place of the number within the sentence, starting at 0, +1 for each space character.
+     * @param numberIndex index of the number within the String, starting at 0. Supports French styled numbers
      * @param increment how much should the number be incremented by
      * @return the same string with the incremented number.
      */
-    public static String incrementValueInString(String sentence, int wordNumber, int increment)
-    {
-        if(increment == 0)
-        {
+    public static String incrementValueInString(String sentence, int numberIndex, int increment) {
+        if (increment == 0) {
             return sentence;
         }
-        String[] mots = sentence.split(" ");
-        int newValue = Integer.parseInt(mots[wordNumber])+increment;
-        if(newValue > 999) {
-            System.err.println("Warning: a number was incremented past 999 in the sentence. This might cause issues with" +
-                    "the expected number format.");
+
+        // Regex : nombre entier, éventuellement négatif, avec espaces entre les milliers
+        // Exemples valides : "12", "-123", "1 000", "12 345 678"
+        Pattern pattern = Pattern.compile("-?\\d{1,3}(?:[ \\u00A0]\\d{3})*");
+        Matcher matcher = pattern.matcher(sentence);
+
+        int currentIndex = 0;
+        StringBuilder result = new StringBuilder();
+
+        while (matcher.find()) {
+            if (currentIndex == numberIndex) {
+                // Supprimer les espaces internes pour parse correctement
+                String rawNumber = matcher.group().replaceAll("[ \\u00A0]", "");
+                int oldValue = Integer.parseInt(rawNumber);
+                int newValue = oldValue + increment;
+
+                // Conversion via ta fonction numberDecomposition (externe)
+                String formatted = numberDecomposition(newValue);
+
+                matcher.appendReplacement(result, Matcher.quoteReplacement(formatted));
+            } else {
+                matcher.appendReplacement(result, matcher.group());
+            }
+            currentIndex++;
         }
 
-        mots[wordNumber] = String.valueOf(newValue);
-        StringBuilder newLigne = new StringBuilder();
-        for(String mot : mots) newLigne.append(mot).append(" ");
-        return newLigne.substring(0, sentence.length());
+        matcher.appendTail(result);
+
+        if (numberIndex >= currentIndex) {
+            throw new IllegalArgumentException(
+                    "La phrase ne contient pas autant de nombres (index demandé : " + numberIndex + ")."
+            );
+        }
+
+        return result.toString();
     }
 
     /**
@@ -166,7 +190,7 @@ public class Util {
     }
 
     /**
-     * Searches for the rest of a line in a text following a target String after a certain index
+     * Searches for the rest of a line in a text following a target String after a character certain index
      * @param content the text that needs to be searched
      * @param searchedString the String that is looked for in the text
      * @param from the index from which the search is performed
@@ -261,7 +285,9 @@ public class Util {
             pokemon = pokemon + "/Génération_" + game.getGeneration();
         }
         pokemonPage = new Page(pokemon, Wiki.POKEPEDIA);
-        String code = pokemonPage.getContent();
+        String code = pokemonPage.getContent().replaceAll("<sup>.*</sup>", "");
+        //String descriptionSection = searchValueOf(code, "=== Descriptions du [[Pokédex]] ===", "== Localisations ==", false)
+
         try {
             String description = searchValueOf(code, ";{{Jeu|" + game.getFrenchAcronym() + "}}\n:", false);
             if (description.startsWith(" ")) {

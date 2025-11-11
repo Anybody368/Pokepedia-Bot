@@ -43,7 +43,7 @@ public class PokeData {
      * @return l'instance du Pokemon avec toutes ses infos
      */
     public static Pokemon getPokemonFromNum(int num) {
-        if ( num > 0 && num <=pokemon.length ) {
+        if ( num > 0 && num <= pokemon.length ) {
             return pokemon[num-1];
         } else {
             return null;
@@ -73,11 +73,18 @@ public class PokeData {
 
     public static String getFrenchNameFromEnglish(String englishName, String context)
     {
+        String prefix = "";
+        if(englishName.startsWith("Mega "))
+        {
+                prefix = "Méga-";
+                englishName = englishName.substring(5);
+        }
+
         for(Pokemon mon : pokemon)
         {
             if(mon.getEnglishName().equals(englishName))
             {
-                return mon.getFrenchName();
+                return prefix + mon.getFrenchName();
             }
         }
         throw new ElementNotFoundException(englishName, context);

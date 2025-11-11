@@ -7,6 +7,8 @@ public enum Iles {
     PLAINE_PERCENEIGE("Plaine Perce-neige", false),
     RIVAGE_LAPISLAZULI("Rivage Lapis-lazuli", false),
     VIEILLE_CENTRALE_DOREE("Vieille Centrale Dorée", false),
+    CANYON_AMBRE("Canyon Ambre", false),
+
     EX_ILE_VERTEPOUSSE("Île Vertepousse", true);
     private final String m_nom;
     private final boolean m_isExpert;

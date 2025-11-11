@@ -30,6 +30,12 @@ public class Pokemon {
     private final int m_ptsAmitie;
     private final String m_bonbon;
 
+    protected final String[] m_pages = {
+            "Liste des Pokémon de soutien de Pokémon Sleep",
+            "Liste des styles de dodo de Pokémon Sleep",
+            "Ingrédient (Pokémon Sleep)"
+    };
+
     /**
      * Constructeur (à peine surchargé) des données d'un Pokémon dans Pokémon sleep sans input supplémentaire
      * @param nom : Nom du Pokémon
@@ -91,26 +97,36 @@ public class Pokemon {
 
     /**
      * Fonction à appeler pour ajouter le Pokémon aux pages du Wiki UNIQUEMENT s'il n'y a encore rien pour lui
+     *
+     * @return all Wiki pages that should be modified for this Pokémon alongside the new text
      */
-    public void ajoutPokeWiki()
+    public HashMap<Page, String> getWikiModifications()
     {
-        ajoutListePokeSoutien();
-        ajouListeDodo();
-        ajoutPokeIles();
+        HashMap<Page, String> wikiPages = new HashMap<>();
+        Page listeSoutien = new Page(m_pages[0], POKEPEDIA);
+        Page listeDodo = new Page(m_pages[1], POKEPEDIA);
+        Page listeIngredients = new Page(m_pages[2], POKEPEDIA);
+
+        wikiPages.put(listeSoutien, ajoutListePokeSoutien(listeSoutien));
+        wikiPages.put(listeDodo, ajouListeDodo(listeDodo));
+        wikiPages.putAll(ajoutPokeIles());
 
         //Si le pokémon n'est pas la forme de base de sa ligne évolutive, on ne l'ajoute pas à la page ingrédients
         if(m_nom.equals(m_bonbon))
-            ajoutPokeIngredients();
+            wikiPages.put(listeIngredients, ajoutPokeIngredients(listeIngredients));
+
+        return wikiPages;
     }
 
     /**
      * S'occupe d'ajouter les lignes d'un Pokémon à la page "Liste des Pokémon de soutien de Pokémon sleep"
+     *
+     * @return
      */
-    protected void ajoutListePokeSoutien()
+    protected String ajoutListePokeSoutien(Page listeSoutien)
     {
         final int LIGNES_INFORMATIONS = 11;
 
-        Page listeSoutien = new Page("Liste des Pokémon de soutien de Pokémon Sleep", POKEPEDIA);
         String content = listeSoutien.getContent();
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
@@ -152,14 +168,12 @@ public class Pokemon {
         //Reconstruction du texte de la page afin de publier
         String newContenu = Util.wikicodeReconstruction(lignes);
         //System.out.println(newContenu);
-        listeSoutien.setContent(newContenu, "Ajout de " + m_nom);
-        System.out.println("Page " + listeSoutien.getTitle() + " mise à jour");
+        return newContenu;
     }
 
-    protected void ajouListeDodo()
+    protected String ajouListeDodo(Page listeDodos)
     {
-        Page listeSoutien = new Page("Liste des styles de dodo de Pokémon Sleep", POKEPEDIA);
-        String content = listeSoutien.getContent();
+        String content = listeDodos.getContent();
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
         //Même procédé pour le deuxième tableau
@@ -186,15 +200,18 @@ public class Pokemon {
         //Reconstruction du texte de la page afin de publier
         String newContenu = Util.wikicodeReconstruction(lignes);
         //System.out.println(newContenu);
-        listeSoutien.setContent(newContenu, "Ajout de " + m_nom);
-        System.out.println("Page " + listeSoutien.getTitle() + " mise à jour");
+        return newContenu;
     }
 
     /**
      * S'occupe de mettre à jour les pages des îles de Pokémon sleep avec les dodos du nouveau Pokémon
+     *
+     * @return a map containing the list of pages that need to be modified with their new text
      */
-    private void ajoutPokeIles()
+    private HashMap<Page, String> ajoutPokeIles()
     {
+        HashMap<Page, String> wikiPages = new HashMap<>();
+
         int numIle = 0;
         for (Iles ile : m_iles) {
             //Si le pokémon n'est pas dispo sur l'ile, on passe directement à la suivante
@@ -213,8 +230,8 @@ public class Pokemon {
             String ligneAct = lignes.get(l);
 
             //mise à jour de la ligne contenant le nombre de Pokémon et de dodos disponibles
-            ligneAct = Util.incrementValueInString(ligneAct, 15, 1);
-            ligneAct = Util.incrementValueInString(ligneAct, 22, paliersPourIle(numIle).size());
+            ligneAct = Util.incrementValueInString(ligneAct, 1, 1);
+            ligneAct = Util.incrementValueInString(ligneAct, 2, paliersPourIle(numIle).size());
             lignes.set(l, ligneAct);
 
             //On continue jusqu'au tableau récapitulatif des paliers de Ronflex
@@ -227,13 +244,13 @@ public class Pokemon {
             for (int p = 0; p < 35; p++) {
                 for(String pal : paliers)
                 {
-                    if(ligneAct.substring(ligneAct.indexOf("]]")+3).equals(pal))
+                    if(Util.searchValueOf(ligneAct, "]] ", false).equals(pal))
                     {
                         increment++;
-                        lignes.set(l+2, Util.incrementValueInString(lignes.get(l+2), 2, 1));
+                        lignes.set(l+2, Util.incrementValueInString(lignes.get(l+2), 0, 1));
                     }
                 }
-                lignes.set(l+3, Util.incrementValueInString(lignes.get(l+3), 1, increment));
+                lignes.set(l+3, Util.incrementValueInString(lignes.get(l+3), 0, increment));
 
                 l += 6;
                 ligneAct = lignes.get(l);
@@ -243,15 +260,15 @@ public class Pokemon {
             l = lignes.indexOf("! Rang nécessaire") + 2;
             ligneAct = lignes.get(l);
 
-            int locNumDex = ligneAct.indexOf("{{Miniature") + 12;
-            while(ligneAct.substring(locNumDex, locNumDex+4).compareTo(m_numDex) <= 0)
+            String currentNumDex = Util.searchValueOf(ligneAct, "{{Miniature|", "|", false);
+            while(currentNumDex.compareTo(m_numDex) <= 0)
             {
-                locNumDex = 11;
-                while(locNumDex == 11 && !ligneAct.equals("|}"))
+                currentNumDex = null;
+                while(currentNumDex == null && !ligneAct.equals("|}"))
                 {
                     l++;
                     ligneAct = lignes.get(l);
-                    locNumDex = ligneAct.indexOf("{{Miniature") + 12;
+                    currentNumDex = Util.searchValueOf(ligneAct, "{{Miniature|", "|", true);
                 }
 
                 //Si jamais on arrive à la fin du tableau
@@ -267,19 +284,20 @@ public class Pokemon {
 
             //Reconstruction du texte de la page afin de publier
             String newContenu = Util.wikicodeReconstruction(lignes);
-            pageIle.setContent(newContenu, "Ajout de " + m_nom);
-            System.out.println("Page " + pageIle.getTitle() + " mise à jour");
+            wikiPages.put(pageIle, newContenu);
 
             numIle++;
         }
+        return wikiPages;
     }
 
     /**
      * Mets à jour la page des ingrédients de Pokémon sleep en ajoutant le Pokémon dans les listes de ses ingrédients
+     *
+     * @return
      */
-    private void ajoutPokeIngredients()
+    private String ajoutPokeIngredients(Page listeIngredients)
     {
-        Page listeIngredients = new Page("Ingrédient (Pokémon Sleep)", POKEPEDIA);
         String content = listeIngredients.getContent();
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
@@ -321,8 +339,7 @@ public class Pokemon {
 
         //Reconstruction du texte de la page afin de publier
         String newContenu = Util.wikicodeReconstruction(lignes);
-        listeIngredients.setContent(newContenu, "Ajout de " + m_nom);
-        System.out.println("Page " + listeIngredients.getTitle() + " mise à jour");
+        return newContenu;
     }
 
     protected String[] getLignePokeRecap()
@@ -336,7 +353,7 @@ public class Pokemon {
                 listeIngredientsWiki(),
                 frequenceWiki(),
                 "| " + m_capacite,
-                "| [[" + m_competence.getNom() + "]]",
+                "| [[" + m_competence.getName() + "]]",
                 "| " + m_ptsAmitie
         };
     }
