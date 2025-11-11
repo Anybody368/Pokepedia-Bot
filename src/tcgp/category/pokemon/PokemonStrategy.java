@@ -6,8 +6,6 @@ import tcgp.card.CardAttack;
 import tcgp.enums.TCGType;
 import tcgp.category.CategoryStrategy;
 import utilitaire.Game;
-import utilitaire.PokeData;
-import utilitaire.Region;
 import utilitaire.Util;
 
 import java.util.ArrayList;

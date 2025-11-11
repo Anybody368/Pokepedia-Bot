@@ -52,6 +52,12 @@ public class CardTranslation {
                     continue;
                 }
 
+                if(content.startsWith("#REDIRECT"))
+                {
+                    System.out.println(nomPage + " est un redirection, page ignorée");
+                    continue;
+                }
+
                 Card carte = new Card(content);
                 ArrayList<String> pagesContent = carte.getPokepediaCodes(nomPage);
                 ArrayList<String> pagesNames = carte.getPagesNames();

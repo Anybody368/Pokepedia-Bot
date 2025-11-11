@@ -5,6 +5,7 @@ import tcgp.category.*;
 import tcgp.category.decorator.RegionalForm;
 import tcgp.category.decorator.UltraBeast;
 import tcgp.category.pokemon.PokeEXStrategy;
+import tcgp.category.pokemon.PokeMegaEXStrategy;
 import tcgp.category.pokemon.PokemonStrategy;
 import tcgp.category.trainer.FossilStrategy;
 import tcgp.category.trainer.ItemStrategy;
@@ -104,6 +105,8 @@ public class Card {
             {
                 enPrevo = enPrevo.substring(prevoRegion.getEnAdjective().length() +1);
                 prevolution = PokeData.getFrenchNameFromEnglish(enPrevo, "pre-evolution regional Pokémon") + " " + prevoRegion.getFrAdjective();
+            } else if (enPrevo.contains(" Fossil") || enPrevo.contains("Old ")) {
+                prevolution = Dictionary.getTranslation(enPrevo);
             } else {
                 prevolution = PokeData.getFrenchNameFromEnglish(enPrevo, "pre-evolution Pokémon");
             }
@@ -115,6 +118,8 @@ public class Card {
         if(name.contains("{{TCGP Icon|ex}}"))
         {
             category = new PokeEXStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
+        } else if (name.contains("{{TCGP Icon|Mega ex}}")) {
+            category = new PokeMegaEXStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
         } else {
             Game descriptionGame = Game.getGameFromEnglishName(searchValueOf(en_text, "[[Pokédex]] entry comes from {{g|", "}}", false),
                     "game the description is from");
@@ -178,6 +183,8 @@ public class Card {
         if(m_enName.contains("{{TCGP Icon|ex}}"))
         {
             m_enName = m_enName.substring(0, m_enName.length()-17);
+        } else if (m_enName.contains("{{TCGP Icon|Mega ex}}")) {
+            m_enName = m_enName.substring(0, m_enName.length()-22);
         }
 
         if(m_category.isPokemon()) {
@@ -225,21 +232,25 @@ public class Card {
                 Rarity rar = Rarity.NONE;
                 String rarity = searchValueOf(en_text, "rarity=", "|", currentLine, true);
                 if(rarity != null) {
+                    String count = searchValueOf(en_text, "rarity count=", "}}", currentLine, false);
+                    if(count.length() > 1) {
+                        count = searchValueOf(en_text, "rarity count=", "|", currentLine, false);
+                    }
                     rar = switch (rarity) {
-                        case "Diamond" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine, false)) {
+                        case "Diamond" -> switch (count) {
                             case "1" -> Rarity.ONE_DIAMOND;
                             case "2" -> Rarity.TWO_DIAMOND;
                             case "3" -> Rarity.THREE_DIAMOND;
                             case "4" -> Rarity.FOUR_DIAMOND;
                             default -> null;
                         };
-                        case "Star" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine, false)) {
+                        case "Star" -> switch (count) {
                             case "1" -> Rarity.ONE_STAR;
                             case "2" -> Rarity.TWO_STAR;
                             case "3" -> Rarity.THREE_STAR;
                             default -> null;
                         };
-                        case "Shiny" -> switch (searchValueOf(en_text, "rarity count=", "|", currentLine, false)) {
+                        case "Shiny" -> switch (count) {
                             case "1" -> Rarity.SHINY_ONE;
                             case "2" -> Rarity.SHINY_TWO;
                             default -> null;

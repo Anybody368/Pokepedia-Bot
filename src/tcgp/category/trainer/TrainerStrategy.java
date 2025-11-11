@@ -42,4 +42,5 @@ public abstract class TrainerStrategy implements CategoryStrategy {
     public boolean isPokemon() {
         return false;
     }
+
 }

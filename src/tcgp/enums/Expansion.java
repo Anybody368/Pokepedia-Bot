@@ -11,6 +11,7 @@ import utilitaire.ElementNotFoundException;
  */
 public enum Expansion {
     PROMO_A("Promo-A", "Promo-A", -1, true),
+    PROMO_B("Promo-B", "Promo-B", -1, true),
     PUISSANCE_GENETIQUE("Puissance Génétique", "Genetic Apex", 226, true),
     ILE_FABULEUSE("L'Île Fabuleuse", "Mythical Island", 68, false),
     SPATIO_TEMPOREL("Choc Spatio-Temporel", "Space-Time Smackdown", 155, true),
@@ -20,7 +21,9 @@ public enum Expansion {
     CRISE_INTERDIMENSIONELLE("Crise Interdimensionnelle", "Extradimensional Crisis", 69, false),
     CLAIRIERE_EVOLI("La Clairière d'Évoli", "Eevee Grove", 69, false),
     SAGESSE_CIEL_MER("Sagesse entre Ciel et Mer", "Wisdom of Sea and Sky", 161, true),
-    SOURCE_SECRETE("Source Secrète", "Secluded Springs", 71, false);
+    SOURCE_SECRETE("Source Secrète", "Secluded Springs", 71, false),
+    BOOSTER_LUXE_EX("Booster de Luxe ex", "Deluxe Pack: ex", 353, false),
+    MEGA_ASCENSION("Méga-Ascension", "Mega Rising", 226, true);
 
     private final String m_frName;
     private final String m_enName;

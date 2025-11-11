@@ -28,6 +28,9 @@ public enum Booster {
     LUNALA("Lunala", GARDIENS_ASTRAUX),
     HO_OH("Ho-Oh", SAGESSE_CIEL_MER),
     LUGIA("Lugia", SAGESSE_CIEL_MER),
+    MEGA_LEVIATOR("Méga-Léviator", MEGA_ASCENSION),
+    MEGA_BRASEGALI("Méga-Braségali", MEGA_ASCENSION),
+    MEGA_ALTARIA("Méga-Altaria", MEGA_ASCENSION),
 
     //Jokers pour Promo-A
     OTHER("{{?}}", null),
