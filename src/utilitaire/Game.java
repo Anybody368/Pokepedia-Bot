@@ -9,6 +9,7 @@ public enum Game {
     RED("Rouge", "Red", 1, "R"),
     BLUE("Bleu", "Blue", 1, "B"),
     YELLOW("Jaune", "Yellow", 1, "J"),
+//    RED_BLUE("Rouge et Bleu", "Red and Blue", 1, "RB"),
 
     GOLD("Or", "Gold", 2, "O"),
     SILVER("Argent", "Silver", 2, "A"),
@@ -25,6 +26,7 @@ public enum Game {
     PLATINUM("Platine", "Platinum", 4, "Pt"),
     HEART_GOLD("Or HeartGold", "HeartGold", 4, "HG"),
     SOUL_SILVER("Argent SoulSilver", "SoulSilver", 4, "SS"),
+//    DIAMOND_PEARL("Diamant et Perle", "Diamond and Pearl", 4, "DP"),
 
     BLACK("Noir", "Black", 5, "No"),
     WHITE("Blanc", "White", 5, "Bl"),
@@ -47,10 +49,11 @@ public enum Game {
     SHIELD("Bouclier", "Shield", 8, "Bo"),
     BRILLIANT_DIAMOND("Diamant Étincelant", "Brilliant Diamond", 8, "DE"),
     SHINING_PEARL("Perle Scintillante", "Shining Pearl", 8, "PS"),
-    LEGENDS_ARCEUS("Légendes Arceus", "Legends Arceus", 8, "LPA"),
+    LEGENDS_ARCEUS("Légendes Pokémon : Arceus", "Legends Arceus", 8, "LPA"),
 
     SCARLET("Écarlate", "Scarlet", 9, "Ec"),
-    VIOLET("Violet", "Violet", 9,  "Vi");
+    VIOLET("Violet", "Violet", 9,  "Vi"),
+    LEGENDS_ZA("Légendes Pokémon : Z-A", "Legends Z-A", 9, "LPZA");
 
     private final String m_frenchName;
     private final String m_englishName;

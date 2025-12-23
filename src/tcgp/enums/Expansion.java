@@ -23,7 +23,8 @@ public enum Expansion {
     SAGESSE_CIEL_MER("Sagesse entre Ciel et Mer", "Wisdom of Sea and Sky", 161, true),
     SOURCE_SECRETE("Source Secrète", "Secluded Springs", 71, false),
     BOOSTER_LUXE_EX("Booster de Luxe ex", "Deluxe Pack: ex", 353, false),
-    MEGA_ASCENSION("Méga-Ascension", "Mega Rising", 226, true);
+    MEGA_ASCENSION("Méga-Ascension", "Mega Rising", 226, true),
+    EMBRASEMENT_ECARLATE("Embrasement Écarlate", "Crimson Blaze", 103, false);
 
     private final String m_frName;
     private final String m_enName;

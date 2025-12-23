@@ -121,9 +121,15 @@ public class Card {
         } else if (name.contains("{{TCGP Icon|Mega ex}}")) {
             category = new PokeMegaEXStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
         } else {
-            Game descriptionGame = Game.getGameFromEnglishName(searchValueOf(en_text, "[[Pokédex]] entry comes from {{g|", "}}", false),
-                    "game the description is from");
-            category = new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks, descriptionGame);
+            String englishDescriptionGame = searchValueOf(en_text, "[[Pokédex]] entry comes from {{g|", "}}", true);
+            if (englishDescriptionGame == null) {
+                System.err.println("No game description found.");
+                category = new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks, null);
+            } else {
+                Game descriptionGame = Game.getGameFromEnglishName(englishDescriptionGame,
+                        "game the description is from");
+                category = new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks, descriptionGame);
+            }
         }
 
         Region region = Region.findRegionalFromEn(m_enName);
