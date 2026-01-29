@@ -7,10 +7,7 @@ import tcgp.category.decorator.UltraBeast;
 import tcgp.category.pokemon.PokeEXStrategy;
 import tcgp.category.pokemon.PokeMegaEXStrategy;
 import tcgp.category.pokemon.PokemonStrategy;
-import tcgp.category.trainer.FossilStrategy;
-import tcgp.category.trainer.ItemStrategy;
-import tcgp.category.trainer.SupporterStrategy;
-import tcgp.category.trainer.ToolStrategy;
+import tcgp.category.trainer.*;
 import tcgp.enums.Booster;
 import tcgp.enums.Expansion;
 import tcgp.enums.Rarity;
@@ -63,6 +60,7 @@ public class Card {
                     case "Item" -> new ItemStrategy();
                     case "Supporter" -> new SupporterStrategy();
                     case "Pokémon Tool" -> new ToolStrategy();
+                    case "Stadium" -> new StadiumStrategy();
                     default -> null;
                 };
             }
