@@ -24,7 +24,8 @@ public enum Expansion {
     SOURCE_SECRETE("Source Secrète", "Secluded Springs", 71, false),
     BOOSTER_LUXE_EX("Booster de Luxe ex", "Deluxe Pack: ex", 353, false),
     MEGA_ASCENSION("Méga-Ascension", "Mega Rising", 226, true),
-    EMBRASEMENT_ECARLATE("Embrasement Écarlate", "Crimson Blaze", 103, false);
+    EMBRASEMENT_ECARLATE("Embrasement Écarlate", "Crimson Blaze", 69, false),
+    PARADE_ONIRIQUE("Parade Onirique", "Fantastical Parade", 155, false);
 
     private final String m_frName;
     private final String m_enName;
