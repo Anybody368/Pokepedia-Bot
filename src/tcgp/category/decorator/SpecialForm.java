@@ -30,13 +30,13 @@ public class SpecialForm extends BaseDecorator {
     @Override
     public String makeNameSection(String en_name, String fr_name, String jp_name) {
         String original = super.makeNameSection(en_name, fr_name, jp_name);
-        String name = Util.searchValueOf(original, "| nom=", false);
+        String name = Util.searchValueOf(original, "| nom=", false).replace(" "  + m_pokeForm.getFrName(), "");
         String result;
         int place1 = original.indexOf(m_pokeForm.getFrName());
         int place2 = original.indexOf("\n");
         if(original.contains("| nomréel=")) {
             result = original.substring(0, place1) + "<small>" + original.substring(place1, place2) + "</small>"
-                    + original.substring(place2);
+                    + original.substring(place2).replace(" "  + m_pokeForm.getFrName() +"\n", "\n");
         } else {
             result = original.substring(0, place1) + "<small>" + original.substring(place1, place2) + "</small>\n| nomréel="
                     + name + original.substring(place2);
