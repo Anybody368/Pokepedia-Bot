@@ -6,6 +6,7 @@ import sleep.dodos.TypesDodo;
 import sleep.UtilSleep;
 import sleep.bouffe.IngredientPoke;
 import utilitaire.Page;
+import utilitaire.PokeData;
 import utilitaire.PokeTypes;
 import utilitaire.Util;
 
@@ -14,26 +15,28 @@ import java.util.*;
 import static utilitaire.Wiki.POKEPEDIA;
 
 public class Pokemon {
-    private final String m_nom;
+    private final String m_name;
     private final String m_numDex;
     private final PokeTypes m_type;
-    private final TypesDodo m_typeDodo;
-    private final Specialites m_specialite;
-    private final ArrayList<IngredientPoke> m_listeIngredients;
-    private final ArrayList<Dodo> m_listeDodos;
-    private final ArrayList<Iles> m_iles;
-    private int m_freqHeure;
+    private final TypesDodo m_sleepType;
+    private final Specialites m_speciality;
+    private final ArrayList<IngredientPoke> m_ingredientsList;
+    private final ArrayList<Dodo> m_sleepList;
+    private final ArrayList<Iles> m_zones;
+    private int m_freqHour;
     private int m_freqMin;
     private int m_freqSec;
-    private final int m_capacite;
-    private final Competences m_competence;
-    private final int m_ptsAmitie;
-    private final String m_bonbon;
+    private final int m_storage;
+    protected final Competences m_ability;
+    private final int m_recruitPoints;
+    private final String m_candy;
+    protected final Imagery m_imageryType;
 
     protected final String[] m_pages = {
             "Liste des Pokémon de soutien de Pokémon Sleep",
             "Liste des styles de dodo de Pokémon Sleep",
-            "Ingrédient (Pokémon Sleep)"
+            "Ingrédient (Pokémon Sleep)",
+            "Bonbon (Pokémon Sleep)"
     };
 
     /**
@@ -52,39 +55,40 @@ public class Pokemon {
      * @param ptsAmitie : Combien de Pokébiscuits max faut-il pour devenir ami avec ce Pokémon
      * @param bonbon : Nom de Pokémon utilisé pour les bonbons de celui-ci (utile pour les Pokémon évolués)
      */
-    public Pokemon(String nom, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<Dodo> dodos, ArrayList<Iles> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon)
+    public Pokemon(String nom, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<Dodo> dodos, ArrayList<Iles> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType)
     {
-        m_nom = nom;
+        m_name = nom;
         m_numDex = Util.numberToPokepediaDexFormat(numDex);
         m_type = type;
-        m_typeDodo = dodoType;
-        m_specialite = specialite;
-        remplissageFreqence(frequence);
-        m_capacite = capacite;
-        m_competence = competence;
-        m_ptsAmitie = ptsAmitie;
-        m_bonbon = bonbon;
-        m_iles = iles;
-        m_listeDodos = dodos;
-        m_listeIngredients = ingredients;
+        m_sleepType = dodoType;
+        m_speciality = specialite;
+        fillFrequency(frequence);
+        m_storage = capacite;
+        m_ability = competence;
+        m_recruitPoints = ptsAmitie;
+        m_candy = bonbon;
+        m_zones = iles;
+        m_sleepList = dodos;
+        m_ingredientsList = ingredients;
+        m_imageryType = imageryType;
     }
 
     /**
      * Remplit les différentes valeurs de la fréquence à partir du String passé en paramètre
      * @param freq : String au format "min:sec" ou "h:min:sec"
      */
-    private void remplissageFreqence(String freq)
+    private void fillFrequency(String freq)
     {
         String[] details = freq.split(":");
         switch (details.length)
         {
             case 2 :
-                m_freqHeure = 0;
+                m_freqHour = 0;
                 m_freqMin = Integer.parseInt(details[0]);
                 m_freqSec = Integer.parseInt(details[1]);
                 break;
             case 3 :
-                m_freqHeure = Integer.parseInt(details[0]);
+                m_freqHour = Integer.parseInt(details[0]);
                 m_freqMin = Integer.parseInt(details[1]);
                 m_freqSec = Integer.parseInt(details[2]);
                 break;
@@ -106,14 +110,21 @@ public class Pokemon {
         Page listeSoutien = new Page(m_pages[0], POKEPEDIA);
         Page listeDodo = new Page(m_pages[1], POKEPEDIA);
         Page listeIngredients = new Page(m_pages[2], POKEPEDIA);
+        Page listeBonbons = new Page(m_pages[3], POKEPEDIA);
+        Page imagery = new Page(getRegionalName() + "/Imagerie", POKEPEDIA);
+        Page ability = new Page(m_ability.getCategory(), POKEPEDIA);
 
-        wikiPages.put(listeSoutien, ajoutListePokeSoutien(listeSoutien));
-        wikiPages.put(listeDodo, ajouListeDodo(listeDodo));
-        wikiPages.putAll(ajoutPokeIles());
+        wikiPages.put(listeSoutien, updateListePokeSoutien(listeSoutien));
+        wikiPages.put(listeDodo, updateListeDodo(listeDodo));
+        wikiPages.put(imagery, updateImageryPage(imagery));
+        wikiPages.put(ability, updateAbilityPage(ability));
+        wikiPages.putAll(updateZones());
 
-        //Si le pokémon n'est pas la forme de base de sa ligne évolutive, on ne l'ajoute pas à la page ingrédients
-        if(m_nom.equals(m_bonbon))
-            wikiPages.put(listeIngredients, ajoutPokeIngredients(listeIngredients));
+        //Si le pokémon n'est pas la forme de base de sa ligne évolutive, on ne l'ajoute pas à certaines pages.
+        if(m_name.equals(m_candy)) {
+            wikiPages.put(listeIngredients, updateIngredientsPage(listeIngredients));
+            wikiPages.put(listeBonbons, updateCandyPage(listeBonbons));
+        }
 
         return wikiPages;
     }
@@ -123,7 +134,7 @@ public class Pokemon {
      *
      * @return
      */
-    protected String ajoutListePokeSoutien(Page listeSoutien)
+    protected String updateListePokeSoutien(Page listeSoutien)
     {
         final int LIGNES_INFORMATIONS = 11;
 
@@ -131,9 +142,9 @@ public class Pokemon {
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
         //On se place au niveau de la première ligne d'un Pokémon de Soutien du premier tableau, normalement "| 0001"
-        int l = lignes.indexOf("! Points d'amitié requis");
-        l += 2;
+        int l = lignes.indexOf("! Points d'amitié requis") + 2;
         String ligneAct = lignes.get(l);
+        System.out.println(lignes.get(l-2) + "\n" + ligneAct);
 
         //On cherche l'endroit où le nouveau Pokémon doit être inséré en comparant les numéros de Pokédex
         while (ligneAct.substring(ligneAct.length()-4).compareTo(m_numDex) <= 0)
@@ -146,11 +157,11 @@ public class Pokemon {
             }
 
             l += LIGNES_INFORMATIONS;
-            //Si jamais il y a un rowspan avant le numero du dex (coucou Pikachu)
-            if(ligneAct.length() > 10)
+            ligneAct = lignes.get(l);
+            while(!ligneAct.matches("^\\| \\d{4}$") && !ligneAct.isEmpty())
             {
-                int rowspan = Integer.parseInt(ligneAct.substring(11, 12));
-                l += (LIGNES_INFORMATIONS-1) * (rowspan-1);
+                l++;
+                ligneAct = lignes.get(l);
             }
 
             ligneAct = lignes.get(l);
@@ -171,7 +182,7 @@ public class Pokemon {
         return newContenu;
     }
 
-    protected String ajouListeDodo(Page listeDodos)
+    protected String updateListeDodo(Page listeDodos)
     {
         String content = listeDodos.getContent();
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
@@ -208,12 +219,12 @@ public class Pokemon {
      *
      * @return a map containing the list of pages that need to be modified with their new text
      */
-    private HashMap<Page, String> ajoutPokeIles()
+    protected HashMap<Page, String> updateZones()
     {
         HashMap<Page, String> wikiPages = new HashMap<>();
 
         int numIle = 0;
-        for (Iles ile : m_iles) {
+        for (Iles ile : m_zones) {
             //Si le pokémon n'est pas dispo sur l'ile, on passe directement à la suivante
             if(!pokeDispoSurIle(numIle))
             {
@@ -296,12 +307,12 @@ public class Pokemon {
      *
      * @return
      */
-    private String ajoutPokeIngredients(Page listeIngredients)
+    protected String updateIngredientsPage(Page listeIngredients)
     {
         String content = listeIngredients.getContent();
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
-        for(IngredientPoke bouffe : m_listeIngredients)
+        for(IngredientPoke bouffe : m_ingredientsList)
         {
             //On cherche le tableau des Pokémon pour l'ingrédient
             int l = lignes.indexOf("| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser le " + bouffe.getNom() + "'''");
@@ -330,7 +341,7 @@ public class Pokemon {
             l--;
 
             String[] ajout = {"|-",
-                    "| " + getStringMiniaNomPoke(),
+                    "| " + getMiniatureString(),
                     "| " + bouffe.getQttNv1(),
                     "| " + bouffe.getQttNv30(),
                     "| " + bouffe.getQttNv60()};
@@ -342,19 +353,107 @@ public class Pokemon {
         return newContenu;
     }
 
+    private String updateCandyPage(Page sleepCandies)
+    {
+        String content = sleepCandies.getContent();
+        ArrayList<String> lines = new ArrayList<>(Arrays.asList(content.split("\n")));
+        int numDex = Integer.parseInt(m_numDex);
+
+        int gen = PokeData.getPokemonGen(numDex);
+        String sup = (gen == 1) ? "{{sup|ère}}" : "<sup>e</sup>";
+        int l = lines.indexOf("! style=\"background:#C5BDDC; text-align:center\" | " + gen + sup + " génération") + 3;
+
+        String ligneAct = lines.get(l);
+        while (!ligneAct.equals("</gallery>")) {
+            System.out.println(ligneAct);
+            String currentPokemon = Util.searchValueOf(ligneAct, "Bonbon ", " Sleep", false);
+            int currentNumDex = PokeData.getPokemonFromName(currentPokemon).getNumDex();
+
+            if (currentNumDex > numDex)
+            {
+                break;
+            }
+
+            l++;
+            ligneAct = lines.get(l);
+        }
+
+        lines.add(l, "Sprite Bonbon " + m_name + " Sleep.png|[[" + m_name + "]]");
+
+        return Util.wikicodeReconstruction(lines);
+    }
+
+    protected String updateImageryPage(Page imagery)
+    {
+        String content = imagery.getContent();
+        if(!content.contains("{{#invoke:Imagerie|secondaire")) {
+            System.err.println("La page d'imagerie suivante ne suit pas le format attendu : " + imagery.getTitle());
+            return content;
+        }
+        ArrayList<String> lines = new ArrayList<>(Arrays.asList(content.split("\n")));
+        int l = Util.getInsertionLineForSideImagery(lines, "Sleep");
+
+        String sleepLine = "Sleep // " + m_imageryType.getSprites() + " / " + m_imageryType.getMiniatures();
+        lines.add(l, sleepLine);
+
+        return Util.wikicodeReconstruction(lines);
+    }
+
+    protected String updateAbilityPage(Page ability)
+    {
+        String content = ability.getContent();
+        if(m_ability == Competences.CHARGE_PUISSANCE_S || m_ability == Competences.AIMANT_FRAGMENT_DE_REVE) {
+            System.err.println("La compétence possède une variante aléatoire et est ignorée");
+            return content;
+        }
+
+        ArrayList<String> lines = new ArrayList<>(Arrays.asList(content.split("\n")));
+
+        int l = lines.indexOf("== Pokémon ayant cette compétence ==") + 2;
+
+        if(l == 1) {
+            l = lines.indexOf("== " + m_ability.getName() + " ==");
+            if (l == -1) {
+                System.err.println("La section suivante n'existe pas dans sa page de compétence : " + ability.getTitle() + "#" + m_ability.getName());
+                return content;
+            }
+
+            l = Util.nextIndexOf(lines, "=== Pokémon ayant cette compétence ===", l) + 2;
+        }
+
+        String currentLine = lines.get(l);
+        if(!currentLine.startsWith("{{#invoke:")) {
+            System.err.println("La compétence est actuellement considérée comme exclusive");
+            return content;
+        }
+
+        l++;
+        currentLine = lines.get(l);
+        int currentNumDex = PokeData.getPokemonFromName(currentLine.split(" f")[0]).getNumDex();
+        while(currentNumDex <= Integer.parseInt(m_numDex)) {
+            l++;
+            currentLine = lines.get(l);
+            if (currentLine.equals("}}")) break;
+            currentNumDex = PokeData.getPokemonFromName(currentLine.split(" f")[0]).getNumDex();
+        }
+
+        lines.add(l, getPokemonListName());
+        return Util.wikicodeReconstruction(lines);
+    }
+
     protected String[] getLignePokeRecap()
     {
         return new String[]{"|-",
                 "| " + m_numDex,
-                "| style=\"text-align:left;\" | " + getStringMiniaNomPoke(),
+                "| style=\"text-align:left;\" | " + getMiniatureString(),
                 "| {{Type|" + m_type.getFrenchName() + "|Sleep}}",
-                "| " + m_specialite.getNom(),
+                "| " + m_speciality.getNom(),
                 "| [[Fichier:Sprite Baie " + m_type.getBerry() + " Sleep.png|30px]] [[Baie " + m_type.getBerry() + "]]",
                 listeIngredientsWiki(),
                 frequenceWiki(),
-                "| " + m_capacite,
-                "| [[" + m_competence.getName() + "]]",
-                "| " + m_ptsAmitie
+                "| " + m_storage,
+                "| [[" + m_ability.getName() + "]]",
+                "| " + m_recruitPoints
         };
     }
 
@@ -363,23 +462,23 @@ public class Pokemon {
      * @return voir ci-dessus
      */
     private String getLignePokeDodos() {
-        Dodo dodo = m_listeDodos.getFirst();
-        StringBuilder lignePoke = new StringBuilder("{{Ligne Pokémon Dododex|dex=" + m_numDex + getSectionNom() + "|type=" + m_typeDodo.getNom().toLowerCase() +
+        Dodo dodo = m_sleepList.getFirst();
+        StringBuilder lignePoke = new StringBuilder("{{Ligne Pokémon Dododex|dex=" + m_numDex + getNameSection() + "|type=" + m_sleepType.getNom().toLowerCase() +
                 "|dodo1=" + dodo.getNom() + "|lieu1=" + dodo.getLieux() + dodo.getRecompenses(1) +
-                "|nombonbon=" + m_bonbon + "|bonbon1=" + dodo.getQttBonbons());
-        for (int i = 1; i < m_listeDodos.size(); i++) {
-            dodo = m_listeDodos.get(i);
+                "|nombonbon=" + m_candy + "|bonbon1=" + dodo.getQttBonbons());
+        for (int i = 1; i < m_sleepList.size(); i++) {
+            dodo = m_sleepList.get(i);
             int num = i+1;
             lignePoke.append("|dodo").append(num).append("=").append(dodo.getNom()).append("|lieu").append(num).append("=")
                     .append(dodo.getLieux()).append(dodo.getRecompenses(num)).append("|bonbon").append(num).append("=").append(dodo.getQttBonbons());
         }
-        lignePoke.append("|dodo=").append(m_listeDodos.size()).append("}}");
+        lignePoke.append("|dodo=").append(m_sleepList.size()).append("}}");
         return lignePoke.toString();
     }
 
-    protected String getSectionNom()
+    protected String getNameSection()
     {
-        return "|nom=" + m_nom;
+        return "|nom=" + m_name;
     }
 
     /**
@@ -392,18 +491,18 @@ public class Pokemon {
         r.add("|-");
         int nbrDodos = paliersPourIle(numIle).size();
         if (nbrDodos == 1) {
-            r.add("| " + getStringMiniaNomPoke());
-            r.add("| class=\"" + m_typeDodo.getNom().toLowerCase() + "\" | [[Fichier:Icône Type " +
-                    m_typeDodo.getNom().toLowerCase() + " Sleep.png|50px]] " + m_typeDodo.getNom());
+            r.add("| " + getMiniatureString());
+            r.add("| class=\"" + m_sleepType.getNom().toLowerCase() + "\" | [[Fichier:Icône Type " +
+                    m_sleepType.getNom().toLowerCase() + " Sleep.png|50px]] " + m_sleepType.getNom());
         }
         else {
-            r.add("| rowspan=\"" + nbrDodos + "\" | " + getStringMiniaNomPoke());
-            r.add("| rowspan=\"" + nbrDodos + "\" class=\"" + m_typeDodo.getNom().toLowerCase() + "\" | [[Fichier:Icône Type " +
-                    m_typeDodo.getNom().toLowerCase() + " Sleep.png|50px]] " + m_typeDodo.getNom());
+            r.add("| rowspan=\"" + nbrDodos + "\" | " + getMiniatureString());
+            r.add("| rowspan=\"" + nbrDodos + "\" class=\"" + m_sleepType.getNom().toLowerCase() + "\" | [[Fichier:Icône Type " +
+                    m_sleepType.getNom().toLowerCase() + " Sleep.png|50px]] " + m_sleepType.getNom());
         }
 
         //lignes pour chaque dodo
-        for(Dodo dodo : m_listeDodos)
+        for(Dodo dodo : m_sleepList)
         {
             if(!dodo.estDispoSurIle(numIle)) continue;
             if(r.size() != 3) r.add("|-");
@@ -414,9 +513,9 @@ public class Pokemon {
         return r;
     }
 
-    protected String getStringMiniaNomPoke()
+    protected String getMiniatureString()
     {
-        return "{{Miniature|" + m_numDex + "|jeu=Sleep}} [[" + m_nom + "]]";
+        return "{{Miniature|" + m_numDex + "|jeu=Sleep}} [[" + m_name + "]]";
     }
 
     /**
@@ -426,7 +525,7 @@ public class Pokemon {
     private String listeIngredientsWiki()
     {
         StringBuilder r = new StringBuilder("| style=\"text-align:left;\" | ");
-        for(IngredientPoke i : m_listeIngredients)
+        for(IngredientPoke i : m_ingredientsList)
         {
             r.append("[[Fichier:Sprite ").append(i.getNom()).append(" Sleep.png|30px]] [[").append(i.getNom()).append("]]<br>");
         }
@@ -440,15 +539,15 @@ public class Pokemon {
     private String frequenceWiki()
     {
         String r = "| ";
-        switch (m_freqHeure)
+        switch (m_freqHour)
         {
             case 0:
                 break;
             case 1:
-                r += m_freqHeure + " heure<br>";
+                r += m_freqHour + " heure<br>";
                 break;
             default:
-                r += m_freqHeure + " heures<br>";
+                r += m_freqHour + " heures<br>";
                 break;
         }
         switch (m_freqMin)
@@ -484,7 +583,7 @@ public class Pokemon {
      */
     private boolean pokeDispoSurIle(int numIle)
     {
-        for(Dodo dodo : m_listeDodos)
+        for(Dodo dodo : m_sleepList)
         {
             if(dodo.estDispoSurIle(numIle)) return true;
         }
@@ -499,7 +598,7 @@ public class Pokemon {
     private ArrayList<String> paliersPourIle(int numIle)
     {
         ArrayList<String> r = new ArrayList<>();
-        for(Dodo dodo : m_listeDodos)
+        for(Dodo dodo : m_sleepList)
         {
             if(dodo.estDispoSurIle(numIle))
             {
@@ -509,9 +608,19 @@ public class Pokemon {
         return r;
     }
 
-    public String getNom()
+    protected String getPokemonListName()
     {
-        return m_nom;
+        return m_name;
+    }
+
+    protected String getRegionalName()
+    {
+        return m_name;
+    }
+
+    public String getName()
+    {
+        return m_name;
     }
 
     public String getNumDex()

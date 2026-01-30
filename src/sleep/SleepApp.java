@@ -30,16 +30,16 @@ public class SleepApp {
         iles.add(Iles.ILE_VERTEPOUSSE);
         iles.add(Iles.EX_ILE_VERTEPOUSSE);
 
-        dodos.add(new Dodo("en Boule", 1, 27, 75, 4, iles, true));
+        dodos.add(new Dodo("Bascule", 1, 27, 75, 4, iles, true));
         dodos.add(new Dodo("Oreilles Tombantes", 2, 228, 676, 6, iles, true));
         //dodos.add(new Dodo("Vautre-Boue", 3, 2303, 1809, 7, iles, true));
         //dodos.add(new Dodo("sur Gros Bidou", 4, 3076, 2415, 8, iles, true));
 
-        ingr.add(new IngredientPoke(ListeIngredients.CITROUILLE_DODUE, 1, 2, 4));
-        ingr.add(new IngredientPoke(ListeIngredients.CACAO_RELAXANT, 0, 4, 6));
-        ingr.add(new IngredientPoke(ListeIngredients.LAIT_MEUMEU, 0, 0, 9));
+        ingr.add(new IngredientPoke(ListeIngredients.HUILE_PURE, 1, 2, 4));
+        ingr.add(new IngredientPoke(ListeIngredients.VIANDE_VEGETALE, 0, 3, 4));
+        ingr.add(new IngredientPoke(ListeIngredients.GINGEMBRE_CHALEUREUX, 0, 0, 4));
 
-        Pokemon newPoke = new PokeForme("Évoli", "Halloween", "", 133, PokeTypes.NORMAL, TypesDodo.BONDODO, Specialites.COMPETENCES, ingr, dodos, iles, "53:20", 18, Competences.AIMANT_INGREDIENT, 5, "Évoli");
+        Pokemon newPoke = new PokeForme("Obalie", "Fêtes", "", 363, PokeTypes.GLACE, TypesDodo.GRODODO, Specialites.COMPETENCES, ingr, dodos, iles, "55:00", 20, Competences.PLAT_SUPER_BON, 5, "Obalie", Imagery.AGENDER);
         HashMap<Page, String> wikiPages = newPoke.getWikiModifications();
 
         Scanner confirm = new Scanner(System.in);
@@ -48,7 +48,7 @@ public class SleepApp {
         confirm.close();
 
         wikiPages.forEach( (k, v) -> {
-            if(k.setContent(v, "Ajout automatique de la forme de " + newPoke.getNom()))
+            if(k.setContent(v, "Ajout automatique de la forme de " + newPoke.getName()))
             {
                 System.out.println(k.getTitle() + " modifiée avec succès !");
             }

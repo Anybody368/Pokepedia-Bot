@@ -5,6 +5,7 @@ import sleep.dodos.Dodo;
 import sleep.dodos.Iles;
 import sleep.dodos.TypesDodo;
 import sleep.pokemon.Competences;
+import sleep.pokemon.Imagery;
 import utilitaire.Page;
 import utilitaire.PokeTypes;
 import sleep.pokemon.Pokemon;
@@ -40,6 +41,7 @@ public class AffichageNewPoke extends  JFrame {
         JTextField nomBonbon = new JTextField();
         JComboBox<Integer> nbrDodos = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5});
         JComboBox<Integer> nbrIngr = new JComboBox<>(new Integer[]{1, 2, 3});
+        JComboBox<Imagery> imgType = new JComboBox<>(Imagery.values());
 
         JComponent[] composants = {
                 new JLabel("Nom du Pokémon"),
@@ -68,10 +70,11 @@ public class AffichageNewPoke extends  JFrame {
                 nomBonbon,
                 new JLabel("Nombre de dodos"),
                 new JLabel("Nombre d'ingrédients"),
-                new JLabel(),
+                new JLabel("Type d'imagerie"),
                 new JLabel(),
                 nbrDodos,
                 nbrIngr,
+                imgType
         };
 
         for(JComponent composant : composants)
@@ -84,6 +87,7 @@ public class AffichageNewPoke extends  JFrame {
             panel.add(new JCheckBox(ile.getNom(true)));
         }
 
+        panel.add(new JLabel());
         for(int i = 0; i < (panel.getComponentCount()+1)%4; i++)
         {
             panel.add(new JLabel());
@@ -102,7 +106,7 @@ public class AffichageNewPoke extends  JFrame {
             int j = 0;
             for(Iles ile : Iles.values())
             {
-                JCheckBox box = (JCheckBox) panel.getComponent(30+j);
+                JCheckBox box = (JCheckBox) panel.getComponent(31+j);
                 if(box.isSelected())
                 {
                     iles.add(ile);
@@ -127,13 +131,14 @@ public class AffichageNewPoke extends  JFrame {
             Competences comp = (Competences) compPoke.getSelectedItem();
             int ptsAmitie = (int) recPoke.getSelectedItem();
             String bonbon = nomBonbon.getText();
+            Imagery img = (Imagery) imgType.getSelectedItem();
 
             frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
             new SwingWorker<Void, Void>() {
                 @Override
                 protected Void doInBackground() throws Exception {
-                    Pokemon Poke = new Pokemon(nom, numDex, type, typeDodo, spec, ingredients, dodos, iles, freq, capacite, comp, ptsAmitie, bonbon);
+                    Pokemon Poke = new Pokemon(nom, numDex, type, typeDodo, spec, ingredients, dodos, iles, freq, capacite, comp, ptsAmitie, bonbon, img);
                     HashMap<Page, String> wikiPages = Poke.getWikiModifications();
 
                     JLabel label = (JLabel) getContentPane().getComponent(getContentPane().getComponentCount() -2);
@@ -141,7 +146,9 @@ public class AffichageNewPoke extends  JFrame {
 
                     wikiPages.forEach( (k, v) -> {
                         label.setText(k.getTitle() + "...");
-                        if(k.setContent(v, "Ajout automatique de " + Poke.getNom()))
+                        String summary = k.getTitle().contains("/Imagerie") ? "Ajout Pokemon Sleep" :
+                                "Ajout automatique de " + Poke.getName();
+                        if(k.setContent(v, summary))
                         {
                             System.out.println(k.getTitle() + " modifiée avec succès !");
                         }

@@ -29,9 +29,9 @@ public class PokemonRegional extends Pokemon{
      * @param ptsAmitie : Combien de Pokébiscuits max faut-il pour devenir ami avec ce Pokémon
      * @param bonbon : Nom de Pokémon utilisé pour les bonbons de celui-ci (utile pour les Pokémon évolués)
      */
-    public PokemonRegional(String nom, Regions region, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<Dodo> dodos, ArrayList<Iles> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon)
+    public PokemonRegional(String nom, Regions region, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<Dodo> dodos, ArrayList<Iles> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType)
     {
-        super(nom, numDex, type, dodoType, specialite, ingredients, dodos, iles, frequence, capacite, competence, ptsAmitie, bonbon);
+        super(nom, numDex, type, dodoType, specialite, ingredients, dodos, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType);
         m_region = region;
     }
 
@@ -43,13 +43,23 @@ public class PokemonRegional extends Pokemon{
     }
 
     @Override
-    protected String getStringMiniaNomPoke()
+    protected String getMiniatureString()
     {
-        return "{{Miniature|" + getNumDex() + "|" + m_region.getNom() + "|jeu=Sleep}} [[" + getNom() + " " + m_region.getComplet() + "]]";
+        return "{{Miniature|" + getNumDex() + "|" + m_region.getNom() + "|jeu=Sleep}} [[" + getName() + " " + m_region.getComplet() + "]]";
     }
 
     @Override
-    protected String getSectionNom() {
-        return ("|forme=" + m_region.getNom() + super.getSectionNom() + "{{!}}" + getNom() + " " + m_region.getComplet());
+    protected String getNameSection() {
+        return ("|forme=" + m_region.getNom() + super.getNameSection() + "{{!}}" + getName() + " " + m_region.getComplet());
+    }
+
+    @Override
+    protected String getRegionalName() {
+        return super.getRegionalName() + " " + m_region.getComplet();
+    }
+
+    @Override
+    protected String getPokemonListName() {
+        return super.getPokemonListName() + " forme(" + m_region.getNom() + ")";
     }
 }

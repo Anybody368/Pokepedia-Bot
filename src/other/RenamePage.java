@@ -1,11 +1,14 @@
-package utilitaire;
+package other;
+
+import utilitaire.API;
+import utilitaire.Login;
 
 import java.util.Scanner;
 
 public class RenamePage {
     private static final boolean KEEP_REDIRECT = false; //Aucun impact si l'utilisateur n'a pas de droits de suppression
 
-    public static void main(String[] args)
+    static void main(String[] args)
     {
         if(args.length == 2) {
             Login.login(args[0], args[1]);

@@ -8,7 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 
 public class Pokemon {
-    private final int number;
+    private final int numDex;
     private final String frenchName;
     private final String englishName;
     private final String japaneseName;
@@ -30,7 +30,7 @@ public class Pokemon {
                    @JsonProperty("regionalForms") ArrayList<Region> regionalForms,
                    @JsonProperty("HasMega") boolean hasMega,
                    @JsonProperty("HasGigantamax") boolean hasGigantamax) {
-        this.number = number;
+        this.numDex = number;
         this.frenchName = frenchName;
         this.englishName = englishName;
         this.japaneseName = japaneseName;
@@ -42,16 +42,16 @@ public class Pokemon {
         this.hasGigantamax = hasGigantamax;
     }
 
-    public int getNumber() {
-        return number;
+    public int getNumDex() {
+        return numDex;
     }
 
     @JsonIgnore
     public String getPokepediaNumber() {
-        if(number < 10) return "000" + number;
-        if(number < 100) return "00" + number;
-        if(number < 1000) return "0" + number;
-        return String.valueOf(number);
+        if(numDex < 10) return "000" + numDex;
+        if(numDex < 100) return "00" + numDex;
+        if(numDex < 1000) return "0" + numDex;
+        return String.valueOf(numDex);
     }
 
     public String getFrenchName() {

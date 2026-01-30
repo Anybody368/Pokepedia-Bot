@@ -487,7 +487,7 @@ public class API {
 	 * @return true si l'upload a réussi, false sinon
 	 */
 	public static boolean upload(String filename, File file, String text, String comment) {
-		boolean success = true;
+		boolean success = false;
 		
 		if(getToken(TYPE_CSRF)) {
 			Hashtable<String, String> parameters = new Hashtable<String, String>();
@@ -499,7 +499,21 @@ public class API {
 			parameters.put("ignorewarnings", "1");
 
 			Document document = post(parameters, file, Wiki.POKEPEDIA);
-			//TODO traiter le xml de retour
+            Element root = (Element) document.getElementsByTagName("api").item(0);
+            NodeList nodeList = root.getElementsByTagName("error");
+
+            if (nodeList.getLength() > 0) {
+                Element error = (Element) nodeList.item(0);
+                System.err.println("[" + error.getAttribute("code") + "] : " + error.getAttribute("info"));
+            } else {
+                nodeList = root.getElementsByTagName("upload");
+                if (nodeList.getLength() > 0) {
+                    Element element = (Element) nodeList.item(0);
+                    success = "Success".equals(element.getAttribute("result"));
+                } else {
+                    System.err.println("missing upload node in the response");
+                }
+            }
 		}
 		
 		return success;
@@ -678,6 +692,41 @@ public class API {
             Element allPagesElement = (Element) query.getElementsByTagName("allpages").item(0);
 
             NodeList allPages = allPagesElement.getElementsByTagName("p");
+            for(int i=0; i<allPages.getLength(); i++) {
+                Element p = (Element) allPages.item(i);
+                String pageName = p.getAttribute("title");
+
+                pagesList.add(new Page(pageName, wiki));
+            }
+        }
+        return pagesList;
+    }
+
+    public static ArrayList<Page> getPageFromCategory(String category, int nameSpace, Wiki wiki) {
+        if(!category.startsWith("Catégorie:")) {
+            category = "Catégorie:" + category;
+        }
+
+        Hashtable<String, String> parameters = new Hashtable<>();
+        parameters.put("action", "query");
+        parameters.put("list", "categorymembers");
+        parameters.put("cmtitle", category);
+        parameters.put("cmlimit", String.valueOf(SEARCH_LIMIT));
+        parameters.put("cmnamespace", String.valueOf(nameSpace));
+
+        Document response = post(parameters, wiki);
+        ArrayList<Page> pagesList = new ArrayList<>();
+
+        Element root = (Element) response.getElementsByTagName("api").item(0);
+        NodeList nodeList = root.getElementsByTagName("error");
+        if(nodeList.getLength()>0) {
+            Element error = (Element) nodeList.item(0);
+            System.err.println("["+error.getAttribute("code")+"] : "+error.getAttribute("code"));
+        } else {
+            Element query = (Element) root.getElementsByTagName("query").item(0);
+            Element allPagesElement = (Element) query.getElementsByTagName("categorymembers").item(0);
+
+            NodeList allPages = allPagesElement.getElementsByTagName("cm");
             for(int i=0; i<allPages.getLength(); i++) {
                 Element p = (Element) allPages.item(i);
                 String pageName = p.getAttribute("title");

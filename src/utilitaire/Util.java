@@ -16,6 +16,65 @@ public class Util {
 
     private static final int NBR_POKE = 1025;
 
+    private static final ArrayList<String> gamesOrder = new ArrayList(List.of(
+            "TCG",
+            "TCG2",
+            "Pin",
+            "PinRS",
+            "St1",
+            "St2",
+            "PBR",
+            "PuzC",
+            "PuzL",
+            "Pokéwalker",
+            "Colo",
+            "XD",
+            "Da",
+            "L!",
+            "LB",
+            "Sh",
+            "Sh-v1",
+            "CM",
+            "CM-v1",
+            "PDMRB",
+            "PDMTO",
+            "PDMC",
+            "PDMTOC",
+            "PDMPI",
+            "PMDM",
+            "PDMDX",
+            "Ra1",
+            "Ra2",
+            "Ra3",
+            "MPR",
+            "PR",
+            "SPR",
+            "PRU",
+            "PRW",
+            "PRR",
+            "PPk1",
+            "PPk2",
+            "APCC",
+            "Cq",
+            "RAdar",
+            "P3DP",
+            "Pic",
+            "GO",
+            "GO-v1",
+            "GO-v2",
+            "MJ",
+            "Pav",
+            "DéPi",
+            "DéPi2",
+            "Q",
+            "PM",
+            "Smile",
+            "NPSnap",
+            "UNITE",
+            "Sleep",
+            "Friends"
+    ));
+
     /**
      * Transform the format of a number to match Poképedia's Pokédex number format.
      * @param number number to be transformed
@@ -298,5 +357,32 @@ public class Util {
         } catch (ElementNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static int getInsertionLineForSideImagery(ArrayList<String> lines, String game)
+    {
+        int l = -1;
+        for(String line : lines) {
+            if(line.startsWith("{{#invoke:Imagerie|secondaire")) {
+                l = lines.indexOf(line) + 1;
+                break;
+            }
+        }
+
+        if(l == -1) {
+            throw new ElementNotFoundException("{{#invoke:Imagerie|secondaire", "Searching for the side imagery of the Pokémon");
+        }
+
+        int targetGameIndex = gamesOrder.indexOf(game);
+        if(targetGameIndex == -1) {
+            throw new IllegalArgumentException(game + " is not a valid game");
+        }
+        int currentGameIndex = gamesOrder.indexOf(lines.get(l).split(" ")[0]);
+        while(currentGameIndex < targetGameIndex && !lines.get(l).equals("}}")) {
+            l++;
+            currentGameIndex = gamesOrder.indexOf(lines.get(l).split(" ")[0]);
+        }
+
+        return l;
     }
 }
