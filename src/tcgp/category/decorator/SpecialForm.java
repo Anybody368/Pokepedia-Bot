@@ -1,29 +1,30 @@
 package tcgp.category.decorator;
 
 import tcgp.category.CategoryStrategy;
-import utilitaire.Region;
+import tcgp.enums.PokeForm;
 import utilitaire.Util;
 
 /**
- * The RegionalForm class is a subclass of BaseDecorator used for cards of regional Pokémon (like Alolan Rattata).
+ * The SpecialForm class is a subclass of BaseDecorator used for cards of Pokémon with a specific form specified (like Heartflame Mask Ogerpon).
  *
- * <p>On top of stocking the Region, this class has a couple of extra public methods that can only be accessed with a
+ * <p>On top of stocking the Form, this class has a couple of extra public methods that can only be accessed with a
  * cast with the current implementation. For this reason, it should also always be the last decoration applied to the card.
  * It's not a good design, but for now it works.</p>
  *
  * @author Samuel Chanal
  */
-public class RegionalForm extends BaseDecorator{
-    private final Region m_region;
+public class SpecialForm extends BaseDecorator {
+    private final PokeForm m_pokeForm;
 
     /**
      * Main constructor with all the relevant data
+     *
      * @param wrapped the main category (or previous decoration) of the card
-     * @param region the Region this Pokémon form is from
+     * @param form    the Region this Pokémon form is from
      */
-    public RegionalForm(CategoryStrategy wrapped, Region region) {
+    public SpecialForm(CategoryStrategy wrapped, PokeForm form) {
         super(wrapped);
-        m_region = region;
+        m_pokeForm = form;
     }
 
     @Override
@@ -31,7 +32,7 @@ public class RegionalForm extends BaseDecorator{
         String original = super.makeNameSection(en_name, fr_name, jp_name);
         String name = Util.searchValueOf(original, "| nom=", false);
         String result;
-        int place1 = original.indexOf(m_region.getFrAdjective());
+        int place1 = original.indexOf(m_pokeForm.getFrName());
         int place2 = original.indexOf("\n");
         if(original.contains("| nomréel=")) {
             result = original.substring(0, place1) + "<small>" + original.substring(place1, place2) + "</small>"
@@ -42,10 +43,10 @@ public class RegionalForm extends BaseDecorator{
         }
 
         int placeEn = result.indexOf("nomen=");
-        String jaAdjective = m_region.getJaAdjective();
+        String jaAdjective = m_pokeForm.getJaName();
 
         int placeEnStart = result.indexOf("=", placeEn)+1;
-        int placeEnEnd = result.indexOf(" ", placeEn);
+        int placeEnEnd = placeEnStart + m_pokeForm.getEnName().length();
         int placeJaStart = result.indexOf(jaAdjective);
         int placeJaEnd = placeJaStart + jaAdjective.length();
 
@@ -61,11 +62,11 @@ public class RegionalForm extends BaseDecorator{
         return true;
     }
 
-    public int getRegionEnSize() {
-        return m_region.getEnAdjective().length()+1;
+    public int getFormEnSize() {
+        return m_pokeForm.getEnName().length()+1;
     }
 
     public String getFrAdjective() {
-        return m_region.getFrAdjective();
+        return m_pokeForm.getFrName();
     }
 }

@@ -344,6 +344,7 @@ public class Util {
             pokemon = pokemon + "/Génération_" + game.getGeneration();
         }
         pokemonPage = new Page(pokemon, Wiki.POKEPEDIA);
+        System.out.println(pokemon);
         String code = pokemonPage.getContent().replaceAll("<sup>.*</sup>", "");
         //String descriptionSection = searchValueOf(code, "=== Descriptions du [[Pokédex]] ===", "== Localisations ==", false)
 
