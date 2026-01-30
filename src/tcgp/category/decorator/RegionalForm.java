@@ -55,7 +55,7 @@ public class RegionalForm extends BaseDecorator{
 
         result = result.substring(0, placeEnStart) + "<small>" + result.substring(placeEnStart, placeEnEnd) + "</small>"
                 + result.substring(placeEnEnd, placeJaStart) + "<small>" + result.substring(placeJaStart, placeJaEnd)
-                + "</small> " + result.substring(placeJaEnd);
+                + "</small>" + result.substring(placeJaEnd);
 
         return result;
     }
