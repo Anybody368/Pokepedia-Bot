@@ -10,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Objects;
 
 /**
  * The Page class represents a Poképedia or Bulbapedia page and it's content, making calls to the API in order to
@@ -254,8 +255,27 @@ public class Page {
 		throw new RuntimeException("Error in API response for page existence");
 	}
 
+    public boolean isRedirect() {
+        if (content == null) {
+            getContent();
+        }
+
+        return content.startsWith("#REDIRECT");
+    }
+
     @Override
     public String toString() {
         return title;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Page page)) return false;
+        return Objects.equals(title, page.title) && Objects.equals(content, page.content) && m_from == page.m_from;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(title, content, m_from);
     }
 }

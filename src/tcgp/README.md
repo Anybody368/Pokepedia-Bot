@@ -89,9 +89,11 @@ If a new card rarity (such as "1 star" or "crown") is introduced, the [Rarity](.
 updated, as well as the `fillRest` method of [Card](./card/Card.java).
 
 ### New Pokémon
-Currently, all data regarding Pokémon is stored in arrays in [PokeData](../utilitaire/PokeData.java), which needs to be
-manually updated. Later on, this will be modified to load data from JSON files in order to make it easier to keep things
-up to date and easily reusable.
+Currently, all data regarding Pokémon is stored in [pokémonData.json](../../ressources/pokémonData.json),
+which can either be manually updated, or using [GeneratePokeJSON](../utilitaire/GeneratePokeJSON.java).
+
+### New Special Form
+If a card mentions a special form using lowercase in its name, translations can be added in [PokeForm](enums/PokeForm.java).
 
 ### Editing translations
 If you want to manually add translation for Trainer cards, or you need to update/remove some, you can directly modify the

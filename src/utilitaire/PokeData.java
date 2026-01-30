@@ -20,11 +20,13 @@ public class PokeData {
 
     private static final String[] capacites = {"À la Queue", "Abîme", "Aboiement", "Abri", "Acidarmure", "Acide", "Acrobatie", "Acupression", "Aéro Noir", "Aéro-Lames", "Aéroblast", "Aéropique", "Affûtage", "Aiguisage", "Aile d'Acier", "Air Veinard", "Aire d'Eau", "Aire d'Herbe", "Aire de Feu", "Allègement", "Amnésie", "Ampleur", "Anneau Hydro", "Anti-Air", "Anti-Brume", "Anti-Soin", "Appel Attak", "Appel Défense", "Appel Soins", "Après Vous", "Aqua-Jet", "Ardeur Noire", "Armure", "Aromathérapie", "Assaut Noir", "Assistance", "Assurance", "Astuce Force", "Atout", "Atterrissage", "Attraction (attaque)", "Attrition", "Aurasphère", "Aurore (attaque)", "Avalanche", "Avale", "Babil", "Bâillement", "Bain de Smog", "Balance (attaque)", "Balayage", "Balayette", "Ball'Brume", "Ball'Glace", "Ball'Météo", "Ball'Ombre", "Balle Graine", "Bang Sonique", "Barrage", "Baston", "Bec Vrille", "Bélier", "Bélier Noir", "Berceuse", "Blabla Dodo", "Blizzard", "Blocage Noir", "Bluff", "Bomb'Œuf", "Bomb-Beurk", "Bombaimant", "Bombe Acide", "Boost", "Bouclier", "Bouclier Royal", "Boue-Bombe", "Boul'Armure", "Boule Élek", "Boule Roc", "Bourdon", "Boutefeu", "Brouhaha", "Brouillard (attaque)", "Brume", "Brume Capiteuse", "Brume Noire", "Buée Noire", "Bulldoboule", "Bulles d'O", "Cadeau", "Cage-Éclair", "Calcination", "Câlinerie", "Camaraderie", "Camouflage", "Canicule (attaque)", "Canon Graine", "Carnareket", "Cascade", "Casse-Brique", "Cauchemar", "Célébration", "Champ Brumeux", "Champ Herbu", "Champ Électrifié", "Change Éclair", "Changement Vitesse", "Chant Antique", "Chant Canon", "Charge", "Charge Foudre", "Charge Noire", "Charge-Os", "Chargeur", "Charme (attaque)", "Chatouille", "Choc Mental", "Choc Psy", "Choc Venin", "Chute Glace", "Chute Libre", "Chute Noire", "Châtiment", "Ciel Noir", "Clairvoyance", "Claquoir", "Clonage (attaque)", "Close Combat", "Cogne", "Cognobidon", "Colère", "Combo-Griffe", "Confidence", "Constriction", "Contre", "Conversion", "Conversion2", "Copie", "Copie Type", "Coquilame", "Corps Perdu", "Cotogarde", "Coud'Boue", "Coud'Krâne", "Coup Bas", "Coup d'Boule", "Coup d'Jus", "Coup d'Main", "Coup Double", "Coup Victoire", "Coup-Croix", "Coupe", "Coupe Psycho", "Coupe-Vent", "Cradovague", "Crèvecœur", "Croc de Mort", "Croc Fatal", "Crochet Venin", "Croco Larme", "Crocs Éclair", "Crocs Feu", "Crocs Givre", "Croissance", "Cru-Aile", "Cyclone", "Damoclès", "Danse Draco", "Danse du Feu", "Danse Flamme", "Danse-Fleur", "Danse-Folle", "Danse-Lames", "Danse-Lune", "Danse Pluie", "Danse-Plume", "Dard Mortel", "Dard-Nuée", "Dard-Venin", "Déflagration", "Dégommage", "DélugePlasmique", "Demi-Tour", "Dépit", "Dernier Mot", "Dernier Recours", "Destruction", "Détection", "Détrempage", "Détricanon", "Détritus", "Dévorêve", "Direct Toxik", "Distorsion (attaque)", "Don Naturel", "Double Baffe", "Double-Dard", "Double-Pied", "Doux Baiser", "Doux Parfum", "Draco Ascension", "Draco-Queue", "Draco-Rage", "Dracocharge", "Dracochoc", "Dracogriffe", "Draco Météor", "Dracosouffle", "Dynamopoing", "E-Coque", "Éboulement", "Ébullilave", "Ébullition", "Échange (attaque)", "Échange Psy", "Écho (attaque)", "Éclair", "Éclair Croix", "Éclair Fou", "Éclair Gelé", "Éclair Noir", "Éclat Magique", "Éclate Griffe", "Éclate-Roc", "Éclats Glace", "Éco-Sphère", "Écras'Face", "Écrasement", "Écume", "Effort", "Élécanon", "Électacle", "Électrisation", "Embargo", "Empal'Korne", "Encore", "Encornebois", "Enroulement", "Entrave", "Ère Glaciaire", "Éructation", "Éruption", "Escalade", "Essorage", "Étincelle", "Étonnement", "Étreinte", "Étrennes", "Exploforce", "Explonuit", "Explosion", "Extrasenseur", "Exuviation", "Fatal-Foudre", "Faucheuse", "Faux-Chage", "Façade", "Feinte", "Fertilisation", "Feu d'Enfer", "Feu Ensorcelé", "Feu Follet", "Feu Glacé", "Feu Sacré", "Feuille Magik", "Flair", "Flamme Bleue", "Flamme Croix", "Flammèche", "Flash", "Flatterie", "Fléau", "Flying Press", "Folie Noire", "Force", "Force Ajoutée", "Force Cachée", "Force Chtonienne", "Force Cosmik", "Force Poigne", "Force-Nature", "Forte-Paume", "Fouet Lianes", "Fracass'Tête", "Frappe Atlas", "Frappe Psy", "Frénésie", "Froid Noir", "Frotte-Frimousse", "Frustration", "Fulmifer", "Fulmigraine", "Furie", "Garde Florale", "Garde Large", "Gaz Toxik", "Géo-Contrôle", "Giclédo", "Giga Impact", "Giga-Sangsue", "Glaciation", "Glas de Soin", "Gonflette", "Gravité", "Grêle (attaque)", "Gribouille", "Griffe", "Griffe Acier", "Griffe Ombre", "Grimace", "Grincement", "Grobisou", "Grondement", "Groz'Yeux", "Guillotine", "Gyroballe", "Halloween", "Hantise", "Harcèlement", "Hâte", "Hurle-Temps", "Hurlement", "Hydroblast", "Hydrocanon", "Hydroqueue", "Hypnose", "Imitation", "Implore", "Incendie", "Interversion", "Jackpot", "Jet de Sable", "Jet-Pierres", "Jugement", "Koud'Korne", "Lait à Boire", "Lame d'Air", "Lame de Roc", "Lame Ointe", "Lame Pangéenne", "Lame Sainte", "Lame-Feuille", "Lance-Boue", "Lance-Flammes", "Lance-Soleil", "Lancécrou", "Larcin", "Laser Glace", "Léchouille", "Lévikinésie", "Ligotage", "Lilliput", "Lire-Esprit", "Lumi-Éclat", "Luminocanon", "Lumiqueue", "Lutte", "Lyophilisation", "Mach Punch", "Machination", "Mâchouille", "Magné-Contrôle", "Mains Jointes", "Malédiction", "Maléfice Sylvain", "Mania", "Marto-Poing", "Martobois", "Massd'Os", "Mawashi Geri", "Méga-Sangsue", "Mégacorne", "Mégafouet", "Mégaphone", "Météores", "Métronome (attaque)", "Mimi-Queue", "Mimique", "Miroi-Tir", "Mitra-Poing", "Moi d'Abord", "Morphing", "Morsure", "Mort-Ailes", "Mur de Fer", "Mur Lumière", "Nitrocharge", "Nuée de Poudre", "Nœud Herbe", "Ocroupi", "Octazooka", "Œil Miracle", "Ombre Nocturne", "Ombre Portée", "Onde Boréale", "Onde de Choc (attaque)", "Onde Folie", "Onde Noire", "Onde Originelle", "Onde Vide", "Ondes Étranges", "Orage Adamantin", "Osmerang", "Ouragan", "Papillodanse", "Par Ici", "Para-Spore", "Parabocharge", "Paresse", "Partage Force", "Partage Garde", "Passe-Cadeau", "Passe-Passe", "Patience", "Peignée", "Percée Noire", "Permucœur", "Permuforce", "Permugarde", "Photocopie", "Phytomixeur", "Picanon", "Pico-Défense", "Picore", "Picots", "Picpic", "Pics Toxik", "Pied Brûleur", "Pied Sauté", "Pied Voltige", "Piège de Roc", "Piétisol", "Pilonnage", "Pince-Masse", "Piqué", "Piqûre", "Pisto-Poing", "Pistolet à O", "Piège de Venin", "Plaie-Croix", "Plaquage", "Plénitude", "Plongée", "Plumo-Queue", "Poing Boost", "Poing Comète", "Poing Dard", "Poing de Feu", "Poing Météor", "Poing Ombre", "Poing-Éclair", "Poing-Glace", "Poing-Karaté", "Poison-Croix", "Poliroche", "Possessif", "Poudre Dodo", "Poudre Fureur", "Poudre Toxik", "Poudreuse", "Poursuite", "Pouvoir Antique", "Pouvoir Lunaire", "Prescience", "Presse", "Prévention", "Prélèvem. Destin", "Projection", "Protection", "Provoc", "Psycho Boost", "Psyko", "Psykoud'Boul", "Puissance (attaque)", "Puissance Cachée", "Punition", "Purédpois", "Queue de Fer", "Queue-Poison", "Racines", "Rafale Feu", "Rafale Psy", "Rage Noire", "Râle Mâle", "Rancune", "Rapace", "Rayon Chargé", "Rayon Gemme", "Rayon Lune", "Rayon Signal", "Rayon Simple", "Rebond", "Rebondifeu", "Recyclage", "Reflet", "Reflet Magik", "Regard Médusant", "Regard Noir", "Regard Touchant", "Régénération", "Relais", "Relâche", "Rengorgement", "Renversement", "Repli", "Repos", "Représailles", "Requiem", "Retenue", "Retour", "Retour Noir", "Réveil Forcé", "Revenant", "Riposte", "Roc-Boulet", "Ronflement", "Roue de Feu", "Roulade", "Rugissement", "Rune Protect", "Ruse", "Sabotage", "Sacrifice", "Saisie", "Saumure", "Sécrétion", "Séduction", "Séisme", "Sheauriken", "Siffl'Herbe", "Siphon", "Soin", "Sonicboom", "Soucigraine", "Souffle Glacé", "Souffle Noir", "Souplesse", "Souvenir", "Spatio-Rift", "Spore", "Spore Coton", "Stalagtite", "Stimulant", "Stockage", "Stratopercut", "Strido-Son", "Suc Digestif", "Surchauffe", "Surf", "Surpuissance", "Survinsecte", "Synchropeine", "Synthèse", "Tacle Feu", "Tacle Lourd", "Taillade", "Tatamigaeshi", "Techno Buster", "Télékinésie", "Téléport", "Telluriforce", "Tempête Florale", "Tempête de Sable", "Tempête Verte", "Ten-danse", "Ténacité", "Tête de Fer", "Tir de Boue", "Toile", "Toile Gluante", "Toile Élek", "Tomberoche", "Tonnerre", "Torgnoles", "Tornade", "Tour Rapide", "Tourbi-Sable", "Tourmagik", "Tourmente", "Tourniquet", "Tout ou Rien", "Toxik", "Tranch'Air", "Tranch'Herbe", "Tranche", "Tranche-Nuit", "Trempette", "Tricherie", "Triplattaque", "Triple Pied", "Trou Noir", "Tunnel", "Tunnelier", "Typhon Noir", "Ultimapoing", "Ultimawashi", "Ultralaser", "Ultrason", "Uppercut", "Vague Psy", "Vampibaiser", "Vampigraine", "Vampipoing", "Vampirisme", "Vantardise", "Végé-Attak", "Vendetta", "Vengeance", "Vent Argenté", "Vent Arrière", "Vent Féérique", "Vent Glace", "Vent Mauvais", "Vent Violent", "Verrou Enchanté", "Verrouillage (attaque)", "Vibra Soin", "Vibraqua", "Vibrobscur", "Vigilance", "Vitesse Extrême", "Vive-Attaque", "Vœu", "Vœu Soin", "Voile Miroir", "Voix Enjôleuse", "Vol (attaque)", "Vol Magnétik", "Vol-Vie", "Vortex Magma", "Yama Arashi", "Yoga", "Zénith", "Zone Étrange", "Zone Magique"};
 
-    private static Pokemon[] pokemon;
+    private static Pokemon[] pokemon = null;
 
     private static final String[] talents = {"Absentéisme","Absorb Eau","Absorb Volt","Acharné","Adaptabilité","Agitation","Ailes Bourrasque","Air Lock","Alerte Neige","Amour Filial","Analyste","Annule Garde","Anti-Bruit","Anticipation","Armumagma","Armurbaston","Armurouillée","Aroma-Voile","Attention","Aura Féérique","Aura Inversée","Aura Ténébreuse","Baigne Sable","Bajoues","Battant","Benêt","Boom Final","Brasier","Brise Moule","Cacophonie","Calque","Chanceux","Cherche Miel","Chlorophylle","Ciel Gris","Coloforce","Colérique","Contestation","Coque Armure","Corps Ardent","Corps Gel","Corps Maudit","Corps Sain","Crachin","Cran","Cuvette","Cœur de Coq","Cœur Noble","Cœur Soin","Don Floral","Début Calme","Déclic Tactique","Défaitiste","Déguisement","Délestage","Écaille Spéciale","Échauffement","Écran Fumée","Écran Poudre","Engrais","Envelocape","Épine de Fer","Esprit Vital","Essaim (talent)","Farceur","Fermeté","Feuille Garde","Filtre","Flora-Voile","Force Pure","Force Sable","Force Soleil","Fouille","Frein","Fuite (talent)","Garde Amie","Garde Magik","Garde Mystik","Glissade","Gloutonnerie","Gluco-Voile","Glue","Griffe Dure","Heavy Metal","Herbivore","Hydratation","Hyper Cutter","Ignifu-Voile","Ignifuge","Illusion","Impassible","Imposteur","Impudence","Inconscient","Infiltration","Insomnia","Intimidation (talent)","Isograisse","Joli Sourire","Lavabo","Lentiteintée","Light Metal","Lumiattirance","Lunatique","Lévitation","Magicien","Magnépiège","Maladresse","Marque Ombre","Matinal","Mauvais Rêve","Mer Primaire","Minus","Miroir Magik","Mode Transe","Moiteur","Momie","Motorisé","Mue","Multi-Coups","Multi-Type","Multiécaille","Médic Nature","Méga Blaster","Météo","Normalise","Œil Composé","Paratonnerre","Pare-Balles","Peau Céleste","Peau Dure","Peau Féérique","Peau Gelée","Peau Miracle","Peau Sèche","Phobique","Pickpocket","Pied Véloce","Pieds Confus","Piège (talent)","Plus","Poing de Fer","Point Poison","Poisseux","Pose Spore","Pression","Prognathe","Protéen","Prédiction","Puanteur","Querelleur","Rage Brûlure","Rage Poison","Ramassage","Regard Vif","Rideau Neige","Rivalité","Récolte","Régé-Force","Sable Volant","Sans Limite","Simple","Sniper","Soin Poison","Solide Roc","Souffle Delta","Statik","Suintement","Symbiose","Synchro","Sécheresse","Sérénité","Technicien","Tempo Perso","Tension","Terre Finale","Toison Herbue","Toison Épaisse","Torche","Torrent","Toxitouche","Turbo","TurboBrasier","Télécharge","Télépathe","Téméraire","Téra-Voltage","Tête de Roc","Vaccin","Ventouse","Victorieux","Voile Sable"};
 
     public static void loadPokemon() {
+        if(pokemon != null) return;
+
         try {
             ObjectMapper mapper = new ObjectMapper();
             pokemon = mapper.readValue(new File("ressources/pokémonData.json"), new TypeReference<>() {
@@ -43,14 +45,18 @@ public class PokeData {
      * @return l'instance du Pokemon avec toutes ses infos
      */
     public static Pokemon getPokemonFromNum(int num) {
+        loadPokemon();
+
         if ( num > 0 && num <= pokemon.length ) {
             return pokemon[num-1];
         } else {
-            return null;
+            throw new IndexOutOfBoundsException("Invalid Pokemon Number");
         }
     }
 
     public static Pokemon getPokemonFromName(String name) {
+        loadPokemon();
+
         for (Pokemon mon : pokemon) {
             if(mon.getFrenchName().equals(name)) {
                 return mon;
@@ -61,6 +67,8 @@ public class PokeData {
 
     public static String translateAllPokemonToFrench(String text)
     {
+        loadPokemon();
+
         for(Pokemon mon : pokemon)
         {
             while(text.contains(mon.getEnglishName()))
@@ -73,6 +81,8 @@ public class PokeData {
 
     public static String getFrenchNameFromEnglish(String englishName, String context)
     {
+        loadPokemon();
+
         String prefix = "";
         if(englishName.startsWith("Mega "))
         {
@@ -94,6 +104,13 @@ public class PokeData {
         return getPokemonFromName(frenchName).getRegionalForms();
     }
 
+    public static int getPokemonCount()
+    {
+        loadPokemon();
+
+        return pokemon.length;
+    }
+
     /**
      * Renvoie le numéro de la génération auquel un Pokémon appartient
      * @param num le numéro du Pokémon dans le Dex national
@@ -106,18 +123,10 @@ public class PokeData {
         if(num>=387 && num<=493) return 4;
         if(num>=494 && num<=649) return 5;
         if(num>=650 && num<=721) return 6;
+        if(num>=722 && num<=809) return 7;
+        if(num>=810 && num<=905) return 8;
+        if(num>=906 && num<=1023) return 9;
         return 0;
-    }
-
-    /**
-     * Formate un numéro sur trois caractères
-     * @param num
-     * @return
-     */
-    public static String formatNum(int num) {
-        if(num<10) return "00"+num;
-        if(num<100) return "0"+num;
-        return ""+num;
     }
 
     public static boolean isShinyLock(int num) {

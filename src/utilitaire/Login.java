@@ -16,6 +16,19 @@ import java.util.Scanner;
  */
 public class Login {
 
+    public static void handleLogin(String[] args) {
+        switch (args.length) {
+            case 2:
+                login(args[0], args[1]);
+                break;
+            case 1:
+                login(args[0]);
+                break;
+            default:
+                login();
+        }
+    }
+
     /**
      * Connect to Poképedia with your login and password
      * @param login the username of your Poképedia's account

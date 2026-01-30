@@ -46,7 +46,7 @@ public class GeneratePokeJSON {
                 }
             }
 
-            boolean hasMega = content.contains("peut [[Méga-Évolution|méga-évoluer]]");
+            boolean hasMega = content.contains(frenchName + " peut [[Méga-Évolution|méga-évoluer]]");
             boolean hasGigantamax = content.contains(frenchName + " Gigamax.png");
 
             System.out.println(frenchName + " successfully fetched");

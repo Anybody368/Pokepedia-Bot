@@ -10,12 +10,14 @@ public enum Competences {
     AIMANT_FRAGMENT_DE_REVE("Aimant à Fragment de Rêve S", "Aimant à Fragment de Rêve S"),
 
     ENCOURAGEMENT_ENERGIQUE("Encouragement Énergique S", "Encouragement Énergique S"),
+    FROTTE_FRIMOUSSE("Frotte-Frimousse (Encouragement Énergique S)", "Encouragement Énergique S"),
 
     CHARGE_ENERGIE("Charge d'Énergie S", "Charge d'Énergie S"),
     RAYON_LUNE("Rayon Lune (Charge d'Énergie S", "Charge d'Énergie S"),
 
     ENERGIE_PARTAGEE("Énergie Partagée S", "Énergie Partagée S"),
-    PRIERE_LUNAIRE("Prière Lunaire (Én. Partagée S", "Énergie Partagée S"),
+    PRIERE_LUNAIRE("Prière Lunaire (Én. Partagée S)", "Énergie Partagée S"),
+    JUS_DE_BAIE("Jus de Baie (Énergie Partagée S)", "Énergie Partagée S"),
 
     SOUTIEN_EXTRA("Soutien Extra S", "Soutien Extra S"),
 
@@ -27,7 +29,7 @@ public enum Competences {
 
     PLAT_SUPER_BON("Plat Super Bon S", "Plat Super Bon S"),
 
-    METRONOME("Métronome", "Métronome"),
+    METRONOME("Métronome (Pokémon Sleep)", "Métronome (Pokémon Sleep)"),
 
     SUPER_SOUTIEN("Super Soutien", "Super Soutien"),
 

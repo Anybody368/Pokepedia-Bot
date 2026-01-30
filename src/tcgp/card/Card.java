@@ -3,15 +3,13 @@ package tcgp.card;
 import tcgp.Dictionary;
 import tcgp.category.*;
 import tcgp.category.decorator.RegionalForm;
+import tcgp.category.decorator.SpecialForm;
 import tcgp.category.decorator.UltraBeast;
 import tcgp.category.pokemon.PokeEXStrategy;
 import tcgp.category.pokemon.PokeMegaEXStrategy;
 import tcgp.category.pokemon.PokemonStrategy;
 import tcgp.category.trainer.*;
-import tcgp.enums.Booster;
-import tcgp.enums.Expansion;
-import tcgp.enums.Rarity;
-import tcgp.enums.TCGType;
+import tcgp.enums.*;
 import utilitaire.*;
 
 import java.util.ArrayList;
@@ -135,6 +133,11 @@ public class Card {
             category = new RegionalForm(category, region);
         }
 
+        PokeForm pokeForm = PokeForm.findFormFromEn(m_enName);
+        if(pokeForm != null) {
+            category = new SpecialForm(category, pokeForm);
+        }
+
         if(en_text.contains("{{Cardtext/UltraBeast")) {
             category = new UltraBeast(category);
         }
@@ -195,6 +198,9 @@ public class Card {
             if(m_category instanceof RegionalForm) {
                 String name = m_enName.substring(((RegionalForm) m_category).getRegionEnSize());
                 m_frName = PokeData.getFrenchNameFromEnglish(name, "regional Pokémon name") + " " + ((RegionalForm) m_category).getFrAdjective();
+            } else if(m_category instanceof SpecialForm) {
+                String name = m_enName.substring(((SpecialForm) m_category).getFormEnSize());
+                m_frName = PokeData.getFrenchNameFromEnglish(name, "regional Pokémon name") + " " + ((SpecialForm) m_category).getFrAdjective();
             } else {
                 m_frName = PokeData.getFrenchNameFromEnglish(m_enName, "Pokémon name");
             }

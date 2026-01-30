@@ -9,23 +9,21 @@ package utilitaire;
  * @author Samuel Chanal
  */
 public enum Region {
-    ALOLA("Alolan", "d'Alola", "アローラ"),
-    GALAR("Galarian", "de Galar", "ガラル"),
-    HISUI("Hisuian", "de Hisui", "ヒスイ"),
-    PALDEA("Paldean", "de Paldea", "パルデア"),
-
-    TEAL_MASK("Teal Mask", "Masque Turquoise", "みどりのめん"),
-    WELLSPRING_MASK("Wellspring Mask", "Masque du Puits", "いどのめん"),
-    HEARTHFLAME_MASK("Hearthflame Mask", "Masque du Fourneau", "かまどのめん"),
-    CORNERSTONE_MASK("Cornerstone Mask", "Masque de la Pierre", "いしずえのめん");
+    ALOLA("Alolan", "d'Alola", "アローラ", "Alola"),
+    GALAR("Galarian", "de Galar", "ガラル", "Galar"),
+    HISUI("Hisuian", "de Hisui", "ヒスイ", "Hisui"),
+    PALDEA("Paldean", "de Paldea", "パルデア", "Paldea"),;
     private final String m_enAdjective;
     private final String m_frAdjective;
     private final String m_jaAdjective;
 
-    private Region(String en, String fr, String ja) {
+    private final String m_frName;
+
+    private Region(String en, String fr, String ja, String name) {
         m_enAdjective = en;
         m_frAdjective = fr;
         m_jaAdjective = ja;
+        m_frName = name;
     }
 
     /**
@@ -68,5 +66,9 @@ public enum Region {
 
     public String getJaAdjective() {
         return m_jaAdjective;
+    }
+
+    public String getM_frName() {
+        return m_frName;
     }
 }
