@@ -121,7 +121,7 @@ public class Pokemon {
         wikiPages.putAll(updateZones());
 
         //Si le pokémon n'est pas la forme de base de sa ligne évolutive, on ne l'ajoute pas à certaines pages.
-        if(m_name.equals(m_candy)) {
+        if(hasUniqueCandy()) {
             wikiPages.put(listeIngredients, updateIngredientsPage(listeIngredients));
             wikiPages.put(listeBonbons, updateCandyPage(listeBonbons));
         }
@@ -393,7 +393,12 @@ public class Pokemon {
         ArrayList<String> lines = new ArrayList<>(Arrays.asList(content.split("\n")));
         int l = Util.getInsertionLineForSideImagery(lines, "Sleep");
 
-        String sleepLine = "Sleep // " + m_imageryType.getSprites() + " / " + m_imageryType.getMiniatures();
+        StringBuilder sleepingSprites = new StringBuilder();
+        for (int i = 1; i <= getSleepCount(); i++) {
+            sleepingSprites.append(" / Sprite Dodo ").append(i).append(" / Sprite Dodo ").append(i).append(" chromatique");
+        }
+
+        String sleepLine = "Sleep // " + m_imageryType.getSprites() + sleepingSprites + " / " + m_imageryType.getMiniatures();
         lines.add(l, sleepLine);
 
         return Util.wikicodeReconstruction(lines);
@@ -626,5 +631,17 @@ public class Pokemon {
     public String getNumDex()
     {
         return m_numDex;
+    }
+
+    public Imagery getImageryType() {
+        return m_imageryType;
+    }
+
+    public int getSleepCount() {
+        return m_sleepList.size();
+    }
+
+    public boolean hasUniqueCandy() {
+        return m_name.equals(m_candy);
     }
 }

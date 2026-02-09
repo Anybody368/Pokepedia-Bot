@@ -490,6 +490,10 @@ public class API {
 		boolean success = false;
 		
 		if(getToken(TYPE_CSRF)) {
+            if (!text.startsWith("== Description ==")){
+                text = "== Description ==\n" + text;
+            }
+
 			Hashtable<String, String> parameters = new Hashtable<String, String>();
 			parameters.put("action", "upload");
 			parameters.put("filename", filename);

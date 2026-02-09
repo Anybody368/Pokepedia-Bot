@@ -4,12 +4,9 @@ import sleep.bouffe.IngredientPoke;
 import sleep.dodos.Dodo;
 import sleep.dodos.Iles;
 import sleep.dodos.TypesDodo;
-import sleep.pokemon.Competences;
-import sleep.pokemon.Imagery;
+import sleep.pokemon.*;
 import utilitaire.Page;
 import utilitaire.PokeTypes;
-import sleep.pokemon.Pokemon;
-import sleep.pokemon.Specialites;
 
 import javax.swing.*;
 import java.awt.*;
@@ -158,6 +155,8 @@ public class AffichageNewPoke extends  JFrame {
                         }
                     });
 
+                    new SpriteHandler(Poke).uploadAll();
+
                     return null;
                 }
 
@@ -166,9 +165,9 @@ public class AffichageNewPoke extends  JFrame {
                     frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     confirmation(nom);
                     try {
-                        get(); // va relancer l'exception si doInBackground l'a levée
+                        get();
                     } catch (Exception e) {
-                        e.printStackTrace(); // ici tu vois l'exception dans la console
+                        e.printStackTrace();
                         JOptionPane.showMessageDialog(frame, "Erreur : " + e.getMessage());
                     }
                 }
