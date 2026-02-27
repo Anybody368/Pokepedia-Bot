@@ -249,7 +249,6 @@ public class Card {
                     if (rarity.contains("}}")) {
                         rarity = rarity.substring(0, rarity.indexOf("}}"));
                     }
-                    System.out.println(rarity);
                     if (!rarity.equals("Crown")) {
                         count = searchValueOf(en_text, "rarity count=", "}}", currentLine, false);
 
