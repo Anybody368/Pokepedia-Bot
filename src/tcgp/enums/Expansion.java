@@ -25,7 +25,8 @@ public enum Expansion {
     BOOSTER_LUXE_EX("Booster de Luxe ex", "Deluxe Pack: ex", 353, false),
     MEGA_ASCENSION("Méga-Ascension", "Mega Rising", 226, true),
     EMBRASEMENT_ECARLATE("Embrasement Écarlate", "Crimson Blaze", 69, false),
-    PARADE_ONIRIQUE("Parade Onirique", "Fantastical Parade", 155, false);
+    PARADE_ONIRIQUE("Parade Onirique", "Fantastical Parade", 155, false),
+    MERVEILLES_DE_PALDEA("Merveilles de Paldea", "Paldean Wonders", 93, false);
 
     private final String m_frName;
     private final String m_enName;

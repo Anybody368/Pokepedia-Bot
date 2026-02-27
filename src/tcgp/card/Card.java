@@ -174,7 +174,8 @@ public class Card {
                     }
                 }
             }
-            boolean hasEffect = !(searchValueOf(en_text, "|effect=", currentLine, false).isBlank());
+            String effectValue = searchValueOf(en_text, "|effect=", currentLine, true);
+            boolean hasEffect = (effectValue != null) && (!effectValue.isBlank());
             attacks.add(new CardAttack(damage, energies, hasEffect));
         }
 
@@ -242,10 +243,21 @@ public class Card {
                 Rarity rar = Rarity.NONE;
                 String rarity = searchValueOf(en_text, "rarity=", "|", currentLine, true);
                 if(rarity != null) {
-                    String count = searchValueOf(en_text, "rarity count=", "}}", currentLine, false);
-                    if(count.length() > 1) {
-                        count = searchValueOf(en_text, "rarity count=", "|", currentLine, false);
+                    String count = "1";
+
+                    // Fallback if rarity is Crown}}
+                    if (rarity.contains("}}")) {
+                        rarity = rarity.substring(0, rarity.indexOf("}}"));
                     }
+                    System.out.println(rarity);
+                    if (!rarity.equals("Crown")) {
+                        count = searchValueOf(en_text, "rarity count=", "}}", currentLine, false);
+
+                        if(count.length() > 1) {
+                            count = searchValueOf(en_text, "rarity count=", "|", currentLine, false);
+                        }
+                    }
+
                     rar = switch (rarity) {
                         case "Diamond" -> switch (count) {
                             case "1" -> Rarity.ONE_DIAMOND;

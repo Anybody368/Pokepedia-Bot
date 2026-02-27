@@ -300,8 +300,8 @@ public class Util {
     public static String searchValueOf(String content, String startString, String endString, int from, boolean nullIsTolerated) throws ElementNotFoundException
     {
         int startIndex = content.indexOf(startString, from)+startString.length();
-        if(startIndex == startString.length()-1) {
-            if(nullIsTolerated) {
+        if (startIndex == startString.length()-1) {
+            if (nullIsTolerated) {
                 return null;
             }
             throw new ElementNotFoundException(startString, "result in text");
