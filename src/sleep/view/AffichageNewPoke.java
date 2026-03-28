@@ -37,7 +37,7 @@ public class AffichageNewPoke extends  JFrame {
         JComboBox<Object> secondes = new JComboBox<>(IntStream.range(0, 60).boxed().toArray());
         JTextField nomBonbon = new JTextField();
         JComboBox<Integer> nbrDodos = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5});
-        JComboBox<Integer> nbrIngr = new JComboBox<>(new Integer[]{1, 2, 3});
+        JComboBox<Integer> nbrIngr = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8});
         JComboBox<Imagery> imgType = new JComboBox<>(Imagery.values());
 
         JComponent[] composants = {
