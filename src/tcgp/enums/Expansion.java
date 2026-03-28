@@ -26,7 +26,8 @@ public enum Expansion {
     MEGA_ASCENSION("Méga-Ascension", "Mega Rising", 226, true),
     EMBRASEMENT_ECARLATE("Embrasement Écarlate", "Crimson Blaze", 69, false),
     PARADE_ONIRIQUE("Parade Onirique", "Fantastical Parade", 155, false),
-    MERVEILLES_DE_PALDEA("Merveilles de Paldea", "Paldean Wonders", 93, false);
+    MERVEILLES_DE_PALDEA("Merveilles de Paldea", "Paldean Wonders", 93, false),
+    MEGA_RAYONNEMENT("Méga-Rayonnement", "Mega Shine", 69, false);;
 
     private final String m_frName;
     private final String m_enName;
