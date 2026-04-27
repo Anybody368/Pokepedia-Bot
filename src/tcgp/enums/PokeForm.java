@@ -1,10 +1,19 @@
 package tcgp.enums;
 
 public enum PokeForm {
+    // Morphéo
+    SUNNY_FORM("Forme Solaire", "Sunny Form", "たいようのすがた"),
+    RAINY_FORM("Forme Eau de Pluie", "Rainy Form", "あまみずのすがた"),
+    SNOWY_FORM("Forme Blizzard", "Snowy Form", "ゆきぐものすがた"),
+    // Shifours
+    SINGLE_STRIKE("Single Strike", "Poing Final", "いちげき"),
+    RAPID_STRIKE("Rapid Strike", "Mille Poings", "れんげき"),
+    // Ogerpon
     TEAL_MASK("Teal Mask", "Masque Turquoise", "みどりのめん"),
     WELLSPRING_MASK("Wellspring Mask", "Masque du Puits", "いどのめん"),
     HEARTHFLAME_MASK("Hearthflame Mask", "Masque du Fourneau", "かまどのめん"),
     CORNERSTONE_MASK("Cornerstone Mask", "Masque de la Pierre", "いしずえのめん");
+
     private final String m_enName;
     private final String m_frName;
     private final String m_jaName;
