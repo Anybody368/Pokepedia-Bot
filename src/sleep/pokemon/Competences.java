@@ -32,6 +32,7 @@ public enum Competences {
     METRONOME("Métronome (Pokémon Sleep)", "Métronome (Pokémon Sleep)"),
 
     SUPER_SOUTIEN("Super Soutien", "Super Soutien"),
+    POLYVALENT("Polyvalent", "Polyvalent"),
 
     BAIES_A_GOGO("Baies à gogo", "Baies à gogo"),
     FANTOMASQUE("Fantômasque (Baies à gogo)", "Baies à gogo"),

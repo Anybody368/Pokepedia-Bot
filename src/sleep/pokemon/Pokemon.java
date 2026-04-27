@@ -117,7 +117,9 @@ public class Pokemon {
         wikiPages.put(listeSoutien, updateListePokeSoutien(listeSoutien));
         wikiPages.put(listeDodo, updateListeDodo(listeDodo));
         wikiPages.put(imagery, updateImageryPage(imagery));
-        wikiPages.put(ability, updateAbilityPage(ability));
+        if(updateAbilityPage(ability) != null) {
+            wikiPages.put(ability, updateAbilityPage(ability));
+        }
         wikiPages.putAll(updateZones());
 
         //Si le pokémon n'est pas la forme de base de sa ligne évolutive, on ne l'ajoute pas à certaines pages.
@@ -144,7 +146,7 @@ public class Pokemon {
         //On se place au niveau de la première ligne d'un Pokémon de Soutien du premier tableau, normalement "| 0001"
         int l = lignes.indexOf("! Points d'amitié requis") + 2;
         String ligneAct = lignes.get(l);
-        System.out.println(lignes.get(l-2) + "\n" + ligneAct);
+        //System.out.println(lignes.get(l-2) + "\n" + ligneAct);
 
         //On cherche l'endroit où le nouveau Pokémon doit être inséré en comparant les numéros de Pokédex
         while (ligneAct.substring(ligneAct.length()-4).compareTo(m_numDex) <= 0)
@@ -152,7 +154,7 @@ public class Pokemon {
             //Si jamais le numdex est le même que celui recherché
             if(ligneAct.substring(ligneAct.length()-4).equals(m_numDex)) {
                 String temp = Util.incrementRowspan(ligneAct);
-                System.out.println(temp);
+                //System.out.println(temp);
                 lignes.set(l, temp);
             }
 
@@ -365,7 +367,7 @@ public class Pokemon {
 
         String ligneAct = lines.get(l);
         while (!ligneAct.equals("</gallery>")) {
-            System.out.println(ligneAct);
+            //System.out.println(ligneAct);
             String currentPokemon = Util.searchValueOf(ligneAct, "Bonbon ", " Sleep", false);
             int currentNumDex = PokeData.getPokemonFromName(currentPokemon).getNumDex();
 
@@ -407,6 +409,11 @@ public class Pokemon {
     protected String updateAbilityPage(Page ability)
     {
         String content = ability.getContent();
+        if(content == null){
+            System.err.println("La page de la compétence n'existe pas encore");
+            return null;
+        }
+
         if(m_ability == Competences.CHARGE_PUISSANCE_S || m_ability == Competences.AIMANT_FRAGMENT_DE_REVE) {
             System.err.println("La compétence possède une variante aléatoire et est ignorée");
             return content;

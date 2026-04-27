@@ -60,12 +60,12 @@ public class SleepApp {
 
         //Ajout manuel de recettes
         /*ArrayList<IngredientPoke> ingr = new ArrayList<>();
-        ingr.add(new IngredientPoke(ListeIngredients.AVOCAT_APPETISSANT, 18));
-        ingr.add(new IngredientPoke(ListeIngredients.TOMATE_ROUPILLON, 16));
-        ingr.add(new IngredientPoke(ListeIngredients.LAIT_MEUMEU, 14));
-        //ingr.add(new IngredientPoke(ListeIngredients.SOJA_VERTEPOUSSE, 22));
+        ingr.add(new IngredientPoke(ListeIngredients.MIEL, 38));
+        ingr.add(new IngredientPoke(ListeIngredients.MAIS_VERTEPOUSSE, 28));
+        ingr.add(new IngredientPoke(ListeIngredients.HUILE_PURE, 28));
+        ingr.add(new IngredientPoke(ListeIngredients.CACAO_RELAXANT, 21));
 
-        Recette newRecette = new Recette("Smoothie Phytomixeur", CategoriesRecettes.BOISSONS_DESSERTS, ingr, 8165, "{{?}}");
+        Recette newRecette = new Recette("Gaufre au chocolat Cherche Miel", CategoriesRecettes.BOISSONS_DESSERTS, ingr, 25484, "Cette gourmandise a été préparée en mélangeant une pâte amère avec du cacao, avant d'être recouverte généreusement avec du miel.");
         HashMap<Page, String> pages = newRecette.getModifiedPages();
 
         Scanner confirm = new Scanner(System.in);
