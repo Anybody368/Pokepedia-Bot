@@ -45,18 +45,16 @@ public class SpecialForm extends BaseDecorator {
                     + name + original.substring(place2);
         }
 
-        int placeEn = result.indexOf("nomen=");
-        String jaAdjective = m_pokeForm.getJaName();
+        int enAdjectivePlace = result.indexOf(m_pokeForm.getEnName());
+        int enAdjectiveEnd = enAdjectivePlace + m_pokeForm.getEnName().length();
+        int jaAdjectivePlace = result.indexOf(m_pokeForm.getJaName());
+        int jaAdjectiveEnd = jaAdjectivePlace + m_pokeForm.getJaName().length();
 
-        int placeEnStart = result.indexOf("=", placeEn)+1;
-        int placeEnEnd = placeEnStart + m_pokeForm.getEnName().length();
-        int placeJaStart = result.indexOf(jaAdjective);
-        int placeJaEnd = placeJaStart + jaAdjective.length();
+        result = result.substring(0, enAdjectivePlace) + "<small>" + result.substring(enAdjectivePlace, enAdjectiveEnd)
+                + "</small>" + result.substring(enAdjectiveEnd, jaAdjectivePlace) + "<small>"
+                + result.substring(jaAdjectivePlace,  jaAdjectiveEnd) + "</small>" + result.substring(jaAdjectiveEnd);
 
-        result = result.substring(0, placeEnStart) + "<small>" + result.substring(placeEnStart, placeEnEnd) + "</small>"
-                + result.substring(placeEnEnd, placeJaStart) + "<small>" + result.substring(placeJaStart, placeJaEnd)
-                + "</small>" + result.substring(placeJaEnd);
-
+        System.out.println(result);
         return result;
     }
 
