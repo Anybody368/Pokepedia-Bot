@@ -2,9 +2,9 @@ package tcgp.enums;
 
 public enum PokeForm {
     // Morphéo
-    SUNNY_FORM("Forme Solaire", "Sunny Form", "たいようのすがた"),
-    RAINY_FORM("Forme Eau de Pluie", "Rainy Form", "あまみずのすがた"),
-    SNOWY_FORM("Forme Blizzard", "Snowy Form", "ゆきぐものすがた"),
+    SUNNY_FORM("Sunny Form", "Forme Solaire", "たいようのすがた"),
+    RAINY_FORM("Rainy Form", "Forme Eau de Pluie", "あまみずのすがた"),
+    SNOWY_FORM("Snowy Form", "Forme Blizzard", "ゆきぐものすがた"),
     // Shifours
     SINGLE_STRIKE("Single Strike", "Poing Final", "いちげき"),
     RAPID_STRIKE("Rapid Strike", "Mille Poings", "れんげき"),
@@ -29,10 +29,25 @@ public enum PokeForm {
      * @param fullName the full English name of the Pokémon
      * @return the PokeForm of the special form if the Pokémon is a special variant, null otherwise
      */
-    public static PokeForm findFormFromEn(String fullName) {
+    public static PokeForm findFormFromEnBeginning(String fullName) {
         for(PokeForm form : values())
         {
             if(fullName.startsWith(form.getEnName())) {
+                return form;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Searches if a Pokémon English name is a special form by analysing the end of its name
+     * @param fullName the full English name of the Pokémon
+     * @return the PokeForm of the special form if the Pokémon is a special variant, null otherwise
+     */
+    public static PokeForm findFormFromEnEnd(String fullName) {
+        for(PokeForm form : values())
+        {
+            if(fullName.endsWith(form.getEnName())) {
                 return form;
             }
         }

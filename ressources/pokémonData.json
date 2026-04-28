@@ -3854,7 +3854,7 @@
   "japaneseName" : "ポワルン",
   "type1" : "NORMAL",
   "type2" : null,
-  "forms" : [ ],
+  "forms" : [ "Eau de Pluie", "Solaire", "Blizzard" ],
   "regionalForms" : [ ],
   "HasMega" : false,
   "HasGigantamax" : false,

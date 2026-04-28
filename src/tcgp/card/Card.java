@@ -133,9 +133,14 @@ public class Card {
             category = new RegionalForm(category, region);
         }
 
-        PokeForm pokeForm = PokeForm.findFormFromEn(m_enName);
+        PokeForm pokeForm = PokeForm.findFormFromEnBeginning(m_enName);
         if(pokeForm != null) {
-            category = new SpecialForm(category, pokeForm);
+            category = new SpecialForm(category, pokeForm, false);
+        } else {
+            pokeForm = PokeForm.findFormFromEnEnd(m_enName);
+            if(pokeForm != null) {
+                category = new SpecialForm(category, pokeForm, true);
+            }
         }
 
         if(en_text.contains("{{Cardtext/UltraBeast")) {
@@ -196,12 +201,13 @@ public class Card {
         }
 
         if(m_category.isPokemon()) {
-            if(m_category instanceof RegionalForm) {
-                String name = m_enName.substring(((RegionalForm) m_category).getRegionEnSize());
-                m_frName = PokeData.getFrenchNameFromEnglish(name, "regional Pokémon name") + " " + ((RegionalForm) m_category).getFrAdjective();
-            } else if(m_category instanceof SpecialForm) {
-                String name = m_enName.substring(((SpecialForm) m_category).getFormEnSize());
-                m_frName = PokeData.getFrenchNameFromEnglish(name, "regional Pokémon name") + " " + ((SpecialForm) m_category).getFrAdjective();
+            if(m_category instanceof RegionalForm regionalForm) {
+                String name = m_enName.substring(regionalForm.getRegionEnSize());
+                m_frName = PokeData.getFrenchNameFromEnglish(name, "regional Pokémon name") + " " + regionalForm.getFrAdjective();
+            } else if(m_category instanceof SpecialForm specialForm) {
+                String name = specialForm.isAdjectiveAtTheEnd() ? m_enName.substring(0, m_enName.length() - specialForm.getFormEnSize())
+                        : m_enName.substring(specialForm.getFormEnSize());
+                m_frName = PokeData.getFrenchNameFromEnglish(name, "special form Pokémon name") + " " + specialForm.getFrAdjective();
             } else {
                 m_frName = PokeData.getFrenchNameFromEnglish(m_enName, "Pokémon name");
             }

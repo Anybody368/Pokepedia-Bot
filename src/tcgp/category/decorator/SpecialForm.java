@@ -15,16 +15,19 @@ import utilitaire.Util;
  */
 public class SpecialForm extends BaseDecorator {
     private final PokeForm m_pokeForm;
+    private final boolean m_isAtTheEnd;
 
     /**
      * Main constructor with all the relevant data
      *
-     * @param wrapped the main category (or previous decoration) of the card
-     * @param form    the Region this Pokémon form is from
+     * @param wrapped       the main category (or previous decoration) of the card
+     * @param form          the form of this Pokémon
+     * @param isAtTheEnd    whether the english name has its form at the end or not
      */
-    public SpecialForm(CategoryStrategy wrapped, PokeForm form) {
+    public SpecialForm(CategoryStrategy wrapped, PokeForm form, boolean isAtTheEnd) {
         super(wrapped);
         m_pokeForm = form;
+        m_isAtTheEnd = isAtTheEnd;
     }
 
     @Override
@@ -64,6 +67,10 @@ public class SpecialForm extends BaseDecorator {
 
     public int getFormEnSize() {
         return m_pokeForm.getEnName().length()+1;
+    }
+
+    public boolean isAdjectiveAtTheEnd() {
+        return m_isAtTheEnd;
     }
 
     public String getFrAdjective() {
