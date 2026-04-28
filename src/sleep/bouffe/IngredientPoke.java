@@ -29,6 +29,14 @@ public class IngredientPoke {
         return m_ingredient.getNom();
     }
 
+    public String getLink() {
+        return switch (m_ingredient) {
+            case MIEL -> "Miel (Pokémon Sleep)|Miel";
+            case LAIT_MEUMEU -> "Lait Meumeu (Pokémon Sleep)|Lait Meumeu";
+            default -> getNom();
+        };
+    }
+
     public String getQttNv1()
     {
         if(m_quantiteBase < 1) return "—";
@@ -43,5 +51,15 @@ public class IngredientPoke {
     {
         if(m_quantite60 < 1) return "—";
         return String.valueOf(m_quantite60);
+    }
+
+    public String getCondensedData() {
+        return """
+                |-
+                | style="white-space:nowrap; text-align:left" | [[Fichier:Sprite %s Sleep.png|30px]] [[%s]]
+                | %s
+                | %s
+                | %s
+                """.formatted(getNom(), getLink(), getQttNv1(), getQttNv30(), getQttNv60());
     }
 }

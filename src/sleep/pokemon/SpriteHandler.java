@@ -1,6 +1,8 @@
 package sleep.pokemon;
 
 import utilitaire.API;
+import utilitaire.Page;
+import utilitaire.Wiki;
 
 import java.io.File;
 
@@ -78,6 +80,10 @@ public class SpriteHandler {
     }
 
     private void uploadSprite(File file, String fileName, String description) {
+        if (new Page("Fichier:" + fileName, Wiki.POKEPEDIA).doesPageExists()) {
+            System.err.println("File " + fileName + " already exists on Poképedia, skipping");
+            return;
+        }
         if (file.exists() && API.upload(fileName, file, description, COMMENT)) {
             System.out.println("Successfully uploaded " + fileName);
         } else {

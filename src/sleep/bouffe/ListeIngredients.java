@@ -1,5 +1,7 @@
 package sleep.bouffe;
 
+import utilitaire.ElementNotFoundException;
+
 public enum ListeIngredients {
     GROS_POIREAU("Gros Poireau", 185, 7),
     CHAMPI_EXQUIS("Champi Exquis", 167, 7),
@@ -41,5 +43,12 @@ public enum ListeIngredients {
 
     public int getPuissance() {
         return m_puissance;
+    }
+
+    public static ListeIngredients getFromName(String name) {
+        for (ListeIngredients ingredient : ListeIngredients.values()) {
+            if (ingredient.getNom().equals(name)) return ingredient;
+        }
+        throw new ElementNotFoundException(name, "Pokemon sleep ingredient");
     }
 }

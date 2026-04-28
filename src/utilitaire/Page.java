@@ -195,12 +195,13 @@ public class Page {
 	 * Remplit l'article avec un nouveau contenu, et met à jour le cache
 	 * @param content le contenu de l'article
 	 * @param summary le résumé de la modification
+     * @param isMinor si la modification est mineure ou non
 	 * @return true en cas de réussite et false sinon
 	 */
-	public boolean setContent(String content, String summary) {
+	public boolean setContent(String content, String summary, boolean isMinor) {
 		boolean success = false;
 		if(content!=null) {
-			if(API.send(title, content, summary)) {
+			if(API.send(title, content, summary, isMinor)) {
 				success = true;
 				File file = new File(API.getBackupPath()+title.replaceAll("/","#slash#"));
 //				FileOutputStream fileOS = null;
@@ -219,6 +220,10 @@ public class Page {
 		}
 		return success;
 	}
+
+    public boolean setContent(String content, String summary) {
+        return setContent(content, summary, false);
+    }
 
     /**
      * Checks whether the page already exists on the wiki or not.

@@ -1,7 +1,7 @@
 package sleep.pokemon;
 
-import sleep.dodos.Dodo;
-import sleep.dodos.Iles;
+import sleep.dodos.SleepStyle;
+import sleep.dodos.Island;
 import sleep.dodos.TypesDodo;
 import sleep.UtilSleep;
 import sleep.bouffe.IngredientPoke;
@@ -16,13 +16,13 @@ import static utilitaire.Wiki.POKEPEDIA;
 
 public class Pokemon {
     private final String m_name;
-    private final String m_numDex;
+    protected final String m_numDex;
     private final PokeTypes m_type;
     private final TypesDodo m_sleepType;
     private final Specialites m_speciality;
-    private final ArrayList<IngredientPoke> m_ingredientsList;
-    private final ArrayList<Dodo> m_sleepList;
-    private final ArrayList<Iles> m_zones;
+    private final ArrayList<IngredientPoke> m_ingredientList;
+    private final ArrayList<SleepStyle> m_sleepList;
+    private final ArrayList<Island> m_zones;
     private int m_freqHour;
     private int m_freqMin;
     private int m_freqSec;
@@ -44,10 +44,10 @@ public class Pokemon {
      * @param nom : Nom du Pokémon
      * @param numDex : Numéro du Pokémon dans le Pokédex National
      * @param type : Type du Pokémon dans sleep
-     * @param dodoType : Catégorie de dodo du Pokémon (Ptidodo, Bondodo, ou Grododo)
+     * @param dodoType : Catégorie de sleepStyle du Pokémon (Ptidodo, Bondodo, ou Grododo)
      * @param specialite : Baies, Ingrédients, ou Compétences
      * @param ingredients : Liste des ingrédients du Pokémon à créer au préalable
-     * @param dodos : Liste des dodos du Pokémon pré-remplis
+     * @param sleepStyles : Liste des dodos du Pokémon pré-remplis
      * @param iles : Iles où le Pokémon peut être trouvé
      * @param frequence : Fréquence de base du Pokémon au format "h:min:sec" ou "min:sec"
      * @param capacite : Capacité maximale du Pokémon (combien d'objets peut-il tenir par défaut)
@@ -55,7 +55,7 @@ public class Pokemon {
      * @param ptsAmitie : Combien de Pokébiscuits max faut-il pour devenir ami avec ce Pokémon
      * @param bonbon : Nom de Pokémon utilisé pour les bonbons de celui-ci (utile pour les Pokémon évolués)
      */
-    public Pokemon(String nom, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<Dodo> dodos, ArrayList<Iles> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType)
+    public Pokemon(String nom, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType)
     {
         m_name = nom;
         m_numDex = Util.numberToPokepediaDexFormat(numDex);
@@ -68,8 +68,8 @@ public class Pokemon {
         m_recruitPoints = ptsAmitie;
         m_candy = bonbon;
         m_zones = iles;
-        m_sleepList = dodos;
-        m_ingredientsList = ingredients;
+        m_sleepList = sleepStyles;
+        m_ingredientList = ingredients;
         m_imageryType = imageryType;
     }
 
@@ -225,15 +225,14 @@ public class Pokemon {
     {
         HashMap<Page, String> wikiPages = new HashMap<>();
 
-        int numIle = 0;
-        for (Iles ile : m_zones) {
+        for (Island ile : m_zones) {
             //Si le pokémon n'est pas dispo sur l'ile, on passe directement à la suivante
-            if(!pokeDispoSurIle(numIle))
+            if(!pokeDispoSurIle(ile))
             {
                 continue;
             }
 
-            Page pageIle = new Page(ile.getNom(false), POKEPEDIA);
+            Page pageIle = new Page(ile.getName(false), POKEPEDIA);
             String content = pageIle.getContent();
             ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
@@ -244,15 +243,15 @@ public class Pokemon {
 
             //mise à jour de la ligne contenant le nombre de Pokémon et de dodos disponibles
             ligneAct = Util.incrementValueInString(ligneAct, 1, 1);
-            ligneAct = Util.incrementValueInString(ligneAct, 2, paliersPourIle(numIle).size());
+            ligneAct = Util.incrementValueInString(ligneAct, 2, paliersPourIle(ile).size());
             lignes.set(l, ligneAct);
 
             //On continue jusqu'au tableau récapitulatif des paliers de Ronflex
             l = lignes.indexOf("| [[Fichier:Sprite Rang Basique Sleep.png|30px]] Basique 1");
             ligneAct = lignes.get(l);
 
-            //À partir de la liste des paliers qui gagnent un/des dodo(s), on incrémente les valeurs du tableau en conséquence
-            ArrayList<String> paliers = paliersPourIle(numIle);
+            //À partir de la liste des paliers qui gagnent un/des sleepStyle(s), on incrémente les valeurs du tableau en conséquence
+            ArrayList<String> paliers = paliersPourIle(ile);
             int increment = 0;
             for (int p = 0; p < 35; p++) {
                 for(String pal : paliers)
@@ -292,14 +291,12 @@ public class Pokemon {
                 }
             }
 
-            ArrayList<String> ajout = getLignesPokeIle(numIle);
+            ArrayList<String> ajout = getLignesPokeIle(ile);
             lignes.addAll(l-1, ajout);
 
             //Reconstruction du texte de la page afin de publier
             String newContenu = Util.wikicodeReconstruction(lignes);
             wikiPages.put(pageIle, newContenu);
-
-            numIle++;
         }
         return wikiPages;
     }
@@ -314,7 +311,7 @@ public class Pokemon {
         String content = listeIngredients.getContent();
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
-        for(IngredientPoke bouffe : m_ingredientsList)
+        for(IngredientPoke bouffe : m_ingredientList)
         {
             //On cherche le tableau des Pokémon pour l'ingrédient
             int l = lignes.indexOf("| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser le " + bouffe.getNom() + "'''");
@@ -474,15 +471,15 @@ public class Pokemon {
      * @return voir ci-dessus
      */
     private String getLignePokeDodos() {
-        Dodo dodo = m_sleepList.getFirst();
+        SleepStyle sleepStyle = m_sleepList.getFirst();
         StringBuilder lignePoke = new StringBuilder("{{Ligne Pokémon Dododex|dex=" + m_numDex + getNameSection() + "|type=" + m_sleepType.getNom().toLowerCase() +
-                "|dodo1=" + dodo.getNom() + "|lieu1=" + dodo.getLieux() + dodo.getRecompenses(1) +
-                "|nombonbon=" + m_candy + "|bonbon1=" + dodo.getQttBonbons());
+                "|dodo1=" + sleepStyle.name() + "|lieu1=" + sleepStyle.getLocationsText() + sleepStyle.getRewardsText(1) +
+                "|nombonbon=" + m_candy + "|bonbon1=" + sleepStyle.candyCount());
         for (int i = 1; i < m_sleepList.size(); i++) {
-            dodo = m_sleepList.get(i);
+            sleepStyle = m_sleepList.get(i);
             int num = i+1;
-            lignePoke.append("|dodo").append(num).append("=").append(dodo.getNom()).append("|lieu").append(num).append("=")
-                    .append(dodo.getLieux()).append(dodo.getRecompenses(num)).append("|bonbon").append(num).append("=").append(dodo.getQttBonbons());
+            lignePoke.append("|dodo").append(num).append("=").append(sleepStyle.name()).append("|lieu").append(num).append("=")
+                    .append(sleepStyle.getLocationsText()).append(sleepStyle.getRewardsText(num)).append("|bonbon").append(num).append("=").append(sleepStyle.candyCount());
         }
         lignePoke.append("|dodo=").append(m_sleepList.size()).append("}}");
         return lignePoke.toString();
@@ -495,13 +492,13 @@ public class Pokemon {
 
     /**
      * Permets d'obtenir les lignes à ajouter pour le Pokémon dans le tableau des îles
-     * @param numIle : numéro de l'île en considération (1 pour Vertepousse, etc)
+     * @param island : numéro de l'île en considération (1 pour Vertepousse, etc)
      * @return un String à ajouter dans le tableau des Pokémon présents sur l'île
      */
-    private ArrayList<String> getLignesPokeIle(int numIle) {
+    private ArrayList<String> getLignesPokeIle(Island island) {
         ArrayList<String> r = new ArrayList<>();
         r.add("|-");
-        int nbrDodos = paliersPourIle(numIle).size();
+        int nbrDodos = paliersPourIle(island).size();
         if (nbrDodos == 1) {
             r.add("| " + getMiniatureString());
             r.add("| class=\"" + m_sleepType.getNom().toLowerCase() + "\" | [[Fichier:Icône Type " +
@@ -513,13 +510,13 @@ public class Pokemon {
                     m_sleepType.getNom().toLowerCase() + " Sleep.png|50px]] " + m_sleepType.getNom());
         }
 
-        //lignes pour chaque dodo
-        for(Dodo dodo : m_sleepList)
+        //lignes pour chaque sleepStyle
+        for(SleepStyle sleepStyle : m_sleepList)
         {
-            if(!dodo.estDispoSurIle(numIle)) continue;
+            if(!sleepStyle.isAvailableOnIsland(island)) continue;
             if(r.size() != 3) r.add("|-");
-            r.add(UtilSleep.ligneEtoiles(dodo.getRarete()));
-            r.add("| [[Fichier:Sprite Rang " + dodo.getRangIle(numIle) + " Sleep.png|30px]] " + dodo.getPalierIle(numIle));
+            r.add(UtilSleep.ligneEtoiles(sleepStyle.rarity()));
+            r.add("| [[Fichier:Sprite Rang " + sleepStyle.getRankBallOnIsland(island) + " Sleep.png|30px]] " + sleepStyle.getRankOnIsland(island));
         }
 
         return r;
@@ -537,7 +534,7 @@ public class Pokemon {
     private String listeIngredientsWiki()
     {
         StringBuilder r = new StringBuilder("| style=\"text-align:left;\" | ");
-        for(IngredientPoke i : m_ingredientsList)
+        for(IngredientPoke i : m_ingredientList)
         {
             r.append("[[Fichier:Sprite ").append(i.getNom()).append(" Sleep.png|30px]] [[").append(i.getNom()).append("]]<br>");
         }
@@ -550,74 +547,336 @@ public class Pokemon {
      */
     private String frequenceWiki()
     {
-        String r = "| ";
-        switch (m_freqHour)
-        {
-            case 0:
-                break;
-            case 1:
-                r += m_freqHour + " heure<br>";
-                break;
-            default:
-                r += m_freqHour + " heures<br>";
-                break;
+        StringBuilder sb = new StringBuilder();
+
+        boolean hasHours = m_freqHour > 0;
+        boolean hasMinutes = m_freqMin > 0;
+        boolean hasSeconds = m_freqSec > 0;
+
+        String hText = m_freqHour + " heure" + (m_freqHour > 1 ? "s" : "");
+        String mText = m_freqMin + " minute" + (m_freqMin > 1 ? "s" : "");
+        String sText = m_freqSec + " seconde" + (m_freqSec > 1 ? "s" : "");
+
+        if (hasHours) sb.append(hText);
+        if (hasMinutes) {
+            if (hasHours && hasSeconds) sb.append(", ");
+            else if (hasHours) sb.append(" et ");
+            sb.append(mText);
         }
-        switch (m_freqMin)
-        {
-            case 0:
-                break;
-            case 1:
-                r += m_freqMin + " minute<br>";
-                break;
-            default:
-                r += m_freqMin + " minutes<br>";
-                break;
+        if (hasSeconds) {
+            if ((hasHours || hasMinutes)) sb.append(" et ");
+            sb.append(sText);
         }
-        switch (m_freqSec)
-        {
-            case 0:
-                r = r.substring(0, r.length()-4);
-                break;
-            case 1:
-                r += m_freqSec + " seconde";
-                break;
-            default:
-                r += m_freqSec + " secondes";
-                break;
-        }
-        return r;
+
+        return sb.toString();
     }
 
     /**
      * Fonction qui permet de déterminer si un Pokémon est discponible sur une ile donnée en regardant si chacun de ses dodos existent sur l'ile
-     * @param numIle : numéro de l'Ile que l'on souhaite vérifer (1 pour Vertepousse, etc)
+     * @param island : numéro de l'Ile que l'on souhaite vérifer (1 pour Vertepousse, etc)
      * @return true si disponible, false sinon
      */
-    private boolean pokeDispoSurIle(int numIle)
+    private boolean pokeDispoSurIle(Island island)
     {
-        for(Dodo dodo : m_sleepList)
+        for(SleepStyle sleepStyle : m_sleepList)
         {
-            if(dodo.estDispoSurIle(numIle)) return true;
+            if(sleepStyle.isAvailableOnIsland(island)) return true;
         }
         return false;
     }
 
     /**
-     * Permets d'obtenir les paliers nécessaires pour chaque dodo pouvant être obtenus sur une ile donnée (peut aussi être utilisée pour savoir combien de dodos sont sur l'île)
-     * @param numIle : Numéro de l'ile pour laquelle on cherche les paliers (1 pour Vertepousse, etc)
+     * Permets d'obtenir les paliers nécessaires pour chaque sleepStyle pouvant être obtenus sur une ile donnée (peut aussi être utilisée pour savoir combien de dodos sont sur l'île)
+     * @param island : Numéro de l'ile pour laquelle on cherche les paliers (1 pour Vertepousse, etc)
      * @return une liste de String contenant les paliers
      */
-    private ArrayList<String> paliersPourIle(int numIle)
+    private ArrayList<String> paliersPourIle(Island island)
     {
         ArrayList<String> r = new ArrayList<>();
-        for(Dodo dodo : m_sleepList)
+        for(SleepStyle sleepStyle : m_sleepList)
         {
-            if(dodo.estDispoSurIle(numIle))
+            if(sleepStyle.isAvailableOnIsland(island))
             {
-                r.add(dodo.getPalierIle(numIle));
+                r.add(sleepStyle.getRankOnIsland(island));
             }
         }
         return r;
+    }
+
+    public String makePokemonPage() {
+        StringBuilder result = new StringBuilder(5000);
+        String type = m_type.getFrenchName();
+        String description;
+        {
+            Page pokePage = new Page(getRegionalName() + "/Jeux secondaires", POKEPEDIA);
+            if (false && pokePage.doesPageExists()) {
+                System.out.println("Warning: Page already exists, might not behave as expected");
+                result.append(pokePage.getContent()).append("\n");
+            } else {
+                result.append(getNavigationRibbon()).append("\n\n");
+            }
+            //TODO temporaire a supprimer
+            description = Util.searchValueOf(pokePage.getContent(), "[[Dododex]] ===\n\n", false);
+        }
+
+
+        Page basePage = new Page(getRegionalName(), POKEPEDIA);
+
+        int berryAmount = (m_speciality == Specialites.BAIES || m_speciality == Specialites.TOUTES) ? 2 : 1;
+
+        result.append("== Pokémon Sleep ==\n{{Édité par robot}}\n[[Fichier:Sprite ").append(getImageID());
+
+        if (m_imageryType.equals(Imagery.SEXUAL_DIMORPHISM)) result.append(" ♂");
+
+        result.append(" Sleep.png|200px|right|thumb|Sprite de ")
+            .append(getRegionalName()).append(" dans {{Jeu|Sleep}}.]]\n\n").append("""
+                '''%s''' est présent dans {{Jeu|Sleep}} depuis {{?}}. Il possède %d styles de dodo et apparaît lors de sessions de recherche du type %s.
+                
+                En tant que Pokémon de soutien, %s arbore le type %s et possède la spécialité « %s ».
+                """.formatted(getRegionalName(), m_sleepList.size(), m_sleepType.getNom().toLowerCase(),
+                    getRegionalName(), type, m_speciality.getNom())).append("\n<div class=\"liste-tableaux\">\n")
+            .append("""
+                {| class="tableaustandard %s ficheinfocentrée"
+                ! style="text-align:center" colspan="2" | Recherches sur le sommeil
+                |-
+                ! Nombre de styles de dodo
+                | %d
+                |-
+                ! Points d'amitié
+                | %d
+                |-
+                ! Récompenses d'amitié
+                | [[Fichier:Sprite Point de recherche Sleep.png|30px]] Point de recherche × %s<br>[[Fichier:Sprite Fragment de Rêve Sleep.png|30px]] [[Fragment de Rêve]] × %s
+                |-
+                ! Médailles Amitié
+                | N. 10 [[Fichier:Sprite Médaille Amitié Bronze Sleep.png|30px]], N. %d [[Fichier:Sprite Médaille Amitié Argent Sleep.png|30px]], N. %d [[Fichier:Sprite Médaille Amitié Or Sleep.png|30px]]
+                |}""".formatted(type.toLowerCase(), m_sleepList.size(), m_recruitPoints,
+                    Util.numberDecomposition(m_sleepList.getFirst().exp()), Util.numberDecomposition(m_sleepList.getFirst().shards()),
+                    getMedalUnlocks()[1], getMedalUnlocks()[2])).append("\n\n").append("""
+                {| class="tableaustandard %s ficheinfocentrée"
+                ! style="text-align:center" colspan="2" | Stats de soutien
+                |-
+                ! [[Type]]
+                | {{Type|%s|Sleep}} [[%s (type)|%s]]
+                |-
+                ! Spécialité
+                | %s
+                |-
+                ! Baie
+                | [[Fichier:Sprite Baie %s Sleep.png|30px]] [[Baie %s]] × %d
+                |-
+                ! Fréquence de base
+                | %s
+                |-
+                ! Capacité de stockage
+                | %d
+                |-
+                ! [[Liste des compétences de Pokémon Sleep#Compétences Principales|Compétence principale]]
+                | %s [[%s]]
+                |-
+                ! Envoi à [[Professeur Néroli|Néroli]]
+                | [[Fichier:Sprite Bonbon %s Sleep.png|30px]] [[Bonbon (Pokémon Sleep)|Bonbon %s]] × %d
+                |}""".formatted(type.toLowerCase(), type, type, type, m_speciality.getNom(), m_type.getBerry(),
+                    m_type.getBerry(), berryAmount, frequenceWiki(), m_storage, getAbilityIcon(), m_ability.getName(), m_candy, m_candy, getSendCandyCount()))
+            .append("\n</div>\n\n").append("""
+                === [[Ingrédient (Pokémon Sleep)|Ingrédients]] possibles ===
+                
+                Le tableau ci-dessous indique les différents ingrédients que %s peut récolter. Pour chaque palier de niveau, un seul de ces ingrédients est sélectionné aléatoirement pour un Pokémon de soutien donné."""
+                    .formatted(getRegionalName())).append("\n\n").append(getPokemonIngredientsData()).append("\n\n").append("""
+                %s=== Description du [[Dododex]] ===
+                
+                %s
+                
+                === Styles de dodo ===
+                
+                """.formatted(getEvolutionData(basePage), description)).append(getPokemonSleepData()).append("""
+                
+                [[Catégorie:Page de %s]]
+                [[Catégorie:Page de jeux secondaires]]
+                [[Catégorie:Pokémon apparaissant dans Pokémon Sleep]]""".formatted(getRegionalName()));
+
+        return result.toString();
+    }
+
+    protected String getNavigationRibbon() {
+        return Util.makeNavigationRibbon(Integer.parseInt(m_numDex));
+    }
+
+    private int[] getMedalUnlocks() {
+        return switch (m_recruitPoints) {
+            case 5, 7 -> new int[] {10, 40, 100};
+            case 12 -> new int[] {10, 30, 60};
+            case 15, 16 -> new int[] {10, 25, 50};
+            case 20, 25, 30 -> new int[] {10, 20, 40};
+            default -> new int[] {-1, -1, -1};
+        };
+    }
+
+    private String getPokemonIngredientsData() {
+        StringBuilder data = new StringBuilder("""
+                {| class="tableaustandard %s centre"
+                ! rowspan="2" | Ingrédient
+                ! colspan="3" | Niveau
+                |-
+                ! width="45px" | N. 1
+                ! width="45px" | N. 30
+                ! width="45px" | N. 60
+                """.formatted(m_type.getFrenchName().toLowerCase()));
+
+        for (IngredientPoke ingredient : m_ingredientList) {
+            data.append(ingredient.getCondensedData());
+        }
+        data.append("|}");
+        return data.toString();
+    }
+
+    private String getPokemonSleepData() {
+        StringBuilder data = new StringBuilder("""
+                <div class="center">
+                {| class="tableaustandard centre %s tableau-overflow" style="max-width:100%c"
+                ! colspan="%d" | Styles de dodos de %s
+                |-
+                ! Rareté
+                """.formatted(m_type.getFrenchName().toLowerCase(), '%', m_sleepList.size() + 1 ,getRegionalName()));
+        for (SleepStyle sleepStyle : m_sleepList) {
+            data.append("|").append(" [[Fichier:Miniature Étoile Sleep.png|20px]]".repeat(sleepStyle.rarity())).append("\n");
+        }
+
+        data.append("|-\n! Image\n");
+        for (int i = 1; i <= m_sleepList.size(); i++) {
+            data.append("| [[Fichier:Sprite %s Dodo %d Sleep.png|150px]]\n".formatted(getImageID(), i));
+        }
+
+        data.append("|-\n! Nom\n");
+        for (SleepStyle sleepStyle : m_sleepList) {
+            data.append("| Dodo ").append(sleepStyle.name()).append("\n");
+        }
+
+        data.append("""
+                |-
+                ! colspan="%d" | Mode normal
+                |-
+                ! Récompenses
+                """.formatted(m_sleepList.size() + 1));
+        for (SleepStyle sleepStyle : m_sleepList) {
+            data.append(sleepStyle.getRewardsOneCell(m_candy)).append("\n");
+        }
+
+        ArrayList<Island> expertAreas = new ArrayList<>();
+        for (Island island : m_zones) {
+            if (island.isExpert()) {
+                expertAreas.add(island);
+                continue;
+            }
+
+            data.append(getLocationsOnIsland(island));
+        }
+
+        if (!expertAreas.isEmpty()) {
+            data.append("""
+                |-
+                ! colspan="%d" | Mode expert
+                |-
+                ! Récompenses
+                """.formatted(m_sleepList.size() + 1));
+
+            data.append(("| style=\"white-space:nowrap; text-align:left\" | [[Fichier:Sprite Point de recherche Sleep.png|30px]] Point de recherche × {{?}}<br>[[Fichier:Sprite Fragment de Rêve Sleep.png|30px]] [[Fragment de Rêve]] × {{?}}<br>[[Fichier:Sprite Bonbon %s Sleep.png|30px]] [[Bonbon (Pokémon Sleep)|Bonbon %s]] × {{?}}\n"
+                    .formatted(m_candy, m_candy).repeat(m_sleepList.size())));
+
+            for (Island island : expertAreas) {
+                data.append(getLocationsOnIsland(island));
+            }
+        }
+
+        data.append("|}\n</div>\n");
+        return data.toString();
+    }
+
+    private String getEvolutionData(Page basePage) {
+        String evolutionData = Util.searchValueOf(basePage.getContent(), "=== [[Évolution]] ===\n", "\n==", true);
+        if(evolutionData == null || evolutionData.contains("n'a pas d'évolution")) return "";
+
+        if(evolutionData.endsWith("\n")) evolutionData = evolutionData.substring(0, evolutionData.length() - 1);
+
+        evolutionData = evolutionData.replaceAll("\\[\\[niveau]] [0-9]+", "niveau {{?}}").replaceAll("niveau [0-9]+", "niveau {{?}}")
+                .replaceAll("\\[*Niveau]* [0-9]+", "Niveau {{?}} + [[Fichier:Sprite Bonbon %s Sleep.png|25px|Bonbon %s|lien=Bonbon (Pokémon Sleep)]] × {{?}}"
+                        .formatted(getRegionalName(), getRegionalName()))
+                .replace("Tableau d'évolution", "Tableau d'évolution Sleep")
+                .replace("] qui lui-", "], qui lui-");
+
+        if(evolutionData.contains("#lst")) {
+            String pokeName = Util.searchValueOf(evolutionData, "#lst:", "|", false);
+            evolutionData = evolutionData.replaceAll("\\{\\{#lst:.+", "{{#lst:%s/Jeux secondaires|Tableau d'évolution Sleep}}".formatted(pokeName))
+                    .replace("[[%s]]".formatted(pokeName), "[[%s/Jeux secondaires|%s]]".formatted(pokeName, pokeName));
+        }
+        else {
+            for (String line : evolutionData.split("\n")) {
+                if (!line.contains("TableauEvolution")) continue;
+
+                String pokeName = line.split("\\|")[line.split("\\|").length - 1].replace("}}", "");
+                String thisNumDex = pokeName.equals(getRegionalName()) ? m_numDex : "{{?}}";
+                evolutionData = evolutionData.replace("|" + pokeName, "|%s|lien=%s/Pokémon Sleep|image=Sprite %s Sleep.png".formatted(pokeName, pokeName, thisNumDex))
+                        .replace("[[" + pokeName + "]]", "[[%s/Pokémon Sleep|%s]]".formatted(pokeName, pokeName));
+            }
+        }
+
+
+
+        String data = """
+        === [[Évolution]] ===
+        
+        %s
+        
+        """.formatted(evolutionData);
+
+        return data;
+    }
+
+    private String getLocationsOnIsland(Island island) {
+        StringBuilder data =  new StringBuilder("|-\n");
+        data.append("! [[%s]]\n".formatted(island.getName(true)));
+        for (SleepStyle sleepStyle : m_sleepList) {
+            if (sleepStyle.isAvailableOnIsland(island)) {
+                data.append("| [[Fichier:Sprite Rang %s Sleep.png|30px]] %s\n".formatted(sleepStyle.getRankBallOnIsland(island),
+                        sleepStyle.getRankOnIsland(island)));
+            } else {
+                data.append("| —\n");
+            }
+        }
+        return data.toString();
+    }
+
+    protected String getImageID() {
+        return m_numDex;
+    }
+
+    protected int getInternalID() {
+        return Integer.parseInt(m_numDex);
+    }
+
+    private String getAbilityIcon() {
+        if (m_ability.equals(Competences.SUPER_SOUTIEN)) {
+            return "{{Type|%s|Sleep}}".formatted(m_type.getFrenchName());
+        } else {
+            return "[[Fichier:Icône Compétence %s Sleep.png|30px]]".formatted(m_ability.getIcon());
+        }
+    }
+
+    private int getSendCandyCount() {
+        if (m_name.equals("Branette")) return 7;
+        if (m_name.equals("Grodoudou")) return 10;
+
+        return switch (m_recruitPoints) {
+            case 5 -> 5;
+            case 7 -> 6;
+            case 12 -> 7;
+            case 15, 20 -> 10;
+            case 16 -> 8;
+            case 18, 22 -> 11;
+            case 25 -> 12;
+            case 30 -> 25;
+            default -> -1;
+        };
     }
 
     protected String getPokemonListName()
@@ -625,7 +884,7 @@ public class Pokemon {
         return m_name;
     }
 
-    protected String getRegionalName()
+    public String getRegionalName()
     {
         return m_name;
     }

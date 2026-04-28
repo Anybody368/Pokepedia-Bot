@@ -125,9 +125,9 @@ public class AddGameToSideImagery {
                 imageryTitle.append(currentPoke.getFrenchName());
 
                 for(Region r : currentPoke.getRegionalForms()) {
-                    if(pageTitle.contains(r.getM_frName())) {
+                    if(pageTitle.contains(r.getFrName())) {
                         region = r;
-                        pageTitle = pageTitle.replaceFirst(" " + r.getM_frName(), "");
+                        pageTitle = pageTitle.replaceFirst(" " + r.getFrName(), "");
                         imageryTitle.append(" ").append(r.getFrAdjective());
                         break;
                     }
@@ -144,7 +144,7 @@ public class AddGameToSideImagery {
                     }
                 }
 
-                String[] test = {currentPoke.getFrenchName(), (region == null ? "" : region.getM_frName()), form};
+                String[] test = {currentPoke.getFrenchName(), (region == null ? "" : region.getFrName()), form};
                 Page imageryPage = new Page(imageryTitle.toString(), Wiki.POKEPEDIA);
                 imageryMap.computeIfAbsent(imageryPage, k -> new ArrayList<>());
                 ArrayList<String> forms = imageryMap.get(imageryPage);

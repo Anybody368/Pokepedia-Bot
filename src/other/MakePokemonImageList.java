@@ -144,7 +144,7 @@ public class MakePokemonImageList {
                     }
                     boolean regionFound = false;
                     for(Region region : regionalForms) {
-                        if(page.getTitle().contains(region.getM_frName())) {
+                        if(page.getTitle().contains(region.getFrName())) {
                             addImage(imagesByPage.get(region), page);
                             regionFound = true;
                         }
@@ -178,7 +178,7 @@ public class MakePokemonImageList {
 
             for(Region region : regionalForms) {
                 if(imagesByPage.containsKey(region)) {
-                    publishImagery(new Page(currentPoke.getFrenchName() + " " + region.getFrAdjective() + "/Imagerie", Wiki.POKEPEDIA), getImageryCode(imagesByPage.get(region), currentPoke, region.getM_frName()), currentPoke);
+                    publishImagery(new Page(currentPoke.getFrenchName() + " " + region.getFrAdjective() + "/Imagerie", Wiki.POKEPEDIA), getImageryCode(imagesByPage.get(region), currentPoke, region.getFrName()), currentPoke);
                 }
             }
         }

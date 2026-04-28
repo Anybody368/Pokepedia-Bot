@@ -1,5 +1,7 @@
 package sleep.pokemon;
 
+import utilitaire.ElementNotFoundException;
+
 public enum Regions {
     ALOLA("d'","Alola"),
     GALAR("de ","Galar"),
@@ -22,5 +24,14 @@ public enum Regions {
     public String getComplet()
     {
         return m_article+m_nomRegion;
+    }
+
+    public static Regions fromName(String name)
+    {
+        for (Regions r : Regions.values())
+        {
+            if(name.equals(r.m_nomRegion) || name.equals(r.m_article + r.m_nomRegion)) return r;
+        }
+        throw new ElementNotFoundException(name, "Pokémon regional form");
     }
 }

@@ -49,7 +49,7 @@ public enum Region {
     public static Region findRegionalFromFr(String fullName) {
         for(Region region : values())
         {
-            if(fullName.endsWith(region.getFrAdjective())) {
+            if(fullName.endsWith(region.getFrName())) {
                 return region;
             }
         }
@@ -68,7 +68,7 @@ public enum Region {
         return m_jaAdjective;
     }
 
-    public String getM_frName() {
+    public String getFrName() {
         return m_frName;
     }
 }

@@ -1,6 +1,6 @@
 package sleep.dodos;
 
-public enum Iles {
+public enum Island {
     ILE_VERTEPOUSSE("Île Vertepousse", false),
     PLAGE_CYAN("Plage Cyan", false),
     GROTTE_SEPIA("Grotte Sépia", false),
@@ -10,23 +10,28 @@ public enum Iles {
     CANYON_AMBRE("Canyon Ambre", false),
 
     EX_ILE_VERTEPOUSSE("Île Vertepousse", true);
-    private final String m_nom;
+    private final String m_name;
     private final boolean m_isExpert;
 
-    Iles(String nom, boolean isExpert)
+    Island(String name, boolean isExpert)
     {
-        m_nom = nom;
+        m_name = name;
         m_isExpert = isExpert;
     }
 
-    public String getNom(boolean getShort) {
+    public boolean isExpert()
+    {
+        return m_isExpert;
+    }
+
+    public String getName(boolean getShort) {
         if(!m_isExpert) {
-            return m_nom;
+            return m_name;
         } else {
             if(!getShort) {
-                return m_nom + " (mode expert)";
+                return m_name + " (mode expert)";
             } else {
-                return m_nom + " (expert)";
+                return m_name + " (expert)";
             }
         }
     }

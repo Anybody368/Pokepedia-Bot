@@ -1,7 +1,9 @@
 package utilitaire;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -383,5 +385,58 @@ public class Util {
         }
 
         return l;
+    }
+
+    public static String makeNavigationRibbon(int number) {
+        return Util.makeNavigationRibbon(number, null);
+    }
+
+    public static String makeNavigationRibbon(int numDex, Region region) {
+        String result = "{{Ruban Pokémon\n";
+        Pokemon currentPoke = PokeData.getPokemonFromNum(numDex);
+        String regionAdjective = region == null ? "" : " " + region.getFrAdjective();
+
+        if(numDex > 1) {
+            Pokemon previousPoke = PokeData.getPokemonFromNum(numDex-1);
+            result += "| nomPrécédent=" + previousPoke.getFrenchName();
+            if(region != null && previousPoke.getRegionalForms().contains(region)) {
+                result += regionAdjective + "\n| forme-précédent=" + region.getFrName() + "\n";
+            } else {
+                result += "\n";
+            }
+        }
+
+        result += "| numéro=" + numberToPokepediaDexFormat(numDex) + "\n| nom=" + currentPoke.getFrenchName() + regionAdjective + "\n";
+
+        if (numDex == PokeData.getPokemonCount()) {
+            result += "}}";
+            return result;
+        }
+
+        Pokemon nextPoke = PokeData.getPokemonFromNum(numDex + 1);
+        result += "| nomSuivant=" + nextPoke.getFrenchName();
+        if(region != null && nextPoke.getRegionalForms().contains(region)) {
+            result += regionAdjective + "\n| forme-suivant=" + region.getFrName() + "\n}}";
+        } else {
+            result += "\n}}";
+        }
+        return result;
+    }
+
+    public static void publishMultipleEdits(HashMap<Page, String> wikiPages, String summary, boolean isMinor) {
+        Scanner confirm = new Scanner(System.in);
+        System.out.println("Upload ready, press Enter to start.");
+        confirm.nextLine();
+
+        wikiPages.forEach( (k, v) -> {
+            if(k.setContent(v, summary, isMinor))
+            {
+                System.out.println(k.getTitle() + " was successfully uploaded.");
+            }
+            else
+            {
+                System.err.println("Error during upload of " + k.getTitle());
+            }
+        });;
     }
 }

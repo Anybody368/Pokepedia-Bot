@@ -525,11 +525,13 @@ public class API {
 	
 	/**
 	 * Remplit un article avec un nouveau contenu
+     * @param title   le titre de l'article
 	 * @param content le contenu de l'article
 	 * @param summary le résumé de la modification
+     * @param isMinor indique si la modification est mineure ou non
 	 * @return true en cas de réussite et false sinon
 	 */
-	public static boolean send(String title, String content, String summary) {
+	public static boolean send(String title, String content, String summary, boolean isMinor) {
 		boolean success = false;
 //		if(getToken(title, TYPE_EDIT)) {
 		if(getToken(TYPE_CSRF)) {
@@ -541,6 +543,9 @@ public class API {
 				parameters.put("summary", summary);
 			}
 			parameters.put("bot", "true");
+            if(isMinor) {
+                parameters.put("minor", "true");
+            }
 			parameters.put("token", token);
 			
 			Document document = post(parameters, Wiki.POKEPEDIA);

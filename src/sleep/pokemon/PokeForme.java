@@ -1,8 +1,8 @@
 package sleep.pokemon;
 
 import sleep.bouffe.IngredientPoke;
-import sleep.dodos.Dodo;
-import sleep.dodos.Iles;
+import sleep.dodos.SleepStyle;
+import sleep.dodos.Island;
 import sleep.dodos.TypesDodo;
 import utilitaire.Page;
 import utilitaire.PokeTypes;
@@ -12,15 +12,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static utilitaire.Wiki.POKEPEDIA;
-
 public class PokeForme extends Pokemon{
     private final String m_nomForme;
     private final String m_precision;
 
-    public PokeForme(String nom, String forme, String precision, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<Dodo> dodos, ArrayList<Iles> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType)
+    public PokeForme(String nom, String forme, String precision, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType)
     {
-        super(nom, numDex, type, dodoType, specialite, ingredients, dodos, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType);
+        super(nom, numDex, type, dodoType, specialite, ingredients, sleepStyles, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType);
         m_nomForme = forme;
         m_precision = precision;
     }

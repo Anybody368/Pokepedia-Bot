@@ -1,8 +1,8 @@
 package sleep.view;
 
 import sleep.bouffe.IngredientPoke;
-import sleep.dodos.Dodo;
-import sleep.dodos.Iles;
+import sleep.dodos.SleepStyle;
+import sleep.dodos.Island;
 import sleep.dodos.TypesDodo;
 import sleep.pokemon.*;
 import utilitaire.Page;
@@ -79,9 +79,9 @@ public class AffichageNewPoke extends  JFrame {
             panel.add(composant);
         }
 
-        for(Iles ile : Iles.values())
+        for(Island ile : Island.values())
         {
-            panel.add(new JCheckBox(ile.getNom(true)));
+            panel.add(new JCheckBox(ile.getName(true)));
         }
 
         panel.add(new JLabel());
@@ -99,9 +99,9 @@ public class AffichageNewPoke extends  JFrame {
             DialogIngredientPoke getIngredients = new DialogIngredientPoke(this);
             getIngredients.showDialog(nbrIngr.getSelectedIndex()+1, ingredients);
 
-            ArrayList<Iles> iles = new ArrayList<>();
+            ArrayList<Island> iles = new ArrayList<>();
             int j = 0;
-            for(Iles ile : Iles.values())
+            for(Island ile : Island.values())
             {
                 JCheckBox box = (JCheckBox) panel.getComponent(31+j);
                 if(box.isSelected())
@@ -111,12 +111,12 @@ public class AffichageNewPoke extends  JFrame {
                 j++;
             }
 
-            ArrayList<Dodo> dodos = new ArrayList<>();
+            ArrayList<SleepStyle> sleepStyles = new ArrayList<>();
             int nbDodo = nbrDodos.getSelectedIndex()+1;
             for(int i = 1; i <= nbDodo; i++)
             {
                 DialogDodoPoke getDodo = new DialogDodoPoke(i, this);
-                dodos.add(getDodo.showDialog(iles));
+                sleepStyles.add(getDodo.showDialog(iles));
             }
 
             String nom = nomPoke.getText();
@@ -135,7 +135,7 @@ public class AffichageNewPoke extends  JFrame {
             new SwingWorker<Void, Void>() {
                 @Override
                 protected Void doInBackground() throws Exception {
-                    Pokemon Poke = new Pokemon(nom, numDex, type, typeDodo, spec, ingredients, dodos, iles, freq, capacite, comp, ptsAmitie, bonbon, img);
+                    Pokemon Poke = new Pokemon(nom, numDex, type, typeDodo, spec, ingredients, sleepStyles, iles, freq, capacite, comp, ptsAmitie, bonbon, img);
                     HashMap<Page, String> wikiPages = Poke.getWikiModifications();
 
                     JLabel label = (JLabel) getContentPane().getComponent(getContentPane().getComponentCount() -2);

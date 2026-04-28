@@ -1,16 +1,18 @@
 package sleep.pokemon;
 
 import sleep.bouffe.IngredientPoke;
-import sleep.dodos.Dodo;
-import sleep.dodos.Iles;
+import sleep.dodos.SleepStyle;
+import sleep.dodos.Island;
 import sleep.dodos.TypesDodo;
 import utilitaire.PokeTypes;
+import utilitaire.Region;
+import utilitaire.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class PokemonRegional extends Pokemon{
-    private final Regions m_region;
+    private final Region m_region;
 
     /**
      *
@@ -21,7 +23,7 @@ public class PokemonRegional extends Pokemon{
      * @param dodoType : Catégorie de dodo du Pokémon (Ptidodo, Bondodo, ou Grododo)
      * @param specialite : Baies, Ingrédients, ou Compétences
      * @param ingredients : Liste des ingrédients du Pokémon à créer au préalable
-     * @param dodos : Liste des dodos du Pokémon pré-remplis
+     * @param sleepStyles : Liste des dodos du Pokémon pré-remplis
      * @param iles : Iles où le Pokémon peut être trouvé
      * @param frequence : Fréquence de base du Pokémon au format "h:min:sec" ou "min:sec"
      * @param capacite : Capacité maximale du Pokémon (combien d'objets peut-il tenir par défaut)
@@ -29,9 +31,9 @@ public class PokemonRegional extends Pokemon{
      * @param ptsAmitie : Combien de Pokébiscuits max faut-il pour devenir ami avec ce Pokémon
      * @param bonbon : Nom de Pokémon utilisé pour les bonbons de celui-ci (utile pour les Pokémon évolués)
      */
-    public PokemonRegional(String nom, Regions region, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<Dodo> dodos, ArrayList<Iles> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType)
+    public PokemonRegional(String nom, Region region, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType)
     {
-        super(nom, numDex, type, dodoType, specialite, ingredients, dodos, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType);
+        super(nom, numDex, type, dodoType, specialite, ingredients, sleepStyles, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType);
         m_region = region;
     }
 
@@ -45,21 +47,36 @@ public class PokemonRegional extends Pokemon{
     @Override
     protected String getMiniatureString()
     {
-        return "{{Miniature|" + getNumDex() + "|" + m_region.getNom() + "|jeu=Sleep}} [[" + getName() + " " + m_region.getComplet() + "]]";
+        return "{{Miniature|" + getNumDex() + "|" + m_region.getFrName() + "|jeu=Sleep}} [[" + getName() + " " + m_region.getFrAdjective() + "]]";
     }
 
     @Override
     protected String getNameSection() {
-        return ("|forme=" + m_region.getNom() + super.getNameSection() + "{{!}}" + getName() + " " + m_region.getComplet());
+        return ("|forme=" + m_region.getFrName() + super.getNameSection() + "{{!}}" + getName() + " " + m_region.getFrAdjective());
     }
 
     @Override
-    protected String getRegionalName() {
-        return super.getRegionalName() + " " + m_region.getComplet();
+    public String getRegionalName() {
+        return super.getRegionalName() + " " + m_region.getFrAdjective();
     }
 
     @Override
     protected String getPokemonListName() {
-        return super.getPokemonListName() + " forme(" + m_region.getNom() + ")";
+        return super.getPokemonListName() + " forme(" + m_region.getFrName() + ")";
+    }
+
+    @Override
+    protected String getImageID() {
+        return super.getImageID() + " " + m_region.getFrName();
+    }
+
+    @Override
+    protected int getInternalID() {
+        return 999999999;
+    }
+
+    @Override
+    protected String getNavigationRibbon() {
+        return Util.makeNavigationRibbon(Integer.parseInt(m_numDex), m_region);
     }
 }

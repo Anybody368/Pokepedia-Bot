@@ -1,12 +1,13 @@
 package sleep.view;
 
-import sleep.dodos.Dodo;
-import sleep.dodos.Iles;
-import sleep.dodos.LieuxDodo;
+import sleep.dodos.SleepStyle;
+import sleep.dodos.Island;
+import sleep.dodos.SleepRank;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
@@ -24,7 +25,7 @@ public class DialogDodoPoke extends JDialog {
         setContentPane(panel);
     }
 
-    public Dodo showDialog(ArrayList<Iles> iles)
+    public SleepStyle showDialog(ArrayList<Island> iles)
     {
         JPanel panel = (JPanel) getContentPane();
 
@@ -62,9 +63,9 @@ public class DialogDodoPoke extends JDialog {
             panel.add(comp);
         }
 
-        for(Iles ile : iles)
+        for(Island ile : iles)
         {
-            panel.add(new JLabel(ile.getNom(true)));
+            panel.add(new JLabel(ile.getName(true)));
             panel.add(new JComboBox<>(new String[]{"n", "Basique 1", "Basique 2", "Basique 3", "Basique 4", "Basique 5",
                     "Super 1", "Super 2", "Super 3", "Super 4", "Super 5", "Hyper 1", "Hyper 2", "Hyper 3", "Hyper 4", "Hyper 5",
                     "Master 1", "Master 2", "Master 3", "Master 4", "Master 5", "Master 6", "Master 7", "Master 8", "Master 9", "Master 10",
@@ -76,26 +77,22 @@ public class DialogDodoPoke extends JDialog {
         panel.add(new JLabel());
 
         JButton confirm = new JButton("Confirmer");
-        AtomicReference<Dodo> dodo = new AtomicReference<>();
+        AtomicReference<SleepStyle> dodo = new AtomicReference<>();
 
         confirm.addActionListener(ActiveEvent -> {
             int i = 0;
-            ArrayList<LieuxDodo> lieux = new ArrayList<>();
-            for(Iles ile : iles)
+            HashMap<Island, SleepRank> lieux = new HashMap<>();
+            for(Island ile : iles)
             {
                 JComboBox<String> rang = (JComboBox<String>) getContentPane().getComponent(13+i);
-                if(rang.getSelectedIndex() == 0)
+                if(rang.getSelectedIndex() != 0)
                 {
-                    lieux.add(new LieuxDodo(ile));
-                }
-                else
-                {
-                    lieux.add(new LieuxDodo(ile, rang.getSelectedItem().toString()));
+                    lieux.put(ile, new SleepRank(rang.getSelectedItem().toString()));
                 }
                 i += 3;
             }
 
-            dodo.set(new Dodo(nomDodo.getText(), rareteDodo.getSelectedIndex() + 1, Integer.parseInt(ptsRech.getText()), Integer.parseInt(fragReve.getText()), (int) bonbons.getSelectedItem(), lieux));
+            dodo.set(new SleepStyle(nomDodo.getText(), rareteDodo.getSelectedIndex() + 1, Integer.parseInt(ptsRech.getText()), Integer.parseInt(fragReve.getText()), (int) bonbons.getSelectedItem(), lieux));
             setVisible(false);
             dispose();
         });
