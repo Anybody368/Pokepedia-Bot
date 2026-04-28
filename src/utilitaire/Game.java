@@ -53,6 +53,7 @@ public enum Game {
 
     SCARLET("Écarlate", "Scarlet", 9, "Ec"),
     VIOLET("Violet", "Violet", 9,  "Vi"),
+    LEGENDS_SEMICOLON_ZA("Légendes Pokémon : Z-A", "Legends: Z-A", 9, "LPZA"),
     LEGENDS_ZA("Légendes Pokémon : Z-A", "Legends Z-A", 9, "LPZA");
 
     private final String m_frenchName;
