@@ -2,6 +2,7 @@ package tcgp.card;
 
 import tcgp.Dictionary;
 import tcgp.category.*;
+import tcgp.category.decorator.PastFutureTense;
 import tcgp.category.decorator.RegionalForm;
 import tcgp.category.decorator.SpecialForm;
 import tcgp.category.decorator.UltraBeast;
@@ -34,7 +35,7 @@ public class Card {
     private String m_frName;
     private String m_enName;
     private String m_jpName;
-    private final CategoryStrategy m_category;
+    private CategoryStrategy m_category;
     private final ArrayList<CardSpecs> m_specs = new ArrayList<>(5);
 
     /**
@@ -62,6 +63,14 @@ public class Card {
                     default -> null;
                 };
             }
+        }
+
+        {
+            String lowerText = en_text.toLowerCase();
+            if (lowerText.contains("{{cardtext/ancient") || lowerText.contains("|ancient=yes"))
+                m_category = new PastFutureTense(m_category, false);
+            else if (lowerText.contains("{{cardtext/future") || lowerText.contains("|future=yes"))
+                m_category = new PastFutureTense(m_category, true);
         }
 
         fillNames(en_text);

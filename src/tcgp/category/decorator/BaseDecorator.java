@@ -52,4 +52,9 @@ public abstract class BaseDecorator implements CategoryStrategy {
     public String getTitleBonus() {
         return m_wrapped.getTitleBonus();
     }
+
+    @Override
+    public boolean isPokemon() {
+        return m_wrapped.isPokemon();
+    }
 }

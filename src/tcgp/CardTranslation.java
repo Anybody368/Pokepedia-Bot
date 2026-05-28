@@ -1,7 +1,6 @@
 package tcgp;
 
 import tcgp.card.Card;
-import tcgp.enums.Expansion;
 import utilitaire.*;
 
 import static tcgp.Dictionary.*;
@@ -80,7 +79,21 @@ public class CardTranslation {
         System.out.println("Toutes les pages sont prêtes, appuyez sur \"Entrée\" pour lancer la publication.");
         confirm.nextLine();
 
+        HashMap<String, String> frenchCardLists = new HashMap<>();
+
         pokePages.forEach( (k, v) -> {
+            {
+                String expansion = Util.searchValueOf(v, "extension=", false);
+                if (!frenchCardLists.containsKey(expansion)) {
+                    frenchCardLists.put(expansion, new Page(expansion, Wiki.POKEPEDIA).getContent());
+                }
+
+                if (!frenchCardLists.get(expansion).contains(k.getTitle())) {
+                    System.err.printf("WARNING : la page %s n'existe pas dans la liste des cartes sur Poképedia, numéro à vérifier%n", k.getTitle());
+                    return;
+                }
+            }
+
             System.out.println("Publication de " + k.getTitle() + " en cours...");
             if (SHOULD_OVERWRITE || !k.doesPageExists()) {
                 if(k.setContent(v, "Création automatique de la page à compléter"))
@@ -94,11 +107,11 @@ public class CardTranslation {
             } else {
                 System.out.println("Page déjà existante, elle est ignorée.");
             }
-            try {
+            /*try {
                 TimeUnit.MILLISECONDS.sleep(1000);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
-            }
+            }*/
         });
     }
 }
