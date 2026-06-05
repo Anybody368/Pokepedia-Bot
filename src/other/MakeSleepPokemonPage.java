@@ -79,10 +79,10 @@ public class MakeSleepPokemonPage {
             Imagery gendering = EvolutionsText.contains("Sprite " + Util.numberToPokepediaDexFormat(numDex) + " ♂") ? Imagery.SEXUAL_DIMORPHISM : Imagery.AGENDER;
 
             if (isRegionalForm) {
-                pokemonList.add(new PokemonRegional(name, region, numDex, type, sleepStyle, speciality, ingredients, sleeps, islands, frequency, storage, ability, recruitPoints, candy, gendering));
+                pokemonList.add(new PokemonRegional(name, region, numDex, type, sleepStyle, speciality, ingredients, sleeps, islands, frequency, storage, ability, recruitPoints, candy, gendering, null));
 
             } else {
-                pokemonList.add(new Pokemon(name, numDex, type, sleepStyle, speciality, ingredients, sleeps, islands, frequency, storage, ability, recruitPoints, candy, gendering));
+                pokemonList.add(new Pokemon(name, numDex, type, sleepStyle, speciality, ingredients, sleeps, islands, frequency, storage, ability, recruitPoints, candy, gendering, null));
                 //System.out.println(pokemonList.getLast().makePokemonPage());
             }
         }

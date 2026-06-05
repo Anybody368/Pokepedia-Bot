@@ -1,5 +1,6 @@
 package utilitaire;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -387,6 +388,12 @@ public class Util {
         return l;
     }
 
+    public static String insertIntoString(String content, String insertion, int index) throws IndexOutOfBoundsException {
+        if (index < 0 || index > content.length()) throw new IndexOutOfBoundsException("index out of \"content\" bounds");
+
+        return content.substring(0, index) + insertion + content.substring(index);
+    }
+
     public static String makeNavigationRibbon(int number) {
         return Util.makeNavigationRibbon(number, null);
     }
@@ -437,6 +444,24 @@ public class Util {
             {
                 System.err.println("Error during upload of " + k.getTitle());
             }
-        });;
+        });
+    }
+
+    public static void publishMultipleEdits(List<PageToPublish> pages) {
+        Scanner confirm = new Scanner(System.in);
+        System.out.println("Upload ready, press Enter to start.");
+        confirm.nextLine();
+
+        for(PageToPublish edit : pages) {
+            Page page = edit.getPage();
+            if(page.setContent(edit.getNewContent(), edit.getSummary(), edit.isMinor()))
+            {
+                System.out.println(page.getTitle() + " was successfully uploaded.");
+            }
+            else
+            {
+                System.err.println("Error during upload of " + page.getTitle());
+            }
+        }
     }
 }

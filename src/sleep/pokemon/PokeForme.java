@@ -16,9 +16,9 @@ public class PokeForme extends Pokemon{
     private final String m_nomForme;
     private final String m_precision;
 
-    public PokeForme(String nom, String forme, String precision, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType)
+    public PokeForme(String nom, String forme, String precision, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType, String description)
     {
-        super(nom, numDex, type, dodoType, specialite, ingredients, sleepStyles, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType);
+        super(nom, numDex, type, dodoType, specialite, ingredients, sleepStyles, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType, description);
         m_nomForme = forme;
         m_precision = precision;
     }
@@ -56,21 +56,8 @@ public class PokeForme extends Pokemon{
     }
 
     @Override
-    protected String[] getLignePokeRecap() {
-        ArrayList<String> temp = new ArrayList<>(Arrays.asList(super.getLignePokeRecap()));
-        temp.remove(1);
-        return temp.toArray(new String[0]);
-    }
-
-    @Override
-     protected String getMiniatureString()
-     {
-         return "{{Miniature|" + super.getNumDex() + "|" + m_nomForme + addPrecision() + "|jeu=Sleep}} [[" + super.getName() + "]] (" + m_nomForme + ")";
-     }
-
-    @Override
     protected String getNameSection() {
-        return ("|forme=" + m_nomForme + addPrecision() + super.getNameSection() + "{{!}}" + getName() + " (" + m_nomForme +")");
+        return (super.getNameSection() + "|forme=" + m_nomForme + addPrecision());
     }
 
     private String addPrecision()
@@ -86,7 +73,7 @@ public class PokeForme extends Pokemon{
 
     @Override
     protected String getPokemonListName() {
-        String form = m_nomForme.replace("(", "\\(").replace(")", "\\(");
+        String form = m_nomForme + addPrecision().replace("(", "\\(").replace(")", "\\(");
 
         return super.getPokemonListName() + " forme(" + form + ")";
     }

@@ -31,6 +31,7 @@ public class Pokemon {
     private final int m_recruitPoints;
     private final String m_candy;
     protected final Imagery m_imageryType;
+    private final String m_description;
 
     protected final String[] m_pages = {
             "Liste des Pokémon de soutien de Pokémon Sleep",
@@ -55,7 +56,7 @@ public class Pokemon {
      * @param ptsAmitie : Combien de Pokébiscuits max faut-il pour devenir ami avec ce Pokémon
      * @param bonbon : Nom de Pokémon utilisé pour les bonbons de celui-ci (utile pour les Pokémon évolués)
      */
-    public Pokemon(String nom, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType)
+    public Pokemon(String nom, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType, String description)
     {
         m_name = nom;
         m_numDex = Util.numberToPokepediaDexFormat(numDex);
@@ -71,6 +72,7 @@ public class Pokemon {
         m_sleepList = sleepStyles;
         m_ingredientList = ingredients;
         m_imageryType = imageryType;
+        m_description = (description == null) ? "{{?}}" : description;
     }
 
     /**
@@ -113,6 +115,8 @@ public class Pokemon {
         Page listeBonbons = new Page(m_pages[3], POKEPEDIA);
         Page imagery = new Page(getRegionalName() + "/Imagerie", POKEPEDIA);
         Page ability = new Page(m_ability.getCategory(), POKEPEDIA);
+        Page secondaryGames = new Page(getRegionalName() + "/Jeux secondaires", POKEPEDIA);
+        Page redirection = new Page(getRegionalName() + "/Pokémon Sleep", POKEPEDIA);
 
         wikiPages.put(listeSoutien, updateListePokeSoutien(listeSoutien));
         wikiPages.put(listeDodo, updateListeDodo(listeDodo));
@@ -121,6 +125,8 @@ public class Pokemon {
             wikiPages.put(ability, updateAbilityPage(ability));
         }
         wikiPages.putAll(updateZones());
+        wikiPages.put(secondaryGames, makePokemonPage());
+        wikiPages.put(redirection, "#REDIRECTION [[%s/Jeux secondaires#Pokémon Sleep]]".formatted(getRegionalName()));
 
         //Si le pokémon n'est pas la forme de base de sa ligne évolutive, on ne l'ajoute pas à certaines pages.
         if(hasUniqueCandy()) {
@@ -138,48 +144,19 @@ public class Pokemon {
      */
     protected String updateListePokeSoutien(Page listeSoutien)
     {
-        final int LIGNES_INFORMATIONS = 11;
+        final int LIGNES_INFORMATIONS = 5;
 
         String content = listeSoutien.getContent();
-        ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
+        ArrayList<String> lines = new ArrayList<>(Arrays.asList(content.split("\n")));
 
-        //On se place au niveau de la première ligne d'un Pokémon de Soutien du premier tableau, normalement "| 0001"
-        int l = lignes.indexOf("! Points d'amitié requis") + 2;
-        String ligneAct = lignes.get(l);
-        //System.out.println(lignes.get(l-2) + "\n" + ligneAct);
-
-        //On cherche l'endroit où le nouveau Pokémon doit être inséré en comparant les numéros de Pokédex
-        while (ligneAct.substring(ligneAct.length()-4).compareTo(m_numDex) <= 0)
-        {
-            //Si jamais le numdex est le même que celui recherché
-            if(ligneAct.substring(ligneAct.length()-4).equals(m_numDex)) {
-                String temp = Util.incrementRowspan(ligneAct);
-                //System.out.println(temp);
-                lignes.set(l, temp);
-            }
-
-            l += LIGNES_INFORMATIONS;
-            ligneAct = lignes.get(l);
-            while(!ligneAct.matches("^\\| \\d{4}$") && !ligneAct.isEmpty())
-            {
-                l++;
-                ligneAct = lignes.get(l);
-            }
-
-            ligneAct = lignes.get(l);
-
-            //Si jamais le Pokémon doit être inséré à la toute fin du tableau
-            if(ligneAct.isEmpty())
-            {
-                break;
-            }
-        }
+        //On récupère l'endroit où le Pokémon doit être inséré dans le tableau
+        int l = UtilSleep.getInsertionLine(lines, lines.indexOf("! Compétence principale") + 2, Integer.parseInt(m_numDex));
 
         String[] ajout = getLignePokeRecap();
-        lignes.addAll(l - 1, List.of(ajout));
+        lines.addAll(l - 1, List.of(ajout));
 
         //Reconstruction du texte de la page afin de publier
-        String newContenu = Util.wikicodeReconstruction(lignes);
+        String newContenu = Util.wikicodeReconstruction(lines);
         //System.out.println(newContenu);
         return newContenu;
     }
@@ -189,21 +166,24 @@ public class Pokemon {
         String content = listeDodos.getContent();
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
-        //Même procédé pour le deuxième tableau
-        int l = lignes.indexOf("! Récompenses");
+        //Même procédé pour la liste des styles de dodos
+        int l = lignes.indexOf("! Rareté");
         l += 2;
-        String ligneAct = lignes.get(l);
+        String currentLine = lignes.get(l);
 
-        while(ligneAct.substring(28, 32).compareTo(m_numDex) <= 0)
+        int currentNumDex = PokeData.getPokemonFromName(Util.searchValueOf(currentLine, "nom=", "|", false)).getNumDex();
+
+        while(Integer.parseInt(m_numDex) >= currentNumDex)
         {
             l += 2;
-            ligneAct = lignes.get(l);
+            currentLine = lignes.get(l);
 
             //Si jamais le Pokémon doit être inséré à la toute fin du tableau
-            if(ligneAct.length() < 33)
+            if(currentLine.length() < 10)
             {
                 break;
             }
+            currentNumDex = PokeData.getPokemonFromName(Util.searchValueOf(currentLine, "nom=", "|", false)).getNumDex();
         }
 
         String lignePoke = getLignePokeDodos();
@@ -234,21 +214,21 @@ public class Pokemon {
 
             Page pageIle = new Page(ile.getName(false), POKEPEDIA);
             String content = pageIle.getContent();
-            ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
+            ArrayList<String> lines = new ArrayList<>(Arrays.asList(content.split("\n")));
 
             //Recherche de la section Description pour modifier les chiffres
-            int l = lignes.indexOf("== Description ==");
+            int l = lines.indexOf("== Description ==");
             l += 3;
-            String ligneAct = lignes.get(l);
+            String currentLine = lines.get(l);
 
             //mise à jour de la ligne contenant le nombre de Pokémon et de dodos disponibles
-            ligneAct = Util.incrementValueInString(ligneAct, 1, 1);
-            ligneAct = Util.incrementValueInString(ligneAct, 2, paliersPourIle(ile).size());
-            lignes.set(l, ligneAct);
+            currentLine = Util.incrementValueInString(currentLine, 1, 1);
+            currentLine = Util.incrementValueInString(currentLine, 2, paliersPourIle(ile).size());
+            lines.set(l, currentLine);
 
             //On continue jusqu'au tableau récapitulatif des paliers de Ronflex
-            l = lignes.indexOf("| [[Fichier:Sprite Rang Basique Sleep.png|30px]] Basique 1");
-            ligneAct = lignes.get(l);
+            l = lines.indexOf("| [[Fichier:Sprite Rang Basique Sleep.png|30px]] Basique 1");
+            currentLine = lines.get(l);
 
             //À partir de la liste des paliers qui gagnent un/des sleepStyle(s), on incrémente les valeurs du tableau en conséquence
             ArrayList<String> paliers = paliersPourIle(ile);
@@ -256,46 +236,26 @@ public class Pokemon {
             for (int p = 0; p < 35; p++) {
                 for(String pal : paliers)
                 {
-                    if(Util.searchValueOf(ligneAct, "]] ", false).equals(pal))
+                    if(Util.searchValueOf(currentLine, "]] ", false).equals(pal))
                     {
                         increment++;
-                        lignes.set(l+2, Util.incrementValueInString(lignes.get(l+2), 0, 1));
+                        lines.set(l+2, Util.incrementValueInString(lines.get(l+2), 0, 1));
                     }
                 }
-                lignes.set(l+3, Util.incrementValueInString(lignes.get(l+3), 0, increment));
+                lines.set(l+3, Util.incrementValueInString(lines.get(l+3), 0, increment));
 
                 l += 6;
-                ligneAct = lignes.get(l);
+                currentLine = lines.get(l);
             }
 
             //Plus qu'à ajouter le Pokémon dans le tableau global
-            l = lignes.indexOf("! Rang nécessaire") + 2;
-            ligneAct = lignes.get(l);
-
-            String currentNumDex = Util.searchValueOf(ligneAct, "{{Miniature|", "|", false);
-            while(currentNumDex.compareTo(m_numDex) <= 0)
-            {
-                currentNumDex = null;
-                while(currentNumDex == null && !ligneAct.equals("|}"))
-                {
-                    l++;
-                    ligneAct = lignes.get(l);
-                    currentNumDex = Util.searchValueOf(ligneAct, "{{Miniature|", "|", true);
-                }
-
-                //Si jamais on arrive à la fin du tableau
-                if(ligneAct.equals("|}"))
-                {
-                    l++;
-                    break;
-                }
-            }
+            l = UtilSleep.getInsertionLine(lines, lines.indexOf("! Rang nécessaire") + 2, Integer.parseInt(m_numDex));
 
             ArrayList<String> ajout = getLignesPokeIle(ile);
-            lignes.addAll(l-1, ajout);
+            lines.addAll(l, ajout);
 
             //Reconstruction du texte de la page afin de publier
-            String newContenu = Util.wikicodeReconstruction(lignes);
+            String newContenu = Util.wikicodeReconstruction(lines);
             wikiPages.put(pageIle, newContenu);
         }
         return wikiPages;
@@ -309,46 +269,33 @@ public class Pokemon {
     protected String updateIngredientsPage(Page listeIngredients)
     {
         String content = listeIngredients.getContent();
-        ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
+        ArrayList<String> lines = new ArrayList<>(Arrays.asList(content.split("\n")));
 
         for(IngredientPoke bouffe : m_ingredientList)
         {
             //On cherche le tableau des Pokémon pour l'ingrédient
-            int l = lignes.indexOf("| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser le " + bouffe.getNom() + "'''");
+            int l = lines.indexOf("| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser le " + bouffe.getNom() + "'''");
             if(l == -1)
             {
-                l = lignes.indexOf("| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser la " + bouffe.getNom() + "'''");
+                l = lines.indexOf("| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser la " + bouffe.getNom() + "'''");
             }
             if(l == -1)
             {
-                l = lignes.indexOf("| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser l'" + bouffe.getNom() + "'''");
+                l = lines.indexOf("| colspan=\"4\" | '''Liste des Pokémon pouvant ramasser l'" + bouffe.getNom() + "'''");
             }
-            l += 7;
-            String ligneAct = lignes.get(l);
 
-            if(!ligneAct.isEmpty()) {
-                while (ligneAct.substring(14, 18).compareTo(m_numDex) <= 0) {
-                    l += 5;
-                    ligneAct = lignes.get(l);
-
-                    //Si jamais le Pokémon doit être inséré à la toute fin du tableau
-                    if (ligneAct.isEmpty()) {
-                        break;
-                    }
-                }
-            }
-            l--;
+            l = UtilSleep.getInsertionLine(lines, l + 7, Integer.parseInt(m_numDex));
 
             String[] ajout = {"|-",
                     "| " + getMiniatureString(),
                     "| " + bouffe.getQttNv1(),
                     "| " + bouffe.getQttNv30(),
                     "| " + bouffe.getQttNv60()};
-            lignes.addAll(l, List.of(ajout));
+            lines.addAll(l, List.of(ajout));
         }
 
         //Reconstruction du texte de la page afin de publier
-        String newContenu = Util.wikicodeReconstruction(lignes);
+        String newContenu = Util.wikicodeReconstruction(lines);
         return newContenu;
     }
 
@@ -452,18 +399,13 @@ public class Pokemon {
 
     protected String[] getLignePokeRecap()
     {
-        return new String[]{"|-",
-                "| " + m_numDex,
-                "| style=\"text-align:left;\" | " + getMiniatureString(),
-                "| {{Type|" + m_type.getFrenchName() + "|Sleep}}",
-                "| " + m_speciality.getNom(),
-                "| [[Fichier:Sprite Baie " + m_type.getBerry() + " Sleep.png|30px]] [[Baie " + m_type.getBerry() + "]]",
-                listeIngredientsWiki(),
-                frequenceWiki(),
-                "| " + m_storage,
-                "| [[" + m_ability.getName() + "]]",
-                "| " + m_recruitPoints
-        };
+        String r = """
+                |-
+                | style="text-align:left;" | {{#invoke:Ressources|pokemon|%s jeu(Sleep)}}
+                | {{Type|%s|Sleep}}
+                | %s
+                | [[%s]]""".formatted(getPokemonListName(), m_type.getFrenchName(), m_speciality.getNom(), m_ability.getName());
+        return r.split("\n");
     }
 
     /**
@@ -471,18 +413,31 @@ public class Pokemon {
      * @return voir ci-dessus
      */
     private String getLignePokeDodos() {
-        SleepStyle sleepStyle = m_sleepList.getFirst();
-        StringBuilder lignePoke = new StringBuilder("{{Ligne Pokémon Dododex|dex=" + m_numDex + getNameSection() + "|type=" + m_sleepType.getNom().toLowerCase() +
-                "|dodo1=" + sleepStyle.name() + "|lieu1=" + sleepStyle.getLocationsText() + sleepStyle.getRewardsText(1) +
-                "|nombonbon=" + m_candy + "|bonbon1=" + sleepStyle.candyCount());
-        for (int i = 1; i < m_sleepList.size(); i++) {
-            sleepStyle = m_sleepList.get(i);
-            int num = i+1;
-            lignePoke.append("|dodo").append(num).append("=").append(sleepStyle.name()).append("|lieu").append(num).append("=")
-                    .append(sleepStyle.getLocationsText()).append(sleepStyle.getRewardsText(num)).append("|bonbon").append(num).append("=").append(sleepStyle.candyCount());
+        StringBuilder zones = new StringBuilder();
+        for (Island zone : m_zones) {
+            zones.append("[[").append(zone.getName(true)).append("]]<br>");
         }
-        lignePoke.append("|dodo=").append(m_sleepList.size()).append("}}");
-        return lignePoke.toString();
+        if (zones.isEmpty()) {
+            zones.append("{{?}}");
+        } else {
+            zones.delete(zones.length() - 4, zones.length());
+        }
+
+        StringBuilder sleepLine = new StringBuilder("{{Ligne Pokémon Dododex").append(getNameSection())
+                .append("|type=").append(m_sleepType.getNom().toLowerCase())
+                .append("|zones=").append(zones)
+                .append("|dodo1=").append(m_sleepList.getFirst().name());
+
+        for (int i = 1; i < m_sleepList.size(); i++) {
+            sleepLine.append("|dodo").append(i + 1).append("=").append(m_sleepList.get(i).name());
+        }
+
+        if (m_sleepList.size() != 4) {
+            sleepLine.append("|dodo=").append(m_sleepList.size());
+        }
+
+        sleepLine.append("}}");
+        return sleepLine.toString();
     }
 
     protected String getNameSection()
@@ -522,27 +477,13 @@ public class Pokemon {
         return r;
     }
 
-    protected String getMiniatureString()
+    private String getMiniatureString()
     {
-        return "{{Miniature|" + m_numDex + "|jeu=Sleep}} [[" + m_name + "]]";
+        return "{{#invoke:Ressources|pokemon|" + getPokemonListName() + " jeu(Sleep)}}";
     }
 
     /**
-     * Mise en forme des ingrédients d'un Pokémon pour son récap dans la liste des Pokémon de soutien
-     * @return voir ci-dessus
-     */
-    private String listeIngredientsWiki()
-    {
-        StringBuilder r = new StringBuilder("| style=\"text-align:left;\" | ");
-        for(IngredientPoke i : m_ingredientList)
-        {
-            r.append("[[Fichier:Sprite ").append(i.getNom()).append(" Sleep.png|30px]] [[").append(i.getNom()).append("]]<br>");
-        }
-        return r.substring(0, r.length()-4);
-    }
-
-    /**
-     * Mise en forme de la fréquence de base d'un Pokémon pour le récap dans la liste des Pokémon de soutien
+     * Mise en forme de la fréquence de base d'un Pokémon pour sa page
      * @return idem
      */
     private String frequenceWiki()
@@ -606,17 +547,14 @@ public class Pokemon {
     public String makePokemonPage() {
         StringBuilder result = new StringBuilder(5000);
         String type = m_type.getFrenchName();
-        String description;
         {
             Page pokePage = new Page(getRegionalName() + "/Jeux secondaires", POKEPEDIA);
-            if (false && pokePage.doesPageExists()) {
+            if (pokePage.doesPageExists()) {
                 System.out.println("Warning: Page already exists, might not behave as expected");
                 result.append(pokePage.getContent()).append("\n");
             } else {
                 result.append(getNavigationRibbon()).append("\n\n");
             }
-            //TODO temporaire a supprimer
-            description = Util.searchValueOf(pokePage.getContent(), "[[Dododex]] ===\n\n", false);
         }
 
 
@@ -630,10 +568,10 @@ public class Pokemon {
 
         result.append(" Sleep.png|200px|right|thumb|Sprite de ")
             .append(getRegionalName()).append(" dans {{Jeu|Sleep}}.]]\n\n").append("""
-                '''%s''' est présent dans {{Jeu|Sleep}} depuis {{?}}. Il possède %d styles de dodo et apparaît lors de sessions de recherche du type %s.
+                '''%s''' est présent dans {{Jeu|Sleep}} depuis le %s via l'évènement [[{{???}}]]. Il possède %d styles de dodo et apparaît lors de sessions de recherche du type %s.
                 
                 En tant que Pokémon de soutien, %s arbore le type %s et possède la spécialité « %s ».
-                """.formatted(getRegionalName(), m_sleepList.size(), m_sleepType.getNom().toLowerCase(),
+                """.formatted(getRegionalName(), UtilSleep.getLastMonday(), m_sleepList.size(), m_sleepType.getNom().toLowerCase(),
                     getRegionalName(), type, m_speciality.getNom())).append("\n<div class=\"liste-tableaux\">\n")
             .append("""
                 {| class="tableaustandard %s ficheinfocentrée"
@@ -689,7 +627,7 @@ public class Pokemon {
                 
                 === Styles de dodo ===
                 
-                """.formatted(getEvolutionData(basePage), description)).append(getPokemonSleepData()).append("""
+                """.formatted(getEvolutionData(basePage), m_description)).append(getPokemonSleepData()).append("""
                 
                 [[Catégorie:Page de %s]]
                 [[Catégorie:Page de jeux secondaires]]
@@ -820,16 +758,12 @@ public class Pokemon {
             }
         }
 
-
-
-        String data = """
+        return """
         === [[Évolution]] ===
         
         %s
         
         """.formatted(evolutionData);
-
-        return data;
     }
 
     private String getLocationsOnIsland(Island island) {
@@ -848,10 +782,6 @@ public class Pokemon {
 
     protected String getImageID() {
         return m_numDex;
-    }
-
-    protected int getInternalID() {
-        return Integer.parseInt(m_numDex);
     }
 
     private String getAbilityIcon() {

@@ -111,6 +111,12 @@ public class PokeData {
         return pokemon.length;
     }
 
+    public static Pokemon[] getAllPokemon()
+    {
+        loadPokemon();
+        return pokemon;
+    }
+
     /**
      * Renvoie le numéro de la génération auquel un Pokémon appartient
      * @param num le numéro du Pokémon dans le Dex national

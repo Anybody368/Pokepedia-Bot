@@ -63,7 +63,8 @@ public class AddGameToSideImagery {
             "NPSnap",
             "UNITE",
             "Sleep",
-            "Friends"
+            "Friends",
+            "Pokopia"
     ));
 
     private static final String[] priorityImages = {
@@ -87,9 +88,9 @@ public class AddGameToSideImagery {
     public static void main(String[] args) {
         Login.handleLogin(args);
 
-        final String GAME = "Sleep";
-        final String CATEGORY = "Sprite Pokémon de style de dodo (Sleep)";
-        final String CATEGORY2 = "Sprite Pokémon de style de dodo chromatique (Sleep)";
+        final String GAME = "Pokopia";
+        final String CATEGORY = "Sprite Pokémon (Pokopia)";
+        final String CATEGORY2 = "Miniature Pokémon (Pokopia)";
 
         ArrayList<Page> pagesList = API.getPageFromCategory(CATEGORY, API.NS_IMAGES, Wiki.POKEPEDIA);
         pagesList.addAll(API.getPageFromCategory(CATEGORY2, API.NS_IMAGES, Wiki.POKEPEDIA));
@@ -213,8 +214,8 @@ public class AddGameToSideImagery {
                 }
 
                 String line = lines.get(l);
-                //String newLine = updateGameLine(line, newImages);
-                String newLine = updateGameLineMiddle(line, newImages, "Miniature");
+                String newLine = updateGameLine(line, newImages);
+                //String newLine = updateGameLineMiddle(line, newImages, "Miniature");
                 if(line.equals(newLine)) return;
 
                 lines.set(l, newLine);

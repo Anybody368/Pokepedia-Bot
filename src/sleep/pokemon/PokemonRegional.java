@@ -9,7 +9,6 @@ import utilitaire.Region;
 import utilitaire.Util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class PokemonRegional extends Pokemon{
     private final Region m_region;
@@ -31,28 +30,17 @@ public class PokemonRegional extends Pokemon{
      * @param ptsAmitie : Combien de Pokébiscuits max faut-il pour devenir ami avec ce Pokémon
      * @param bonbon : Nom de Pokémon utilisé pour les bonbons de celui-ci (utile pour les Pokémon évolués)
      */
-    public PokemonRegional(String nom, Region region, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType)
+    public PokemonRegional(String nom, Region region, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType, String description)
     {
-        super(nom, numDex, type, dodoType, specialite, ingredients, sleepStyles, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType);
+        super(nom, numDex, type, dodoType, specialite, ingredients, sleepStyles, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType, description);
         m_region = region;
     }
 
-    @Override
-    protected String[] getLignePokeRecap() {
-        ArrayList<String> temp = new ArrayList<>(Arrays.asList(super.getLignePokeRecap()));
-        temp.remove(1); //On part du principe que le poké original existe déja, donc pas besoin du numdex ici
-        return temp.toArray(new String[0]);
-    }
 
-    @Override
-    protected String getMiniatureString()
-    {
-        return "{{Miniature|" + getNumDex() + "|" + m_region.getFrName() + "|jeu=Sleep}} [[" + getName() + " " + m_region.getFrAdjective() + "]]";
-    }
 
     @Override
     protected String getNameSection() {
-        return ("|forme=" + m_region.getFrName() + super.getNameSection() + "{{!}}" + getName() + " " + m_region.getFrAdjective());
+        return (super.getNameSection() + "|forme=" + m_region.getFrName());
     }
 
     @Override
@@ -68,11 +56,6 @@ public class PokemonRegional extends Pokemon{
     @Override
     protected String getImageID() {
         return super.getImageID() + " " + m_region.getFrName();
-    }
-
-    @Override
-    protected int getInternalID() {
-        return 999999999;
     }
 
     @Override

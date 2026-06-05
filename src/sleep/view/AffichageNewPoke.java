@@ -119,6 +119,8 @@ public class AffichageNewPoke extends  JFrame {
                 sleepStyles.add(getDodo.showDialog(iles));
             }
 
+            String description = JOptionPane.showInputDialog(this, "Description du Dododex", JOptionPane.QUESTION_MESSAGE);
+
             String nom = nomPoke.getText();
             PokeTypes type = (PokeTypes) typePoke.getSelectedItem();
             TypesDodo typeDodo = (TypesDodo) dodoPoke.getSelectedItem();
@@ -131,11 +133,14 @@ public class AffichageNewPoke extends  JFrame {
             Imagery img = (Imagery) imgType.getSelectedItem();
 
             frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            JLabel label = (JLabel) getContentPane().getComponent(getContentPane().getComponentCount() -2);
+            label.setText("");
+            label.setOpaque(false);
 
             new SwingWorker<Void, Void>() {
                 @Override
                 protected Void doInBackground() throws Exception {
-                    Pokemon Poke = new Pokemon(nom, numDex, type, typeDodo, spec, ingredients, sleepStyles, iles, freq, capacite, comp, ptsAmitie, bonbon, img);
+                    Pokemon Poke = new Pokemon(nom, numDex, type, typeDodo, spec, ingredients, sleepStyles, iles, freq, capacite, comp, ptsAmitie, bonbon, img, description);
                     HashMap<Page, String> wikiPages = Poke.getWikiModifications();
 
                     JLabel label = (JLabel) getContentPane().getComponent(getContentPane().getComponentCount() -2);
@@ -143,8 +148,11 @@ public class AffichageNewPoke extends  JFrame {
 
                     wikiPages.forEach( (k, v) -> {
                         label.setText(k.getTitle() + "...");
-                        String summary = k.getTitle().contains("/Imagerie") ? "Ajout Pokemon Sleep" :
-                                "Ajout automatique de " + Poke.getName();
+                        String summary;
+                        if(k.getTitle().contains("#RED")) summary = "Redirection vers Jeux secondaires";
+                        else if(k.getTitle().contains("/")) summary = "Ajout Pokemon Sleep";
+                        else summary = "Ajout automatique de " + Poke.getName();
+
                         if(k.setContent(v, summary))
                         {
                             System.out.println(k.getTitle() + " modifiée avec succès !");
