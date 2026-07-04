@@ -49,6 +49,8 @@ public enum Game {
     SHIELD("Bouclier", "Shield", 8, "Bo"),
     BRILLIANT_DIAMOND("Diamant Étincelant", "Brilliant Diamond", 8, "DE"),
     SHINING_PEARL("Perle Scintillante", "Shining Pearl", 8, "PS"),
+    BRILLIANT_DIAMOND_SHINING_PEARL("Diamant Étincelant et Perle Scintillante", "Brilliant Diamond and Shining Pearl", 8, "DEPS"),
+    LEGENDS_SEMICOLON_ARCEUS("Légendes Pokémon : Arceus", "Legends: Arceus", 8, "LPA"),
     LEGENDS_ARCEUS("Légendes Pokémon : Arceus", "Legends Arceus", 8, "LPA"),
 
     SCARLET("Écarlate", "Scarlet", 9, "Ec"),

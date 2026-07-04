@@ -54,7 +54,6 @@ public class SpecialForm extends BaseDecorator {
                 + "</small>" + result.substring(enAdjectiveEnd, jaAdjectivePlace) + "<small>"
                 + result.substring(jaAdjectivePlace,  jaAdjectiveEnd) + "</small>" + result.substring(jaAdjectiveEnd);
 
-        System.out.println(result);
         return result;
     }
 

@@ -96,7 +96,7 @@ public class PokemonStrategy implements CategoryStrategy {
         }
 
         code.append("\n<!-- Description -->\n| description=");
-        if(m_descriptionGame != null && m_descriptionGame != Game.SHINING_PEARL && m_descriptionGame != Game.BRILLIANT_DIAMOND && PokeForm.findFormFromFr(fr_name) == null) {
+        if(m_descriptionGame != null && m_descriptionGame != Game.BRILLIANT_DIAMOND && m_descriptionGame != Game.SHINING_PEARL && m_descriptionGame != Game.BRILLIANT_DIAMOND_SHINING_PEARL && PokeForm.findFormFromFr(fr_name) == null) {
             String description = Util.getFrenchPokemonDescription(Utilitaire.actualName(fr_name), m_descriptionGame);
             code.append(description).append("\n| description-jeu=").append(m_descriptionGame.getFrenchAcronym()).append("\n");
         } else {

@@ -91,6 +91,9 @@ public class Card {
         if(en_text.contains("|weakness=") && !searchValueOf(en_text, "|weakness=", false).isBlank()) {
             weakness = TCGType.typeFromEnglishName(searchValueOf(en_text, "|weakness=", false), "weakness type");
         }
+        if (weakness != null && weakness.equals(TCGType.AUCUN)) {
+            weakness = null;
+        }
         int retreat = Integer.parseInt(searchValueOf(en_text, "|retreat cost=", false));
         int stage = switch (searchValueOf(en_text, "|evo stage=", false))
         {
@@ -128,7 +131,7 @@ public class Card {
         } else {
             String englishDescriptionGame = searchValueOf(en_text, "[[Pokédex]] entry comes from {{g|", "}}", true);
             if (englishDescriptionGame == null) {
-                System.err.println("No game description found.");
+                System.err.println("No game description found for " + name + ".");
                 category = new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks, null);
             } else {
                 Game descriptionGame = Game.getGameFromEnglishName(englishDescriptionGame,

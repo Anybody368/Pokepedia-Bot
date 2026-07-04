@@ -10,7 +10,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class CardTranslation {
     private static final boolean SHOULD_OVERWRITE = false;
@@ -53,8 +52,15 @@ public class CardTranslation {
 
                 if(content.startsWith("#REDIRECT"))
                 {
-                    System.out.println(nomPage + " est un redirection, page ignorée");
-                    continue;
+                    System.out.println(nomPage + " est une redirection");
+                    nomPage = content.replace("#REDIRECT [[", "").replaceAll("#.*\\]\\]", "").replace("]]", "");
+                    page = new Page(nomPage, Wiki.BULBAPEDIA);
+                    content = page.getContent();
+                    if((content == null) || content.isBlank())
+                    {
+                        System.err.println("Erreur : La page " + nomPage + " n'a pas pu être lue ou n'existe pas");
+                        continue;
+                    }
                 }
 
                 Card carte = new Card(content);

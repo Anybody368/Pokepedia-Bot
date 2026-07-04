@@ -12,13 +12,14 @@ public enum TCGType {
     FEU("Feu", "Fire"),
     EAU("Eau", "Water"),
     PLANTE("Plante", "Grass"),
-    ELECTRIK("Électrique", "Lightning"),
+    ELECTRIQUE("Électrique", "Lightning"),
     METAL("Métal", "Metal"),
     COMBAT("Combat", "Fighting"),
     PSY("Psy", "Psychic"),
     OBSCURITE("Obscurité", "Darkness"),
     FEE("Fée", "Fairy"),
-    DRAGON("Dragon", "Dragon");
+    DRAGON("Dragon", "Dragon"),
+    AUCUN("", "None");
     private final String m_frName;
     private final String m_enName;
 

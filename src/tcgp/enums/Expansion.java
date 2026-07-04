@@ -29,7 +29,8 @@ public enum Expansion {
     MERVEILLES_DE_PALDEA("Merveilles de Paldea", "Paldean Wonders", 93, false),
     MEGA_RAYONNEMENT("Méga-Rayonnement", "Mega Shine", 69, false),
     AURA_PALPITANTE("Aura Palpitante", "Pulsing Aura", 155, false),
-    PROPULSION_PARADOXE("Propulsion Paradoxe", "Paradox Drive", 74, false);
+    PROPULSION_PARADOXE("Propulsion Paradoxe", "Paradox Drive", 74, false),
+    JOURS_HEUREUX("Jours Heureux", "Everyday Wonders", 69, false);
 
     private final String m_frName;
     private final String m_enName;
