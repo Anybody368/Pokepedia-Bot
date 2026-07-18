@@ -5,10 +5,7 @@ import sleep.dodos.Island;
 import sleep.dodos.TypesDodo;
 import sleep.UtilSleep;
 import sleep.bouffe.IngredientPoke;
-import utilitaire.Page;
-import utilitaire.PokeData;
-import utilitaire.PokeTypes;
-import utilitaire.Util;
+import utilitaire.*;
 
 import java.util.*;
 
@@ -32,12 +29,14 @@ public class Pokemon {
     private final String m_candy;
     protected final Imagery m_imageryType;
     private final String m_description;
+    private final boolean m_isSingle;
 
     protected final String[] m_pages = {
             "Liste des Pokémon de soutien de Pokémon Sleep",
             "Liste des styles de dodo de Pokémon Sleep",
             "Ingrédient (Pokémon Sleep)",
-            "Bonbon (Pokémon Sleep)"
+            "Bonbon (Pokémon Sleep)",
+            "Liste des Pokémon par famille d'évolution dans Pokémon Sleep"
     };
 
     /**
@@ -56,7 +55,7 @@ public class Pokemon {
      * @param ptsAmitie : Combien de Pokébiscuits max faut-il pour devenir ami avec ce Pokémon
      * @param bonbon : Nom de Pokémon utilisé pour les bonbons de celui-ci (utile pour les Pokémon évolués)
      */
-    public Pokemon(String nom, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType, String description)
+    public Pokemon(String nom, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType, String description, boolean isSingle)
     {
         m_name = nom;
         m_numDex = Util.numberToPokepediaDexFormat(numDex);
@@ -73,6 +72,7 @@ public class Pokemon {
         m_ingredientList = ingredients;
         m_imageryType = imageryType;
         m_description = (description == null) ? "{{?}}" : description;
+        m_isSingle = isSingle;
     }
 
     /**
@@ -106,32 +106,41 @@ public class Pokemon {
      *
      * @return all Wiki pages that should be modified for this Pokémon alongside the new text
      */
-    public HashMap<Page, String> getWikiModifications()
+    public ArrayList<PageToPublish> getWikiModifications()
     {
-        HashMap<Page, String> wikiPages = new HashMap<>();
+        ArrayList<PageToPublish> wikiPages = new ArrayList<>();
         Page listeSoutien = new Page(m_pages[0], POKEPEDIA);
         Page listeDodo = new Page(m_pages[1], POKEPEDIA);
         Page listeIngredients = new Page(m_pages[2], POKEPEDIA);
         Page listeBonbons = new Page(m_pages[3], POKEPEDIA);
         Page imagery = new Page(getRegionalName() + "/Imagerie", POKEPEDIA);
         Page ability = new Page(m_ability.getCategory(), POKEPEDIA);
+        Page main = new Page(getRegionalName(), POKEPEDIA);
         Page secondaryGames = new Page(getRegionalName() + "/Jeux secondaires", POKEPEDIA);
         Page redirection = new Page(getRegionalName() + "/Pokémon Sleep", POKEPEDIA);
 
-        wikiPages.put(listeSoutien, updateListePokeSoutien(listeSoutien));
-        wikiPages.put(listeDodo, updateListeDodo(listeDodo));
-        wikiPages.put(imagery, updateImageryPage(imagery));
+        final String SUMMARY = "ajout de " + getFullName();
+        wikiPages.add(new PageToPublish(listeSoutien, updateListePokeSoutien(listeSoutien), SUMMARY));
+        wikiPages.add(new PageToPublish(listeDodo, updateListeDodo(listeDodo), SUMMARY));
+        wikiPages.add(new PageToPublish(imagery, updateImageryPage(imagery), "Ajout Pokémon Sleep"));
         if(updateAbilityPage(ability) != null) {
-            wikiPages.put(ability, updateAbilityPage(ability));
+            wikiPages.add(new PageToPublish(ability, updateAbilityPage(ability), SUMMARY));
         }
-        wikiPages.putAll(updateZones());
-        wikiPages.put(secondaryGames, makePokemonPage());
-        wikiPages.put(redirection, "#REDIRECTION [[%s/Jeux secondaires#Pokémon Sleep]]".formatted(getRegionalName()));
+        wikiPages.addAll(updateZones());
+        wikiPages.add(new PageToPublish(main, updateMainPokemonPage(main), "Ajout description Pokèmon Sleep"));
+        wikiPages.add(new PageToPublish(secondaryGames, makePokemonPage(), "Ajout Pokémon Sleep à compléter"));
+        wikiPages.add(new PageToPublish(redirection, "#REDIRECTION [[%s/Jeux secondaires#Pokémon Sleep]]".formatted(getRegionalName()), "Redirection vers Jeux secondaires"));
 
         //Si le pokémon n'est pas la forme de base de sa ligne évolutive, on ne l'ajoute pas à certaines pages.
-        if(hasUniqueCandy()) {
-            wikiPages.put(listeIngredients, updateIngredientsPage(listeIngredients));
-            wikiPages.put(listeBonbons, updateCandyPage(listeBonbons));
+        if (hasUniqueCandy()) {
+            wikiPages.add(new PageToPublish(listeIngredients, updateIngredientsPage(listeIngredients), SUMMARY));
+            wikiPages.add(new PageToPublish(listeBonbons, updateCandyPage(listeBonbons), SUMMARY));
+        }
+
+        //Si le Pokémon n'a pas de famille evolutive, on peut l'ajouter automatiquement a la page des familles d'évolution
+        if (m_isSingle) {
+            Page evolution = new Page(m_pages[4], POKEPEDIA);
+            wikiPages.add(new PageToPublish(evolution, updateEvolutionPage(evolution), SUMMARY));
         }
 
         return wikiPages;
@@ -153,30 +162,28 @@ public class Pokemon {
         int l = UtilSleep.getInsertionLine(lines, lines.indexOf("! Compétence principale") + 2, Integer.parseInt(m_numDex));
 
         String[] ajout = getLignePokeRecap();
-        lines.addAll(l - 1, List.of(ajout));
+        lines.addAll(l, List.of(ajout));
 
         //Reconstruction du texte de la page afin de publier
-        String newContenu = Util.wikicodeReconstruction(lines);
-        //System.out.println(newContenu);
-        return newContenu;
+        return Util.wikicodeReconstruction(lines);
     }
 
     protected String updateListeDodo(Page listeDodos)
     {
         String content = listeDodos.getContent();
-        ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
+        ArrayList<String> lines = new ArrayList<>(Arrays.asList(content.split("\n")));
 
         //Même procédé pour la liste des styles de dodos
-        int l = lignes.indexOf("! Rareté");
+        int l = lines.indexOf("! Rareté");
         l += 2;
-        String currentLine = lignes.get(l);
+        String currentLine = lines.get(l);
 
         int currentNumDex = PokeData.getPokemonFromName(Util.searchValueOf(currentLine, "nom=", "|", false)).getNumDex();
 
         while(Integer.parseInt(m_numDex) >= currentNumDex)
         {
             l += 2;
-            currentLine = lignes.get(l);
+            currentLine = lines.get(l);
 
             //Si jamais le Pokémon doit être inséré à la toute fin du tableau
             if(currentLine.length() < 10)
@@ -187,13 +194,11 @@ public class Pokemon {
         }
 
         String lignePoke = getLignePokeDodos();
-        lignes.add(l, lignePoke);
-        lignes.add(l+1, "");
+        lines.add(l, lignePoke);
+        lines.add(l+1, "");
 
         //Reconstruction du texte de la page afin de publier
-        String newContenu = Util.wikicodeReconstruction(lignes);
-        //System.out.println(newContenu);
-        return newContenu;
+        return Util.wikicodeReconstruction(lines);
     }
 
     /**
@@ -201,9 +206,9 @@ public class Pokemon {
      *
      * @return a map containing the list of pages that need to be modified with their new text
      */
-    protected HashMap<Page, String> updateZones()
+    protected ArrayList<PageToPublish> updateZones()
     {
-        HashMap<Page, String> wikiPages = new HashMap<>();
+        ArrayList<PageToPublish> wikiPages = new ArrayList<>();
 
         for (Island ile : m_zones) {
             //Si le pokémon n'est pas dispo sur l'ile, on passe directement à la suivante
@@ -256,7 +261,7 @@ public class Pokemon {
 
             //Reconstruction du texte de la page afin de publier
             String newContenu = Util.wikicodeReconstruction(lines);
-            wikiPages.put(pageIle, newContenu);
+            wikiPages.add(new PageToPublish(pageIle, newContenu, "Ajout de " + getFullName()));
         }
         return wikiPages;
     }
@@ -394,6 +399,39 @@ public class Pokemon {
         }
 
         lines.add(l, getPokemonListName());
+        return Util.wikicodeReconstruction(lines);
+    }
+
+    private String updateEvolutionPage(Page evolution)
+    {
+        ArrayList<String> lines = new ArrayList<>(Arrays.asList(evolution.getContent().split("\n")));
+        int l = lines.indexOf("|-") + 1;
+        String currentLine = lines.get(l);
+        int currentNumDex = Integer.parseInt(Util.searchValueOf(currentLine, "Sprite ", " ", false));
+
+        while(currentNumDex <= Integer.parseInt(m_numDex)) {
+            l += 3;
+            currentLine = lines.get(l);
+            while (!currentLine.startsWith("|-") && !currentLine.equals("|}")) {
+                l++;
+                currentLine = lines.get(l);
+            }
+
+            if (currentLine.equals("|}")) break;
+
+            currentNumDex = Integer.parseInt(Util.searchValueOf(lines.get(l + 3), "Sprite ", " ", false));
+        }
+
+        String sexPlus = m_imageryType.equals(Imagery.AGENDER) ? "" : " ♂";
+        String addition = """
+                |- class="Sans-Famille"
+                | colspan="5" class="%s" | Famille de %s
+                |- class="Sans-Famille"
+                | colspan="5" | [[Fichier:Sprite %s%s Sleep.png|70px]]<br>[[%s/Jeux secondaires|%s]]""".formatted(
+                        m_type.getFrenchName().toLowerCase(), getRegionalName(), m_numDex, sexPlus, getRegionalName(), getRegionalName());
+
+        lines.add(l, addition);
+
         return Util.wikicodeReconstruction(lines);
     }
 
@@ -544,6 +582,32 @@ public class Pokemon {
         return r;
     }
 
+    private String updateMainPokemonPage(Page main) {
+        final String[] GAMES_AFTER = {"LPZA", "Pokopia"};
+        String mainContent = main.getContent();
+
+        if (!mainContent.contains("=== Descriptions du [[Pokédex]] ===")) {
+            System.err.printf("WARNING : la description de %s à besoin d'être géré manuellement\n", main.getTitle());
+            return mainContent;
+        }
+
+        int descSection = mainContent.indexOf("=== Descriptions du [[Pokédex]] ===");
+        int placeToInsert = -1;
+        int maxPlace = mainContent.indexOf("\n=", descSection);
+
+        for (String s : GAMES_AFTER) {
+            placeToInsert = mainContent.indexOf(";{{Jeu|%s}}".formatted(s), descSection);
+
+            if (placeToInsert != -1 && placeToInsert < maxPlace) break;
+        }
+
+        if (placeToInsert == -1 || placeToInsert > maxPlace + 2) {
+            placeToInsert = mainContent.indexOf("\n=", descSection);
+        }
+
+        return Util.insertIntoString(mainContent, m_description, placeToInsert);
+    }
+
     public String makePokemonPage() {
         StringBuilder result = new StringBuilder(5000);
         String type = m_type.getFrenchName();
@@ -568,7 +632,7 @@ public class Pokemon {
 
         result.append(" Sleep.png|200px|right|thumb|Sprite de ")
             .append(getRegionalName()).append(" dans {{Jeu|Sleep}}.]]\n\n").append("""
-                '''%s''' est présent dans {{Jeu|Sleep}} depuis le %s via l'évènement [[{{???}}]]. Il possède %d styles de dodo et apparaît lors de sessions de recherche du type %s.
+                '''%s''' est présent dans {{Jeu|Sleep}} depuis le %s via l'évènement [[{{?}}]]. Il possède %d styles de dodo et apparaît lors de sessions de recherche du type %s.
                 
                 En tant que Pokémon de soutien, %s arbore le type %s et possède la spécialité « %s ».
                 """.formatted(getRegionalName(), UtilSleep.getLastMonday(), m_sleepList.size(), m_sleepType.getNom().toLowerCase(),
@@ -677,7 +741,7 @@ public class Pokemon {
                 ! Rareté
                 """.formatted(m_type.getFrenchName().toLowerCase(), '%', m_sleepList.size() + 1 ,getRegionalName()));
         for (SleepStyle sleepStyle : m_sleepList) {
-            data.append("|").append(" [[Fichier:Miniature Étoile Sleep.png|20px]]".repeat(sleepStyle.rarity())).append("\n");
+            data.append("|").append(" [[Fichier:Miniature Étoile Sleep.png|25px]]".repeat(sleepStyle.rarity())).append("\n");
         }
 
         data.append("|-\n! Image\n");
@@ -819,7 +883,7 @@ public class Pokemon {
         return m_name;
     }
 
-    public String getName()
+    public String getFullName()
     {
         return m_name;
     }

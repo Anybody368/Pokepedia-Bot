@@ -49,8 +49,8 @@ public class SpriteHandler {
 
     private void uploadCandy() {
         File sprite = new File(PATH_TO_ARCHIVE + "/candy/" + m_numDex + ".png");
-        String candyName = "Sprite Bonbon " + m_pokemon.getName() + " Sleep.png";
-        String candyDescription = "Sprite d'un [[Bonbon (Pokémon Sleep)|Bonbon " + m_pokemon.getName() + "]] dans {{jeu|Sleep}}.\n" +
+        String candyName = "Sprite Bonbon " + m_pokemon.getFullName() + " Sleep.png";
+        String candyDescription = "Sprite d'un [[Bonbon (Pokémon Sleep)|Bonbon " + m_pokemon.getFullName() + "]] dans {{jeu|Sleep}}.\n" +
                 "\n" +
                 "{{Informations Fichier\n" +
                 "| Source = [https://pks.raenonx.cc/fr Pokémon Sleep Info Wiki]\n" +

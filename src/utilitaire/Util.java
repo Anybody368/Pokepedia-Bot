@@ -1,5 +1,7 @@
 package utilitaire;
 
+import org.jetbrains.annotations.Contract;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -300,6 +302,7 @@ public class Util {
      * returns null if nullIsTolerated is true and startString isn't found.
      * @throws ElementNotFoundException if nullIsTolerated is false and startString isn't found.
      */
+    @Contract("_, _, _, _, false -> !null")
     public static String searchValueOf(String content, String startString, String endString, int from, boolean nullIsTolerated) throws ElementNotFoundException
     {
         int startIndex = content.indexOf(startString, from)+startString.length();

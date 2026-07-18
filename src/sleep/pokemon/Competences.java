@@ -43,6 +43,7 @@ public enum Competences {
 
     BAIES_A_GOGO("Baies à gogo", "Baies à gogo", "Baies"),
     FANTOMASQUE("Fantômasque (Baies à gogo)", "Baies à gogo", "Baies"),
+    DRACO_METEORE("Draco-Météore (Baies à gogo)", "Baies à gogo", "Baies"),
 
     PIOCHE_INGREDIENTS("Pioche à Ingrédient S", "Pioche à Ingrédient S", "Pioche"),
     CHANCEUX("Chanceux (Pioche à Ingrédient S)", "Pioche à Ingrédient S", "Pioche"),

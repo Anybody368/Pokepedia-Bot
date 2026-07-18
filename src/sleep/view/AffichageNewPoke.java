@@ -5,13 +5,12 @@ import sleep.dodos.SleepStyle;
 import sleep.dodos.Island;
 import sleep.dodos.TypesDodo;
 import sleep.pokemon.*;
-import utilitaire.Page;
-import utilitaire.PokeTypes;
+import sleep.pokemon.Pokemon;
+import utilitaire.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.stream.IntStream;
 
 public class AffichageNewPoke extends  JFrame {
@@ -35,10 +34,17 @@ public class AffichageNewPoke extends  JFrame {
         JComboBox<Integer> heures = new JComboBox<>(new Integer[] {0, 1});
         JComboBox<Object> minutes = new JComboBox<>(IntStream.range(0, 60).boxed().toArray());
         JComboBox<Object> secondes = new JComboBox<>(IntStream.range(0, 60).boxed().toArray());
+        JCheckBox pokeIsSingle = new JCheckBox("Pas de famille évolutive");
         JTextField nomBonbon = new JTextField();
         JComboBox<Integer> nbrDodos = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5});
         JComboBox<Integer> nbrIngr = new JComboBox<>(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8});
         JComboBox<Imagery> imgType = new JComboBox<>(Imagery.values());
+        JComboBox<ComboOption<Region>> regionPoke = new JComboBox<>();
+
+        regionPoke.addItem(new ComboOption<>(null, "Non"));
+        for (Region r : Region.values()) {
+            regionPoke.addItem(new ComboOption<>(r, r.getFrName()));
+        }
 
         JComponent[] composants = {
                 new JLabel("Nom du Pokémon"),
@@ -68,10 +74,13 @@ public class AffichageNewPoke extends  JFrame {
                 new JLabel("Nombre de dodos"),
                 new JLabel("Nombre d'ingrédients"),
                 new JLabel("Type d'imagerie"),
-                new JLabel(),
+                new JLabel("Forme régionale"),
                 nbrDodos,
                 nbrIngr,
-                imgType
+                imgType,
+                regionPoke,
+                pokeIsSingle,
+                new JLabel(),
         };
 
         for(JComponent composant : composants)
@@ -103,7 +112,7 @@ public class AffichageNewPoke extends  JFrame {
             int j = 0;
             for(Island ile : Island.values())
             {
-                JCheckBox box = (JCheckBox) panel.getComponent(31+j);
+                JCheckBox box = (JCheckBox) panel.getComponent(34+j);
                 if(box.isSelected())
                 {
                     iles.add(ile);
@@ -131,6 +140,8 @@ public class AffichageNewPoke extends  JFrame {
             int ptsAmitie = (int) recPoke.getSelectedItem();
             String bonbon = nomBonbon.getText();
             Imagery img = (Imagery) imgType.getSelectedItem();
+            boolean isSingle = pokeIsSingle.isSelected();
+            Region region = ((ComboOption<Region>) regionPoke.getSelectedItem()).value();
 
             frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             JLabel label = (JLabel) getContentPane().getComponent(getContentPane().getComponentCount() -2);
@@ -140,30 +151,20 @@ public class AffichageNewPoke extends  JFrame {
             new SwingWorker<Void, Void>() {
                 @Override
                 protected Void doInBackground() throws Exception {
-                    Pokemon Poke = new Pokemon(nom, numDex, type, typeDodo, spec, ingredients, sleepStyles, iles, freq, capacite, comp, ptsAmitie, bonbon, img, description);
-                    HashMap<Page, String> wikiPages = Poke.getWikiModifications();
+                    Pokemon poke;
+                    if (region == null) {
+                        poke = new Pokemon(nom, numDex, type, typeDodo, spec, ingredients, sleepStyles, iles, freq, capacite, comp, ptsAmitie, bonbon, img, description, isSingle);
+                    } else {
+                        poke = new PokemonRegional(nom, region, numDex, type, typeDodo, spec, ingredients, sleepStyles, iles, freq, capacite, comp, ptsAmitie, bonbon, img, description, isSingle);
+                    }
+                    ArrayList<PageToPublish> wikiPages = poke.getWikiModifications();
 
                     JLabel label = (JLabel) getContentPane().getComponent(getContentPane().getComponentCount() -2);
-                    label.setOpaque(false);
+                    label.setText("Upload en cours...");
 
-                    wikiPages.forEach( (k, v) -> {
-                        label.setText(k.getTitle() + "...");
-                        String summary;
-                        if(k.getTitle().contains("#RED")) summary = "Redirection vers Jeux secondaires";
-                        else if(k.getTitle().contains("/")) summary = "Ajout Pokemon Sleep";
-                        else summary = "Ajout automatique de " + Poke.getName();
+                    Util.publishMultipleEdits(wikiPages);
 
-                        if(k.setContent(v, summary))
-                        {
-                            System.out.println(k.getTitle() + " modifiée avec succès !");
-                        }
-                        else
-                        {
-                            System.err.println("Echec de la modification de " + k.getTitle());
-                        }
-                    });
-
-                    new SpriteHandler(Poke).uploadAll();
+                    new SpriteHandler(poke).uploadAll();
 
                     return null;
                 }

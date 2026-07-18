@@ -5,6 +5,7 @@ import sleep.dodos.SleepStyle;
 import sleep.dodos.Island;
 import sleep.dodos.TypesDodo;
 import utilitaire.Page;
+import utilitaire.PageToPublish;
 import utilitaire.PokeTypes;
 import utilitaire.Util;
 
@@ -16,24 +17,24 @@ public class PokeForme extends Pokemon{
     private final String m_nomForme;
     private final String m_precision;
 
-    public PokeForme(String nom, String forme, String precision, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType, String description)
+    public PokeForme(String nom, String forme, String precision, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType, String description, boolean isSingle)
     {
-        super(nom, numDex, type, dodoType, specialite, ingredients, sleepStyles, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType, description);
+        super(nom, numDex, type, dodoType, specialite, ingredients, sleepStyles, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType, description, isSingle);
         m_nomForme = forme;
         m_precision = precision;
     }
 
     @Override
-    public HashMap<Page, String> getWikiModifications() {
-        HashMap<Page, String> wikiPages = super.getWikiModifications();
-        wikiPages.entrySet().removeIf(e -> e.getKey().getTitle().equals(m_pages[3]));
+    public ArrayList<PageToPublish> getWikiModifications() {
+        ArrayList<PageToPublish> wikiPages = super.getWikiModifications();
+        wikiPages.remove(3);
 
         return wikiPages;
     }
 
     @Override
-    protected HashMap<Page, String> updateZones() {
-        return new HashMap<>();
+    protected ArrayList<PageToPublish> updateZones() {
+        return new ArrayList<>();
     }
 
     @Override

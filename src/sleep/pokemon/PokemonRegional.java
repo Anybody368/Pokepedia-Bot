@@ -30,9 +30,9 @@ public class PokemonRegional extends Pokemon{
      * @param ptsAmitie : Combien de Pokébiscuits max faut-il pour devenir ami avec ce Pokémon
      * @param bonbon : Nom de Pokémon utilisé pour les bonbons de celui-ci (utile pour les Pokémon évolués)
      */
-    public PokemonRegional(String nom, Region region, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType, String description)
+    public PokemonRegional(String nom, Region region, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType, String description, boolean isSingle)
     {
-        super(nom, numDex, type, dodoType, specialite, ingredients, sleepStyles, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType, description);
+        super(nom, numDex, type, dodoType, specialite, ingredients, sleepStyles, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType, description, isSingle);
         m_region = region;
     }
 

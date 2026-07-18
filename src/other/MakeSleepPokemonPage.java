@@ -13,6 +13,7 @@ import utilitaire.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@Deprecated
 public class MakeSleepPokemonPage {
     private static final String ListeSoutienText = new Page("Liste des Pokémon de soutien de Pokémon Sleep", Wiki.POKEPEDIA).getContent();
     private static final String ListeDodosText = new Page("Liste des styles de dodo de Pokémon Sleep", Wiki.POKEPEDIA).getContent();
@@ -79,10 +80,10 @@ public class MakeSleepPokemonPage {
             Imagery gendering = EvolutionsText.contains("Sprite " + Util.numberToPokepediaDexFormat(numDex) + " ♂") ? Imagery.SEXUAL_DIMORPHISM : Imagery.AGENDER;
 
             if (isRegionalForm) {
-                pokemonList.add(new PokemonRegional(name, region, numDex, type, sleepStyle, speciality, ingredients, sleeps, islands, frequency, storage, ability, recruitPoints, candy, gendering, null));
+                pokemonList.add(new PokemonRegional(name, region, numDex, type, sleepStyle, speciality, ingredients, sleeps, islands, frequency, storage, ability, recruitPoints, candy, gendering, null, false));
 
             } else {
-                pokemonList.add(new Pokemon(name, numDex, type, sleepStyle, speciality, ingredients, sleeps, islands, frequency, storage, ability, recruitPoints, candy, gendering, null));
+                pokemonList.add(new Pokemon(name, numDex, type, sleepStyle, speciality, ingredients, sleeps, islands, frequency, storage, ability, recruitPoints, candy, gendering, null, false));
                 //System.out.println(pokemonList.getLast().makePokemonPage());
             }
         }

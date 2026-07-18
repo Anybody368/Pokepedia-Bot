@@ -1,5 +1,7 @@
 package sleep.pokemon;
 
+import utilitaire.ElementNotFoundException;
+
 public enum Specialites {
     BAIES("Baies"),
     INGREDIENTS("Ingrédients"),
@@ -15,5 +17,15 @@ public enum Specialites {
     public String getNom()
     {
         return m_nom;
+    }
+
+    public static Specialites SpecialityFromName(String name) throws ElementNotFoundException
+    {
+        for (Specialites specialite : Specialites.values()) {
+            if (specialite.getNom().equalsIgnoreCase(name)) {
+                return specialite;
+            }
+        }
+        throw new ElementNotFoundException(name, "Looking for a specific Pokemon speciality");
     }
 }
