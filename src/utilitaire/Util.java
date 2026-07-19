@@ -2,11 +2,9 @@ package utilitaire;
 
 import org.jetbrains.annotations.Contract;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -466,5 +464,20 @@ public class Util {
                 System.err.println("Error during upload of " + page.getTitle());
             }
         }
+    }
+
+    public static String dateToString(Date date) {
+        SimpleDateFormat formatter =
+                new SimpleDateFormat("dd MMMM yyyy", Locale.FRENCH);
+
+        return formatter.format(date);
+    }
+
+    public static Date getEndDate(Date date, int duration) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DAY_OF_MONTH, duration);
+
+        return cal.getTime();
     }
 }

@@ -29,8 +29,8 @@ public record SleepStyle(String name, int rarity, int exp, int shards, int candy
                 r.append("<br>");
             }
             SleepRank loc = locations.get(island);
-            r.append("[[%s]] ([[Fichier:Sprite Rang %s Sleep.png|Rang %s|25px]]%d)".formatted(
-                    island.getName(true), loc.rankBall(), loc.rankBall(), loc.rankLevel()
+            r.append("[[Fichier:Sprite Rang %s Sleep.png|25px]] %s ([[%s]])".formatted(
+                    loc.getBall(), loc.getPalier(), island.getName(true)
             ));
         }
         return r.toString();
@@ -50,7 +50,7 @@ public record SleepStyle(String name, int rarity, int exp, int shards, int candy
     }
 
     public String getRankBallOnIsland(Island island) {
-        return locations.get(island).rankBall();
+        return locations.get(island).getBall();
     }
 
     public String getRankOnIsland(Island island) {

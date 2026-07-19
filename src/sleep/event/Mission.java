@@ -15,6 +15,11 @@ public record Mission(MissionType mission, ItemReward reward) {
         MissionType(String description) {
             this.description = description;
         }
-        public String getDescription() {return this.description;}
+    }
+
+    public String getWikiCode() {
+        return """
+                | %s
+                | %s""".formatted(mission.description, reward.getWikiCode());
     }
 }

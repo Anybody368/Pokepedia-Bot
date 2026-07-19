@@ -2,6 +2,7 @@ package sleep;
 
 import sleep.dodos.SleepStyle;
 import sleep.dodos.TypesDodo;
+import sleep.pokemon.Competences;
 import sleep.pokemon.SimplifiedPokemon;
 import sleep.pokemon.Specialites;
 import utilitaire.*;
@@ -89,6 +90,9 @@ public class UtilSleep {
             String specialityString = Util.searchValueOf(mainContent, "|Sleep}}\n| ", i, false);
             Specialites speciality = Specialites.SpecialityFromName(specialityString);
 
+            String skillString = Util.searchValueOf(mainContent, "| [[", "]]", i, false);
+            Competences mainSkill = Competences.getFromName(skillString);
+
             String searchString;
             if (form != null) {
                 searchString = "nom=%s|forme=%s|type=".formatted(name, form);
@@ -98,7 +102,7 @@ public class UtilSleep {
             String sleepString = Util.searchValueOf(sleepContent, searchString, "|", false);
             TypesDodo style = TypesDodo.searchByName(sleepString);
 
-            pokemonList.add(new SimplifiedPokemon(name, form, type, speciality, style));
+            pokemonList.add(new SimplifiedPokemon(name, form, type, speciality, style, mainSkill));
 
             i = mainContent.indexOf("{{#invoke:Ressources|p", i+30);
         }
