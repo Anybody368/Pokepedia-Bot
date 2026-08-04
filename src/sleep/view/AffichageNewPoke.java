@@ -13,7 +13,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.stream.IntStream;
 
-public class AffichageNewPoke extends  JFrame {
+public class AffichageNewPoke extends JFrame {
     public AffichageNewPoke() {
         super("Ajout de Pokémon");
         JFrame frame = this;

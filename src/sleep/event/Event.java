@@ -1,10 +1,12 @@
 package sleep.event;
 
 import sleep.event.bonus.Bonus;
-import sleep.event.bundle.Bundle;
 import sleep.event.bundle.BundlePack;
 import sleep.pokemon.SimplifiedPokemon;
+import utilitaire.Page;
+import utilitaire.PageToPublish;
 import utilitaire.Util;
+import utilitaire.Wiki;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -20,6 +22,7 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
     {
         int year = Calendar.getInstance().get(Calendar.YEAR);
         return """
+        {{Édité par robot}}
         [[Fichier:%s Sleep.png|thumb|right|350px|Image promotionelle pour l'évènement dans {{Jeu|Sleep}}.]]
         '''%s''' est un évènement de {{jeu|Sleep}}.
 
@@ -70,7 +73,7 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
     }
 
     private String getBonusSection() {
-        if (bonuses.isEmpty()) {return "";}
+        if (bonuses == null || bonuses.isEmpty()) {return "";}
 
         StringBuilder bonusSection = new StringBuilder("Comme les autres évènements du jeu, plusieurs bonus d'événement"
                 + "ont été mis en place pendant la durée de la Semaine des compétences Pokémon en vedette 1. Ainsi :\n");
@@ -94,17 +97,17 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
     }
 
     private String getFullPokemonSection() {
-        if (newPokemon.isEmpty() && boostedPokemon.isEmpty()) {return "";}
+        if ((newPokemon == null || newPokemon.isEmpty()) && (boostedPokemon == null || boostedPokemon.isEmpty())) {return "";}
         String section = "== Pokémon à l'affiche ==\n\n";
 
-        if (boostedPokemon.isEmpty()) {
+        if (boostedPokemon == null || boostedPokemon.isEmpty()) {
             String adverb = newPokemon.size() > 1 ? "ont" : "a";
             return section + getNewPokemonString() + " au cours de l'évènement, et " + adverb
                     + " plus de chances d'apparaître lors d'une session de sommeil.\n\n" + getNewPokemonTable() + "\n\n";
         }
 
-        if (newPokemon.isEmpty()) {
-            return section + boostedPokemon.size() + "anciens Pokémon déjà introduits sont à l'affiche, et ont plus de chances d'apparaître lors d'une session de sommeil.\n\n"
+        if (newPokemon == null || newPokemon.isEmpty()) {
+            return section + boostedPokemon.size() + " anciens Pokémon déjà introduits sont à l'affiche, et ont plus de chances d'apparaître lors d'une session de sommeil.\n\n"
                     + getReturningPokemonTable() + "\n\n";
         }
 
@@ -127,7 +130,7 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
     }
 
     private String getMissionsSection() {
-        if (missions.isEmpty()) return "";
+        if (missions == null || missions.isEmpty()) return "";
 
         StringBuilder section = new StringBuilder("""
                 == Missions à durée limitée ==
@@ -146,10 +149,11 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
     }
 
     private String getBundleSection() {
-        if (bundles.isEmpty()) return "";
+        if (bundles == null || bundles.isEmpty()) return "";
 
         StringBuilder section = new StringBuilder("""
                 == Lots à durée limitée ==
+                
                 Ces lots peuvent être achetés dans la [[Boutique (Pokémon Sleep)|boutique]] uniquement durant la période de l'évènement.
                 
                 {| class="tableaustandard"
@@ -173,13 +177,12 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
                 ! Pokémon
                 ! Type
                 ! Spécialité
-                ! Compétence principale
-                """);
+                ! Compétence principale""");
 
         for (SimplifiedPokemon pokemon : newPokemon) {
-            section.append("|-\n").append(pokemon.getNewWikiCode());
+            section.append("\n|-\n").append(pokemon.getNewWikiCode());
         }
-        section.append("|}\n\n");
+        section.append("\n|}\n\n");
 
         String apparition = newPokemon.size() > 1 ? "les nouveaux Pokémon" : newPokemon.getFirst().getFullName();
 
@@ -206,15 +209,15 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
     private String getReturningPokemonTable() {
         StringBuilder section = new StringBuilder("""
                 {| class="tableaustandard sortable" style="text-align:center; white-space:nowrap"
-                        ! Pokémon
-                        ! Type
-                        ! Spécialité
-                        ! Type de dodo
-                        |-
-                        ! colspan="6" | Pokémon « Un peu plus fréquents »""");
+                ! Pokémon
+                ! Type
+                ! Spécialité
+                ! Type de dodo
+                |-
+                ! colspan="6" | Pokémon « Un peu plus fréquents »""");
 
         for (SimplifiedPokemon pokemon : boostedPokemon) {
-            section.append("\n|-").append(pokemon.getOldWikiCode());
+            section.append("\n|-\n").append(pokemon.getOldWikiCode());
         }
         section.append("\n|}");
 
@@ -237,5 +240,86 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
 
     private String getNameWithArticle() {
         return name.startsWith("Semaine") ? "La " + name : name;
+    }
+
+    public PageToPublish updateEventModel() {
+        Page eventPage = new Page("Modèle:Évènements Pokémon Sleep", Wiki.POKEPEDIA);
+
+        String content = eventPage.getContent();
+        if (content.contains(name)) return null;
+
+        String newContent;
+        int year = getYear();
+
+        String oldSection = Util.searchValueOf(content, "padding: 0\" | " + year, "\n|}", true);
+        if (oldSection != null) {
+            String newSection = oldSection + " • [[%s]]".formatted(name);
+            newContent = content.replace(oldSection, newSection);
+        }
+        else {
+            int insertPlace = content.indexOf("|}</includeonly>");
+            String newSection = """
+                    {| class="tableaustandard enroulable {{#ifeq: {{{1|}}} | %d | | enroulé}}" style="text-align:center; width: 100%%; margin: 5px auto; max-width: none;"
+                    !style="background: #e4f0f7; font-size:90%%; min-width: 75px; padding: 0" | %d
+                    |-
+                    | style="font-size:85%%;" | [[%s]]
+                    |}""".formatted(year, year, name);
+            newContent = Util.insertIntoString(content, newSection, insertPlace);
+        }
+
+        return new PageToPublish(eventPage, newContent, "Ajout de " + name);
+    }
+
+    public PageToPublish updateEvenPage() {
+        Page eventPage = new Page("Liste des évènements de Pokémon Sleep", Wiki.POKEPEDIA);
+
+        String content = eventPage.getContent();
+        if (content.contains(name)) return null;
+
+        String newContent;
+        int year = getYear();
+        Date endDate = Util.getEndDate(startDate, weekDuration*7 - 1);
+
+        String oldSection = Util.searchValueOf(content, "durant l'année " + year, "|}", true);
+        if (oldSection != null) {
+
+            String newSection = oldSection + """
+                |-
+                | [[%s]]
+                | %s<br>—<br>%s
+                | [[Fichier:%s Sleep.png|250px]]
+                """.formatted(name, Util.dateToString(startDate), Util.dateToString(endDate), name);
+
+            newContent = content.replace(oldSection, newSection);
+        }
+        else {
+            int insertPlace = content.indexOf("== Voir aussi ==");
+
+            String newSection = """
+                == %d ==
+                
+                Ces événements ont débuté durant l'année %d.
+                
+                {| class="tableaustandard centre"
+                ! Nom
+                ! Dates
+                ! Image
+                |-
+                | [[%s]]
+                | %s<br>—<br>%s
+                | [[Fichier:%s Sleep.png|250px]]
+                |}
+                
+                """.formatted(year, year, name, Util.dateToString(startDate), Util.dateToString(endDate), name);
+            newContent = Util.insertIntoString(content, newSection, insertPlace);
+        }
+
+        return new PageToPublish(eventPage, newContent, "Ajout de " + name);
+    }
+
+    private int getYear() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        return cal.get(Calendar.YEAR);
     }
 }

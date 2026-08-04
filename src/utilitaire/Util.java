@@ -453,7 +453,13 @@ public class Util {
         System.out.println("Upload ready, press Enter to start.");
         confirm.nextLine();
 
+        publishEditsConfirmed(pages);
+    }
+
+    public static void publishEditsConfirmed(List<PageToPublish> pages) {
         for(PageToPublish edit : pages) {
+            if (edit == null) continue;
+
             Page page = edit.getPage();
             if(page.setContent(edit.getNewContent(), edit.getSummary(), edit.isMinor()))
             {

@@ -15,6 +15,11 @@ public record ItemReward(Item item, int quantity) {
             this.fileName = fileName;
             this.linkName = linkName;
         }
+
+        @Override
+        public String toString() {
+            return fileName;
+        }
     }
 
     public String getWikiCode() {

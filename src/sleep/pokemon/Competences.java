@@ -70,6 +70,7 @@ public enum Competences {
 
     public static Competences getFromName(String name)
     {
+        name = name.split("\\|")[0];
         for (Competences c : Competences.values()) {
             if (c.m_name.equals(name)) {
                 return c;

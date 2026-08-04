@@ -1,5 +1,6 @@
 package sleep.pokemon;
 
+import org.jetbrains.annotations.NotNull;
 import sleep.dodos.Island;
 import sleep.dodos.SleepRank;
 import sleep.dodos.SleepStyle;
@@ -69,11 +70,12 @@ public record SimplifiedPokemon(String name, String forme, PokeTypes type, Speci
     }
 
     private List<SleepStyle> getSleepStyles() {
-        String content = new Page(getFullName(), Wiki.POKEPEDIA).getContent();
+        String usefulName = getFullName().contains(" forme ") ? name : getFullName();
+        String content = new Page(usefulName + "/Jeux secondaires", Wiki.POKEPEDIA).getContent();
         List<String> lines = List.of(content.split("\n"));
 
-        int tablePosition = content.indexOf(" | Styles de dodos")-1;
-        int sleepCount = Integer.parseInt(String.valueOf(content.charAt(tablePosition))) -1;
+        int tablePosition = content.indexOf(" | Styles de dodos")-5;
+        int sleepCount = Integer.parseInt(Util.searchValueOf(content, "=\"", "\"", tablePosition, false)) -1;
         int initialLine = lines.indexOf("| [[Fichier:Miniature Étoile Sleep.png|25px]] [[Fichier:Miniature Étoile Sleep.png|25px]]");
         lines = lines.subList(initialLine, lines.size());
 
@@ -84,15 +86,22 @@ public record SimplifiedPokemon(String name, String forme, PokeTypes type, Speci
             HashMap<Island, SleepRank> locations = new HashMap<>();
 
             for (Island island : Island.values()) {
-                initialLine = lines.indexOf("| [[%s]]".formatted(island.getName(true)));
-                if (initialLine != -1) continue;
+                initialLine = lines.indexOf("! [[%s]]".formatted(island.getName(true)));
+                if (initialLine == -1) continue;
+                String line = lines.get(initialLine + i);
+                if (line.equals("| —")) continue;
 
-                String rank = Util.searchValueOf(lines.get(initialLine + i), "30px]] ", false);
+                String rank = Util.searchValueOf(line, "30px]] ", false);
                 locations.put(island, new SleepRank(rank));
             }
 
             sleepStyles.add(new SleepStyle(name, rarity, -1, -1, -1, locations));
         }
         return sleepStyles.stream().toList();
+    }
+
+    @Override
+    public @NotNull String toString() {
+        return getFullName();
     }
 }

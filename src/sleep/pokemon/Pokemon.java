@@ -605,7 +605,7 @@ public class Pokemon {
             placeToInsert = mainContent.indexOf("\n=", descSection);
         }
 
-        return Util.insertIntoString(mainContent, m_description, placeToInsert);
+        return Util.insertIntoString(mainContent, getDescriptionInsert(), placeToInsert);
     }
 
     public String makePokemonPage() {
@@ -871,6 +871,13 @@ public class Pokemon {
             case 30 -> 25;
             default -> -1;
         };
+    }
+
+    private String getDescriptionInsert() {
+        return """
+                ;{{Jeu|Sleep}}
+                %s
+                """.formatted(m_description);
     }
 
     protected String getPokemonListName()

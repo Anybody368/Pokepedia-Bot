@@ -15,6 +15,17 @@ public record Mission(MissionType mission, ItemReward reward) {
         MissionType(String description) {
             this.description = description;
         }
+
+        public String description() {return this.description;}
+
+        public static MissionType fromString(String description) {
+            for (MissionType mission : MissionType.values()) {
+                if (mission.description().equals(description)) {
+                    return mission;
+                }
+            }
+            throw new IllegalArgumentException("Mission not found: " + description);
+        }
     }
 
     public String getWikiCode() {
