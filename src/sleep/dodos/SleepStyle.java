@@ -1,5 +1,6 @@
 package sleep.dodos;
 
+import sleep.zone.Island;
 import utilitaire.Util;
 
 import java.util.Map;

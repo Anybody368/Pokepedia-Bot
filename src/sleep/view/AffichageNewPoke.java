@@ -2,7 +2,7 @@ package sleep.view;
 
 import sleep.bouffe.IngredientPoke;
 import sleep.dodos.SleepStyle;
-import sleep.dodos.Island;
+import sleep.zone.Island;
 import sleep.dodos.TypesDodo;
 import sleep.pokemon.*;
 import sleep.pokemon.Pokemon;

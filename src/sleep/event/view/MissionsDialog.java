@@ -16,13 +16,16 @@ import sleep.event.Mission;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.List;
 
 public class MissionsDialog {
     public static List<Mission> selectMissions(Component parent) {
         List<Mission> missions = new ArrayList<>();
-        HashMap<JPanel, Mission.MissionType> missionPanels = new HashMap<>();
+
+        Map<Mission.MissionType, JPanel> missionPanels =
+                new EnumMap<>(Mission.MissionType.class);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -34,26 +37,37 @@ public class MissionsDialog {
             missionPanel.add(chbMission);
             missionPanel.add(new JLabel(missionType.description()));
             missionPanel.add(new JComboBox<>(ItemReward.Item.values()));
-            missionPanel.add(new JSpinner(new SpinnerNumberModel(1,1,10000,1)));
+            missionPanel.add(
+                    new JSpinner(new SpinnerNumberModel(1, 1, 100000, 1))
+            );
 
-            missionPanels.put(missionPanel, missionType);
+            missionPanels.put(missionType, missionPanel);
 
             mainPanel.add(missionPanel);
             mainPanel.add(Box.createVerticalStrut(5));
         }
 
-        int result = JOptionPane.showConfirmDialog(parent, mainPanel, "Choix des missions", JOptionPane.OK_CANCEL_OPTION);
+        int result = JOptionPane.showConfirmDialog(
+                parent,
+                mainPanel,
+                "Choix des missions",
+                JOptionPane.OK_CANCEL_OPTION
+        );
 
         if (result == JOptionPane.OK_OPTION) {
-            missionPanels.forEach((panel, missionType) -> {
-                if (((JCheckBox)panel.getComponent(0)).isSelected()) {
-                    ItemReward.Item reward = (ItemReward.Item) ((JComboBox<ItemReward.Item>)panel.getComponent(2)).getSelectedItem();
-                    int quantity = (Integer) ((JSpinner)panel.getComponent(3)).getValue();
+            missionPanels.forEach((missionType, panel) -> {
+                if (((JCheckBox) panel.getComponent(0)).isSelected()) {
+                    ItemReward.Item reward = (ItemReward.Item) ((JComboBox<?>) panel.getComponent(2)).getSelectedItem();
+
+                    int quantity = (Integer) ((JSpinner) panel.getComponent(3)).getValue();
+
                     missions.add(new Mission(missionType, new ItemReward(reward, quantity)));
                 }
             });
+
             return missions;
         }
+
         return null;
     }
 }

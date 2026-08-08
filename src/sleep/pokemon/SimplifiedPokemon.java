@@ -1,7 +1,7 @@
 package sleep.pokemon;
 
 import org.jetbrains.annotations.NotNull;
-import sleep.dodos.Island;
+import sleep.zone.Island;
 import sleep.dodos.SleepRank;
 import sleep.dodos.SleepStyle;
 import sleep.dodos.TypesDodo;

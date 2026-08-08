@@ -2,7 +2,7 @@ package sleep.pokemon;
 
 import sleep.bouffe.IngredientPoke;
 import sleep.dodos.SleepStyle;
-import sleep.dodos.Island;
+import sleep.zone.Island;
 import sleep.dodos.TypesDodo;
 import utilitaire.Page;
 import utilitaire.PageToPublish;
@@ -11,7 +11,6 @@ import utilitaire.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 
 public class PokeForme extends Pokemon{
     private final String m_nomForme;

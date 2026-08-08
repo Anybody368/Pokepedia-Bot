@@ -15,12 +15,19 @@ import sleep.event.ItemReward;
 import sleep.event.bundle.Bundle;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class BundleDialog {
+    private static File previousDirectory = new File(System.getProperty("user.home"));
+
     public static Bundle addBundle(Component parent) {
-        ArrayList<ItemReward> items = new ArrayList<>(2);
+        JPanel mainPanel = new JPanel();
+        ArrayList<ItemReward> items = new ArrayList<>(8);
+        AtomicReference<File> selectedFile = new AtomicReference<>();
 
         JTextField txtName = new JTextField();
         JSpinner spnPrice = new JSpinner(new SpinnerNumberModel(250,250,5000,50));
@@ -35,7 +42,28 @@ public class BundleDialog {
             }
         });
 
-        JPanel mainPanel = new JPanel();
+        JLabel lblFile = new JLabel("Aucun fichier sélectionné");
+        JButton btnFile = new JButton("Choix de l'image");
+
+        btnFile.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser(previousDirectory);
+
+            fileChooser.setDialogTitle("Sélection de l'icône du bundle");
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.setFileFilter(
+                    new FileNameExtensionFilter("PNG images (*.png)", "png")
+            );
+
+            int result = fileChooser.showOpenDialog(mainPanel);
+
+            if (result == JFileChooser.APPROVE_OPTION) {
+                selectedFile.set(fileChooser.getSelectedFile());
+                lblFile.setText(fileChooser.getSelectedFile().getName());
+                previousDirectory = fileChooser.getCurrentDirectory();
+            }
+        });
+
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         JPanel itemPanel = getItemPanel(items, lblItems);
@@ -50,11 +78,13 @@ public class BundleDialog {
         mainPanel.add(itemPanel);
         mainPanel.add(lblItems);
         mainPanel.add(btnRemove);
+        mainPanel.add(lblFile);
+        mainPanel.add(btnFile);
 
         int result = JOptionPane.showConfirmDialog(parent, mainPanel, "Ajout d'un Bundle", JOptionPane.OK_CANCEL_OPTION);
 
         if (result == JOptionPane.OK_OPTION) {
-            return new Bundle(txtName.getText(), (Integer) spnPrice.getValue(), (Integer) spnLimit.getValue(), items);
+            return new Bundle(txtName.getText(), (Integer) spnPrice.getValue(), (Integer) spnLimit.getValue(), items, selectedFile.get());
         }
 
         return null;
@@ -68,7 +98,7 @@ public class BundleDialog {
         btnAdd.addActionListener(e -> {
             ItemReward.Item item = (ItemReward.Item) cmbItem.getSelectedItem();
             ItemReward newReward = new ItemReward(item, (Integer) spnQuantity.getValue());
-            if (items.contains(newReward)) return;
+            if (items.contains(newReward) && newReward.item().isComplete) return;
 
             items.add(newReward);
             lblItems.setText("%d objets ajoutés".formatted(items.size()));

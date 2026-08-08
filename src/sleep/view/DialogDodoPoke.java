@@ -1,7 +1,7 @@
 package sleep.view;
 
 import sleep.dodos.SleepStyle;
-import sleep.dodos.Island;
+import sleep.zone.Island;
 import sleep.dodos.SleepRank;
 
 import javax.swing.*;

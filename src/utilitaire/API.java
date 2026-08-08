@@ -494,6 +494,10 @@ public class API {
                 text = "== Description ==\n" + text;
             }
 
+            if (!filename.startsWith("Fichier:")) {
+                filename = "Fichier:" + filename;
+            }
+
 			Hashtable<String, String> parameters = new Hashtable<String, String>();
 			parameters.put("action", "upload");
 			parameters.put("filename", filename);

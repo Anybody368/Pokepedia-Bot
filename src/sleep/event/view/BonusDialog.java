@@ -76,13 +76,13 @@ public class BonusDialog {
         int result = JOptionPane.showConfirmDialog(parent, mainPanel, "Choix des bonus", JOptionPane.OK_CANCEL_OPTION);
 
         if (result == JOptionPane.OK_OPTION) {
-            if (chbCS.isSelected()) bonuses.add(new CookingStrengthBonus((Integer) spnCS.getValue()));
+            if (chbCS.isSelected()) bonuses.add(new CookingStrengthBonus((Integer) spnCS.getValue() - 100));
             if (chbSL.isSelected()) bonuses.add(new SkillLevelBonus((Integer) spnSL.getValue()));
-            if (chbST.isSelected()) bonuses.add(new SkillTrigerBonus((Integer) spnST.getValue()));
-            if (chbEXP.isSelected()) bonuses.add(new ExpBonus((Integer) spnEXP.getValue()));
-            if (chbRC.isSelected()) bonuses.add(new SleepRewardBonus(SleepRewardBonus.Reward.CANDIES, (Integer) spnRC.getValue()));
-            if (chbRS.isSelected()) bonuses.add(new SleepRewardBonus(SleepRewardBonus.Reward.SHARDS, (Integer) spnRS.getValue()));
-            if (chbRR.isSelected()) bonuses.add(new SleepRewardBonus(SleepRewardBonus.Reward.RESEARCH_EXP, (Integer) spnRR.getValue()));
+            if (chbST.isSelected()) bonuses.add(new SkillTrigerBonus((Integer) spnST.getValue() - 100));
+            if (chbEXP.isSelected()) bonuses.add(new ExpBonus((Integer) spnEXP.getValue() - 100));
+            if (chbRC.isSelected()) bonuses.add(new SleepRewardBonus(SleepRewardBonus.Reward.CANDIES, (Integer) spnRC.getValue() - 100));
+            if (chbRS.isSelected()) bonuses.add(new SleepRewardBonus(SleepRewardBonus.Reward.SHARDS, (Integer) spnRS.getValue() - 100));
+            if (chbRR.isSelected()) bonuses.add(new SleepRewardBonus(SleepRewardBonus.Reward.RESEARCH_EXP, (Integer) spnRR.getValue() - 100));
             if (chbH.isSelected()) bonuses.add(new HungryBonus());
             if (chbSTQ.isSelected()) bonuses.add(new SleepTypeBonus(SleepTypeBonus.Quantity.QUELQUES));
             if (chbSTP.isSelected()) bonuses.add(new SleepTypeBonus(SleepTypeBonus.Quantity.PLUSIEURS));

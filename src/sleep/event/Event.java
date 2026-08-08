@@ -1,22 +1,19 @@
 package sleep.event;
 
 import sleep.event.bonus.Bonus;
+import sleep.event.bundle.Bundle;
 import sleep.event.bundle.BundlePack;
 import sleep.pokemon.SimplifiedPokemon;
-import utilitaire.Page;
-import utilitaire.PageToPublish;
-import utilitaire.Util;
-import utilitaire.Wiki;
+import utilitaire.*;
 
+import java.io.File;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public record Event(String name, Date startDate, int weekDuration, List<Bonus> bonuses, List<SimplifiedPokemon> newPokemon,
-                    List<SimplifiedPokemon> boostedPokemon, List<Mission> missions, List<BundlePack> bundles, URL linkToEvent) {
+                    List<SimplifiedPokemon> boostedPokemon, List<Mission> missions, List<BundlePack> bundles, URL linkToEvent,
+                    File image, List<SimplifiedPokemon> pokemonOnImage, String spanishName) {
 
     public String getWikiCode()
     {
@@ -31,11 +28,12 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
         %s est un évènement qui s'est déroulé sur toutes les îles pendant %s. Chaque journée de l'évènement débute à 04:00, heure locale.
 
         %s%s%s%s== Lien externe ==
+        
         * [%s Notice de l'évènement sur le site officiel] '''(fr)'''
 
         {{Évènements Pokémon Sleep|%d}}
 
-        [[Catégorie:Évènement de Pokémon Sleep]]""".formatted(
+        [[Catégorie:Évènement de Pokémon Sleep]]%s""".formatted(
                 name,
                 getNameWithArticle(),
                 getNameWithArticle(),
@@ -45,7 +43,8 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
                 getMissionsSection(),
                 getBundleSection(),
                 linkToEvent,
-                year
+                year,
+                getSpanishLink()
         );
     }
 
@@ -74,9 +73,14 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
 
     private String getBonusSection() {
         if (bonuses == null || bonuses.isEmpty()) {return "";}
+        String preposition = name.matches("(?i)^[aàâäæeéèêëiîïoôöœuùûüyÿ].*") ? "d'" : "de ";
 
-        StringBuilder bonusSection = new StringBuilder("Comme les autres évènements du jeu, plusieurs bonus d'événement"
-                + "ont été mis en place pendant la durée de la Semaine des compétences Pokémon en vedette 1. Ainsi :\n");
+        StringBuilder bonusSection = new StringBuilder("""
+                === Bonus d'évènement ===
+                
+                Comme les autres évènements du jeu, plusieurs bonus d'événement ont été mis en place pendant la durée \
+                %s%s. Ainsi :
+                """.formatted(preposition, getNameWithArticle()));
 
         for (Bonus bonus : bonuses) {
             bonusSection.append("\n* ").append(bonus.getBonusString()).append(" ;");
@@ -103,16 +107,16 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
         if (boostedPokemon == null || boostedPokemon.isEmpty()) {
             String adverb = newPokemon.size() > 1 ? "ont" : "a";
             return section + getNewPokemonString() + " au cours de l'évènement, et " + adverb
-                    + " plus de chances d'apparaître lors d'une session de sommeil.\n\n" + getNewPokemonTable() + "\n\n";
+                    + " donc plus de chances d'apparaître lors des sessions de sommeil durant cet évènement.\n\n" + getNewPokemonTable() + "\n\n";
         }
 
         if (newPokemon == null || newPokemon.isEmpty()) {
-            return section + boostedPokemon.size() + " anciens Pokémon déjà introduits sont à l'affiche, et ont plus de chances d'apparaître lors d'une session de sommeil.\n\n"
+            return section + boostedPokemon.size() + " anciens Pokémon déjà introduits sont à l'affiche, et ont plus de chances d'apparaître lors des sessions de sommeil durant cet évènement.\n\n"
                     + getReturningPokemonTable() + "\n\n";
         }
 
         return section + """
-                Les Pokémon suivants sont à l'affiche durant l'évènement, et ont plus de chances d'apparaître lors d'une session de sommeil.
+                Les Pokémon suivants sont à l'affiche durant l'évènement, et ont plus de chances d'apparaître lors des sessions de sommeil durant cet évènement.
                 
                 === Nouveaux Pokémon ===
                 
@@ -161,6 +165,7 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
                 ! Lot
                 ! Contenu
                 ! Prix
+                ! Limite<br>d'achat
                 """);
 
         for (BundlePack bundle : bundles) {
@@ -242,6 +247,11 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
         return name.startsWith("Semaine") ? "La " + name : name;
     }
 
+    private String getSpanishLink() {
+        if (spanishName == null || spanishName.isEmpty()) return "";
+        return "\n\n[[es:%s]]".formatted(spanishName);
+    }
+
     public PageToPublish updateEventModel() {
         Page eventPage = new Page("Modèle:Évènements Pokémon Sleep", Wiki.POKEPEDIA);
 
@@ -317,9 +327,78 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
         return new PageToPublish(eventPage, newContent, "Ajout de " + name);
     }
 
+    public PageToPublish updateShopPage() {
+        int year = getYear();
+        Page page = new Page("Boutique (Pokémon Sleep)", Wiki.POKEPEDIA);
+        String content = page.getContent();
+
+        if (content.contains(bundles.getFirst().bundles().getFirst().name())) return null;
+
+        String newContent;
+        String oldSection = Util.searchValueOf(content, "évènementiels en " + year, "\n|}", true);
+
+        if (oldSection != null) {
+            StringBuilder newSection = new StringBuilder();
+            for (BundlePack pack : bundles) {
+                newSection.append("|-\n").append(pack.getWikiCode());
+            }
+            newContent = content.replace(oldSection, newSection.toString());
+        }
+        else {
+            int insertPlace = content.indexOf("=== Lots à prix réduit ===");
+            StringBuilder newSection = new StringBuilder("""
+                    {| class="tableaustandard enroulable enroulé"
+                    ! colspan="5" | Lots évènementiels en %d
+                    |-
+                    ! Dates
+                    ! Lot
+                    ! Contenu
+                    ! Prix
+                    ! Limite<br>d'achat""".formatted(year));
+
+            for (BundlePack pack : bundles) {
+                newSection.append("|-\n").append(pack.getWikiCode());
+            }
+            newSection.append("|}\n\n");
+
+            newContent = Util.insertIntoString(content, newSection.toString(), insertPlace);
+        }
+
+        return new PageToPublish(page, newContent, "Ajout de " + name);
+    }
+
     private int getYear() {
         Calendar cal = Calendar.getInstance();
         cal.setTime(startDate);
         return cal.get(Calendar.YEAR);
+    }
+
+    public List<FileToUpload> getIconsToPublish() {
+        List<FileToUpload> iconsToPublish = new ArrayList<>();
+
+        if (image != null) {
+            String imageName = "Fichier:" + name + " Sleep.png";
+            StringBuilder description = new StringBuilder("""
+                    == Description ==
+                    Image promotionnelle de l'événement [[%s]] dans {{Jeu|Sleep}}.
+                    
+                    {{Informations Fichier
+                    | Source = [https://www.pokemonsleep.net/fr/news Site officiel de Pokémon Sleep]
+                    | Auteur = [[The Pokémon Company]]
+                    }}
+                    
+                    [[Catégorie:Image d'évènement de Pokémon Sleep]]""".formatted(name));
+            for (SimplifiedPokemon pokemon : pokemonOnImage) {
+                description.append("\n[[Catégorie:Image Pokémon représentant ").append(pokemon.getFullName()).append("]]");
+            }
+            String summary = "Image promotionelle d'évènement";
+            iconsToPublish.add(new FileToUpload(image, imageName, description.toString(), summary));
+        }
+
+        for (BundlePack pack : bundles) {
+            iconsToPublish.addAll(pack.getIconsToPublish());
+        }
+
+        return iconsToPublish;
     }
 }

@@ -3,7 +3,7 @@ package other;
 import sleep.bouffe.IngredientPoke;
 import sleep.bouffe.ListeIngredients;
 import sleep.dodos.SleepStyle;
-import sleep.dodos.Island;
+import sleep.zone.Island;
 import sleep.dodos.SleepRank;
 import sleep.dodos.TypesDodo;
 import sleep.pokemon.*;

@@ -13,15 +13,15 @@ package sleep.event.view;
 import sleep.event.Event;
 import sleep.event.Mission;
 import sleep.event.bonus.Bonus;
+import sleep.event.bonus.SpawnChanceBonus;
 import sleep.event.bundle.BundlePack;
 import sleep.pokemon.SimplifiedPokemon;
-import utilitaire.Page;
-import utilitaire.PageToPublish;
-import utilitaire.Util;
-import utilitaire.Wiki;
+import utilitaire.*;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,18 +29,21 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class EventUI extends JFrame {
-    private List<Bonus> bonuses = new ArrayList<>();
-    private List<SimplifiedPokemon> newPokemon = new ArrayList<>();
-    private List<SimplifiedPokemon> returningPokemon = new ArrayList<>();
-    private List<Mission> missions = new ArrayList<>();
-    private List<BundlePack> bundles = new ArrayList<>();
+    private final List<Bonus> bonuses = new ArrayList<>();
+    private final List<SimplifiedPokemon> newPokemon = new ArrayList<>();
+    private final List<SimplifiedPokemon> returningPokemon = new ArrayList<>();
+    private final List<Mission> missions = new ArrayList<>();
+    private final List<BundlePack> bundles = new ArrayList<>();
+    private final List<SimplifiedPokemon> pokemonOnImage = new ArrayList<>();
+    private File selectedFile = null;
 
     public EventUI(List<SimplifiedPokemon> pokemonList) {
         super("Création d'un évènement");
         JFrame frame = this;
-        setSize(600, 300);
+        setSize(600, 390);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -100,6 +103,40 @@ public class EventUI extends JFrame {
         });
         btnRemoveBundles.addActionListener(e -> removeFromList(bundles, lblBundles, " pack(s) ajouté(s)", btnRemoveBundles));
 
+        JLabel lblFile = new JLabel("Aucun fichier sélectionné");
+        JButton btnFile = new JButton("Choix de l'image");
+
+        btnFile.addActionListener(e -> {
+            File userImages = new File(System.getProperty("user.home"), "Images");
+            JFileChooser fileChooser = new JFileChooser(userImages);
+
+            fileChooser.setDialogTitle("Sélection de l'icône du bundle");
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fileChooser.setAcceptAllFileFilterUsed(false);
+            fileChooser.setFileFilter(
+                    new FileNameExtensionFilter("PNG images (*.png)", "png")
+            );
+
+            int result = fileChooser.showOpenDialog(mainPanel);
+
+            if (result == JFileChooser.APPROVE_OPTION) {
+                selectedFile = fileChooser.getSelectedFile();
+                lblFile.setText(fileChooser.getSelectedFile().getName());
+            }
+        });
+
+        JLabel lblImagePokemon = new JLabel("0 anciens Pokémon sélectionné(s)");
+        JButton btnAddImagePokemon = new JButton("Ajout");
+        JButton btnClearImagePokemon = new JButton("Supprimer dernier");
+        btnClearImagePokemon.setEnabled(false);
+        btnAddImagePokemon.addActionListener(e -> {
+            SimplifiedPokemon newImagePokemon = ObjectSelectionDialog.chooseObject(this, "Pokémon sur l'image", "Sélectionnez le Pokémon à ajouter", pokemonList);
+            updateListSingle(newImagePokemon, pokemonOnImage, lblImagePokemon, " Pokémon sélectionné(s)", btnClearImagePokemon);
+        });
+        btnClearImagePokemon.addActionListener(e -> removeFromList(returningPokemon, lblImagePokemon, " Pokémon sélectionné(s)", btnClearImagePokemon));
+
+        JTextField txtSpanish = new JTextField();
+
         JButton btnConfirm = new JButton("Confirmer");
         btnConfirm.addActionListener(e -> {
             String name = txtName.getText();
@@ -117,8 +154,12 @@ public class EventUI extends JFrame {
                 return;
             }
 
+            if (!newPokemon.isEmpty() || !returningPokemon.isEmpty()) {
+                bonuses.add(new SpawnChanceBonus());
+            }
+
             Event event = new Event(txtName.getText(), (Date) spnStartDate.getValue(), (Integer) spnDuration.getValue(),
-                    bonuses, newPokemon, returningPokemon, missions, bundles, link);
+                    bonuses, newPokemon, returningPokemon, missions, bundles, link, selectedFile, pokemonOnImage, txtSpanish.getText());
 
             String finalText = event.getWikiCode();
 
@@ -126,9 +167,19 @@ public class EventUI extends JFrame {
             edits.add(new PageToPublish(new Page(event.name(), Wiki.POKEPEDIA), finalText, "Page d'évènement à relire"));
             edits.add(event.updateEvenPage());
             edits.add(event.updateEventModel());
+            edits.add(event.updateShopPage());
 
+            edits.removeIf(Objects::isNull);
             Util.publishEditsConfirmed(edits);
-            System.out.println(finalText);
+
+            List<FileToUpload> filesToPublish = event.getIconsToPublish();
+            for (FileToUpload file : filesToPublish) {
+                if (file.upload()) {
+                    System.out.println(file.fileName() + " successfully uploaded");
+                } else {
+                    System.err.println(file.fileName() + " failed to upload");
+                }
+            }
         });
         btnConfirm.setAlignmentX(Component.LEFT_ALIGNMENT);
 
@@ -136,7 +187,7 @@ public class EventUI extends JFrame {
         generalPanel.setLayout(new GridLayout(2, 3));
         generalPanel.add(new JLabel("Nom :"));
         generalPanel.add(new JLabel("Date de début :"));
-        generalPanel.add(new JLabel("Durée :"));
+        generalPanel.add(new JLabel("Durée (en semaines) :"));
         generalPanel.add(txtName);
         generalPanel.add(spnStartDate);
         generalPanel.add(spnDuration);
@@ -154,6 +205,12 @@ public class EventUI extends JFrame {
         mainPanel.add(getSecondaryPanel(lblBonuses, btnBonuses, null));
         mainPanel.add(Box.createVerticalStrut(5));
         mainPanel.add(getSecondaryPanel(lblMissions, btnMissions, null));
+        mainPanel.add(Box.createVerticalStrut(5));
+        mainPanel.add(getSecondaryPanel(lblFile, btnFile, null));
+        mainPanel.add(Box.createVerticalStrut(5));
+        mainPanel.add(getSecondaryPanel(lblImagePokemon, btnAddImagePokemon, btnClearImagePokemon));
+        mainPanel.add(Box.createVerticalStrut(5));
+        mainPanel.add(getSecondaryPanel(new JLabel("Nom WikiDex :"), txtSpanish, null));
         mainPanel.add(Box.createVerticalStrut(10));
         mainPanel.add(btnConfirm);
 

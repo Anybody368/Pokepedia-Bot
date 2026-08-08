@@ -1,7 +1,7 @@
 package sleep.pokemon;
 
 import sleep.dodos.SleepStyle;
-import sleep.dodos.Island;
+import sleep.zone.Island;
 import sleep.dodos.TypesDodo;
 import sleep.UtilSleep;
 import sleep.bouffe.IngredientPoke;
@@ -427,7 +427,7 @@ public class Pokemon {
                 |- class="Sans-Famille"
                 | colspan="5" class="%s" | Famille de %s
                 |- class="Sans-Famille"
-                | colspan="5" | [[Fichier:Sprite %s%s Sleep.png|70px]]<br>[[%s/Jeux secondaires|%s]]""".formatted(
+                | colspan="5" | [[Fichier:Sprite %s%s Sleep.png|70px]]<br>[[%s/Pokémon Sleep|%s]]""".formatted(
                         m_type.getFrenchName().toLowerCase(), getRegionalName(), m_numDex, sexPlus, getRegionalName(), getRegionalName());
 
         lines.add(l, addition);
@@ -809,7 +809,7 @@ public class Pokemon {
         if(evolutionData.contains("#lst")) {
             String pokeName = Util.searchValueOf(evolutionData, "#lst:", "|", false);
             evolutionData = evolutionData.replaceAll("\\{\\{#lst:.+", "{{#lst:%s/Jeux secondaires|Tableau d'évolution Sleep}}".formatted(pokeName))
-                    .replace("[[%s]]".formatted(pokeName), "[[%s/Jeux secondaires|%s]]".formatted(pokeName, pokeName));
+                    .replace("[[%s]]".formatted(pokeName), "[[%s/Pokémon Sleep|%s]]".formatted(pokeName, pokeName));
         }
         else {
             for (String line : evolutionData.split("\n")) {

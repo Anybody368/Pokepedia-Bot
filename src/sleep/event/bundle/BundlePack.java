@@ -1,9 +1,12 @@
 package sleep.event.bundle;
 
+import utilitaire.FileToUpload;
 import utilitaire.Util;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public record BundlePack(Date startDate, Date endDate, List<Bundle> bundles) {
     public String getWikiCode() {
@@ -13,5 +16,14 @@ public record BundlePack(Date startDate, Date endDate, List<Bundle> bundles) {
             sb.append("\n").append(bundle.getWikiCode()).append("\n|-");
         }
         return sb.substring(0, sb.length() - 2);
+    }
+
+    public List<FileToUpload> getIconsToPublish() {
+        List<FileToUpload> iconsToPublish = new ArrayList<>();
+        for (Bundle bundle : bundles) {
+            iconsToPublish.add(bundle.getIconPage());
+        }
+        iconsToPublish.removeIf(Objects::isNull);
+        return iconsToPublish;
     }
 }
