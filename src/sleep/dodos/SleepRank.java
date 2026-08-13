@@ -45,5 +45,11 @@ public record SleepRank(
     public String getPalier() {
         return rankBall.name + " " + rankLevel;
     }
-    public String getBall() {return rankBall.name;}
+    public String getBall() {
+        return rankBall.name;
+    }
+
+    public String getRankLine() {
+        return "[[Fichier:Sprite Rang %s Sleep.png|30px]] %s".formatted(rankBall.name, getPalier());
+    }
 }

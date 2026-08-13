@@ -11,12 +11,12 @@ import static utilitaire.Wiki.POKEPEDIA;
 
 public class Recette {
     private final String m_nom;
-    private final CategoriesRecettes m_categorie;
+    private final CookingType m_categorie;
     private final ArrayList<IngredientPoke> m_ingredients;
     private final int m_puissance;
     private final String m_description;
 
-    public Recette(String nom, CategoriesRecettes categorie, ArrayList<IngredientPoke> liste, int puissance, String description)
+    public Recette(String nom, CookingType categorie, ArrayList<IngredientPoke> liste, int puissance, String description)
     {
         m_nom = nom;
         m_categorie = categorie;
@@ -45,7 +45,7 @@ public class Recette {
         }
         ArrayList<String> lignes = new ArrayList<>(Arrays.asList(content.split("\n")));
 
-        int l = lignes.indexOf("==== " + m_categorie.getNom() + " ====");
+        int l = lignes.indexOf("==== " + m_categorie.getName() + " ====");
         if(l == -1)
         {
             System.err.println("Erreur : Problème dans le nom de catégorie");

@@ -3,6 +3,7 @@ package utilitaire;
 import org.jetbrains.annotations.Contract;
 
 import java.io.File;
+import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
@@ -63,6 +64,8 @@ public class Util {
             "RAdar",
             "P3DP",
             "Pic",
+            "Pokkén",
+            "PokkénDX",
             "GO",
             "GO-v1",
             "GO-v2",
@@ -76,7 +79,8 @@ public class Util {
             "NPSnap",
             "UNITE",
             "Sleep",
-            "Friends"
+            "Friends",
+            "Pokopia"
     ));
 
     /**
@@ -460,15 +464,21 @@ public class Util {
     public static void publishEditsConfirmed(List<PageToPublish> pages) {
         for(PageToPublish edit : pages) {
             if (edit == null) continue;
+            long time = System.currentTimeMillis();
 
             Page page = edit.getPage();
             if(page.setContent(edit.getNewContent(), edit.getSummary(), edit.isMinor()))
             {
                 System.out.println(page.getTitle() + " was successfully uploaded.");
+                try {
+                    long delay = time + 1000 - System.currentTimeMillis();
+                    Thread.sleep(Math.max(1, delay));
+                } catch (InterruptedException _) {}
             }
             else
             {
                 System.err.println("Error during upload of " + page.getTitle());
+                System.out.println(edit.getNewContent());
             }
         }
     }

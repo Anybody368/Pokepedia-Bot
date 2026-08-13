@@ -10,6 +10,7 @@ public enum Competences {
     MAUVAIS_REVE("Mauvais Rêve (Ch. de Puiss. M)", "Charge de Puissance M", "Puissance"),
 
     AIMANT_FRAGMENT_DE_REVE("Aimant à Fragment de Rêve S", "Aimant à Fragment de Rêve S", "Fragment de Rêve"),
+    AURASPERE("Aurasphère (Aimant à Fragment de Rêve S)", "Aimant à Fragment de Rêve S", "Fragment de Rêve"),
 
     ENCOURAGEMENT_ENERGIQUE("Encouragement Énergique S", "Encouragement Énergique S", "Énergie"),
     FROTTE_FRIMOUSSE("Frotte-Frimousse (Encouragement Énergique S)", "Encouragement Énergique S", "Énergie"),

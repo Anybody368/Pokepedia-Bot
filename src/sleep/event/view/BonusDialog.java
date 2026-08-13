@@ -10,6 +10,7 @@
 
 package sleep.event.view;
 
+import sleep.bouffe.CookingType;
 import sleep.event.bonus.*;
 
 import javax.swing.*;
@@ -23,8 +24,11 @@ public class BonusDialog {
 
         JPanel mainPanel = new JPanel(new GridLayout(0, 2));
 
-        JCheckBox chbCB = new JCheckBox("Boost bonbon");
-        JCheckBox chbCBM = new JCheckBox("Mini boost bonbon");
+        JCheckBox chbEF = new JCheckBox("Fonctionnalité bonus");
+        JComboBox<ExtraFunctionalityBonus.Functionality> cmbEF = new JComboBox<>(ExtraFunctionalityBonus.Functionality.values());
+
+        JCheckBox chbCT = new JCheckBox("Type de plat défini");
+        JComboBox<CookingType> cmbCT = new JComboBox<>(CookingType.values());
 
         JCheckBox chbCS = new JCheckBox("Multiplicateur cuisine");
         JSpinner spnCS = new JSpinner(new SpinnerNumberModel(150,105,200,5));
@@ -52,6 +56,10 @@ public class BonusDialog {
         JCheckBox chbSTQ = new JCheckBox("Quelques Pokémon...");
         JCheckBox chbSTP = new JCheckBox("Plusieurs Pokémon...");
 
+        JCheckBox chbS = new JCheckBox("Boost chromatique");
+
+        mainPanel.add(chbCT);
+        mainPanel.add(cmbCT);
         mainPanel.add(chbCS);
         mainPanel.add(spnCS);
         mainPanel.add(chbSL);
@@ -70,12 +78,15 @@ public class BonusDialog {
         mainPanel.add(new JLabel());
         mainPanel.add(chbSTQ);
         mainPanel.add(chbSTP);
-        mainPanel.add(chbCB);
-        mainPanel.add(chbCBM);
+        mainPanel.add(chbS);
+        mainPanel.add(new JLabel());
+        mainPanel.add(chbEF);
+        mainPanel.add(cmbEF);
 
         int result = JOptionPane.showConfirmDialog(parent, mainPanel, "Choix des bonus", JOptionPane.OK_CANCEL_OPTION);
 
         if (result == JOptionPane.OK_OPTION) {
+            if (chbCT.isSelected()) bonuses.add(new CookingTypeBonus((CookingType) cmbCT.getSelectedItem()));
             if (chbCS.isSelected()) bonuses.add(new CookingStrengthBonus((Integer) spnCS.getValue() - 100));
             if (chbSL.isSelected()) bonuses.add(new SkillLevelBonus((Integer) spnSL.getValue()));
             if (chbST.isSelected()) bonuses.add(new SkillTrigerBonus((Integer) spnST.getValue() - 100));
@@ -86,8 +97,8 @@ public class BonusDialog {
             if (chbH.isSelected()) bonuses.add(new HungryBonus());
             if (chbSTQ.isSelected()) bonuses.add(new SleepTypeBonus(SleepTypeBonus.Quantity.QUELQUES));
             if (chbSTP.isSelected()) bonuses.add(new SleepTypeBonus(SleepTypeBonus.Quantity.PLUSIEURS));
-            if (chbCB.isSelected()) bonuses.add(new CandyBoostBonus(false));
-            if (chbCBM.isSelected()) bonuses.add(new CandyBoostBonus(true));
+            if (chbS.isSelected()) bonuses.add(new ShinyBonus());
+            if (chbEF.isSelected()) bonuses.add(new ExtraFunctionalityBonus((ExtraFunctionalityBonus.Functionality) cmbEF.getSelectedItem()));
 
             return bonuses;
         }

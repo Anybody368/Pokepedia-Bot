@@ -217,7 +217,7 @@ public class Pokemon {
                 continue;
             }
 
-            Page pageIle = new Page(ile.getName(false), POKEPEDIA);
+            Page pageIle = new Page(ile.getFullName(false), POKEPEDIA);
             String content = pageIle.getContent();
             ArrayList<String> lines = new ArrayList<>(Arrays.asList(content.split("\n")));
 
@@ -412,14 +412,14 @@ public class Pokemon {
         while(currentNumDex <= Integer.parseInt(m_numDex)) {
             l += 3;
             currentLine = lines.get(l);
-            while (!currentLine.startsWith("|-") && !currentLine.equals("|}")) {
+            while (!currentLine.startsWith("| colspan=\"5\" class=\"") && !currentLine.equals("|}")) {
                 l++;
                 currentLine = lines.get(l);
             }
 
             if (currentLine.equals("|}")) break;
 
-            currentNumDex = Integer.parseInt(Util.searchValueOf(lines.get(l + 3), "Sprite ", " ", false));
+            currentNumDex = Integer.parseInt(Util.searchValueOf(lines.get(l + 2), "Sprite ", " ", false));
         }
 
         String sexPlus = m_imageryType.equals(Imagery.AGENDER) ? "" : " ♂";
@@ -430,7 +430,7 @@ public class Pokemon {
                 | colspan="5" | [[Fichier:Sprite %s%s Sleep.png|70px]]<br>[[%s/Pokémon Sleep|%s]]""".formatted(
                         m_type.getFrenchName().toLowerCase(), getRegionalName(), m_numDex, sexPlus, getRegionalName(), getRegionalName());
 
-        lines.add(l, addition);
+        lines.add(l-1, addition);
 
         return Util.wikicodeReconstruction(lines);
     }
@@ -453,7 +453,7 @@ public class Pokemon {
     private String getLignePokeDodos() {
         StringBuilder zones = new StringBuilder();
         for (Island zone : m_zones) {
-            zones.append("[[").append(zone.getName(true)).append("]]<br>");
+            zones.append("[[").append(zone.getFullName(true)).append("]]<br>");
         }
         if (zones.isEmpty()) {
             zones.append("{{?}}");
@@ -832,7 +832,7 @@ public class Pokemon {
 
     private String getLocationsOnIsland(Island island) {
         StringBuilder data =  new StringBuilder("|-\n");
-        data.append("! [[%s]]\n".formatted(island.getName(true)));
+        data.append("! [[%s]]\n".formatted(island.getFullName(true)));
         for (SleepStyle sleepStyle : m_sleepList) {
             if (sleepStyle.isAvailableOnIsland(island)) {
                 data.append("| [[Fichier:Sprite Rang %s Sleep.png|30px]] %s\n".formatted(sleepStyle.getRankBallOnIsland(island),

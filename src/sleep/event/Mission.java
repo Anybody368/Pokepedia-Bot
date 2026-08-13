@@ -6,10 +6,10 @@ public record Mission(MissionType mission, ItemReward reward) {
         HYPER_1("Faire monter Ronflex au rang Hyper 1"),
         MASTER_1("Faire monter Ronflex au rang Master 1"),
         GIVE_BISCUITS("Donner 15 biscuits"),
-        RESPECT_SLEEP("Respecter 3 fois l'heure du coucher fixée"),
+        CANDY_USE("Utiliser 100 bonbons"),
         USE_ENCENS("Utiliser 7 encens"),
-        COOK("Cuisiner 15 fois"),
-        CANDY_USE("Utiliser 100 bonbons")
+        RESPECT_SLEEP("Respecter 3 fois l'heure du coucher fixée"),
+        COOK("Cuisiner 12 fois")
         ;
         private final String description;
         MissionType(String description) {

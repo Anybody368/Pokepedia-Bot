@@ -133,7 +133,7 @@ public class MakeSleepPokemonPage {
     private static ArrayList<Island> getPokemonIslands(String sleepData) {
         ArrayList<Island> islands = new ArrayList<>();
         for (Island i : Island.values()) {
-            if (sleepData.contains(i.getName(true) + "]]")) islands.add(i);
+            if (sleepData.contains(i.getFullName(true) + "]]")) islands.add(i);
         }
         return islands;
     }
@@ -149,7 +149,7 @@ public class MakeSleepPokemonPage {
                 int l = -1;
                 boolean exists = false;
                 for(int j = 0; j < locations.length; j++) {
-                    if (locations[j].contains(island.getName(true) + "]")) {
+                    if (locations[j].contains(island.getFullName(true) + "]")) {
                         exists = true;
                         l = j;
                         break;

@@ -32,10 +32,10 @@ public class MissionsDialog {
 
         for (Mission.MissionType missionType : Mission.MissionType.values()) {
             JPanel missionPanel = new JPanel(new GridLayout(2, 2));
-            JCheckBox chbMission = new JCheckBox(missionType.toString());
+            JCheckBox chbMission = new JCheckBox(missionType.description());
 
             missionPanel.add(chbMission);
-            missionPanel.add(new JLabel(missionType.description()));
+            missionPanel.add(new JLabel());
             missionPanel.add(new JComboBox<>(ItemReward.Item.values()));
             missionPanel.add(
                     new JSpinner(new SpinnerNumberModel(1, 1, 100000, 1))

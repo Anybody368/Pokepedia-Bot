@@ -43,7 +43,7 @@ public class EventUI extends JFrame {
     public EventUI(List<SimplifiedPokemon> pokemonList) {
         super("Création d'un évènement");
         JFrame frame = this;
-        setSize(600, 390);
+        setSize(700, 430);
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
 
@@ -78,6 +78,8 @@ public class EventUI extends JFrame {
             updateListSingle(newOldPokemon, returningPokemon, lblOldPokemon, " Pokémon sélectionné(s)", btnClearOldPokemon);
         });
         btnClearOldPokemon.addActionListener(e -> removeFromList(returningPokemon, lblOldPokemon, " Pokémon sélectionné(s)", btnClearOldPokemon));
+        JCheckBox chbShinyBoosted = new JCheckBox("Taux de chromatique boosté");
+        chbShinyBoosted.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JButton btnBonuses = new JButton("Choix des bonus");
         JLabel lblBonuses = new JLabel("0 bonus sélectionné(s)");
@@ -139,6 +141,7 @@ public class EventUI extends JFrame {
 
         JButton btnConfirm = new JButton("Confirmer");
         btnConfirm.addActionListener(e -> {
+            frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             String name = txtName.getText();
             if (name.isBlank()) {
                 showInputError("Nom de l'évent manquant");
@@ -155,7 +158,7 @@ public class EventUI extends JFrame {
             }
 
             if (!newPokemon.isEmpty() || !returningPokemon.isEmpty()) {
-                bonuses.add(new SpawnChanceBonus());
+                bonuses.add(new SpawnChanceBonus(chbShinyBoosted.isSelected()));
             }
 
             Event event = new Event(txtName.getText(), (Date) spnStartDate.getValue(), (Integer) spnDuration.getValue(),
@@ -167,21 +170,26 @@ public class EventUI extends JFrame {
             edits.add(new PageToPublish(new Page(event.name(), Wiki.POKEPEDIA), finalText, "Page d'évènement à relire"));
             edits.add(event.updateEvenPage());
             edits.add(event.updateEventModel());
-            edits.add(event.updateShopPage());
 
             edits.removeIf(Objects::isNull);
             Util.publishEditsConfirmed(edits);
 
             List<FileToUpload> filesToPublish = event.getIconsToPublish();
             for (FileToUpload file : filesToPublish) {
+                long time = System.currentTimeMillis();
                 if (file.upload()) {
                     System.out.println(file.fileName() + " successfully uploaded");
+                    try {
+                        long delay = time + 1000 - System.currentTimeMillis();
+                        Thread.sleep(Math.max(1, delay));
+                    } catch (InterruptedException _) {}
                 } else {
                     System.err.println(file.fileName() + " failed to upload");
                 }
             }
+
+            frame.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         });
-        btnConfirm.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JPanel generalPanel = new JPanel();
         generalPanel.setLayout(new GridLayout(2, 3));
@@ -191,6 +199,7 @@ public class EventUI extends JFrame {
         generalPanel.add(txtName);
         generalPanel.add(spnStartDate);
         generalPanel.add(spnDuration);
+        generalPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         mainPanel.add(generalPanel);
         mainPanel.add(Box.createVerticalStrut(5));
@@ -199,6 +208,7 @@ public class EventUI extends JFrame {
         mainPanel.add(getSecondaryPanel(lblNewPokemon, btnAddNewPokemon, btnClearNewPokemon));
         mainPanel.add(Box.createVerticalStrut(5));
         mainPanel.add(getSecondaryPanel(lblOldPokemon, btnAddOldPokemon, btnClearOldPokemon));
+        mainPanel.add(chbShinyBoosted);
         mainPanel.add(Box.createVerticalStrut(5));
         mainPanel.add(getSecondaryPanel(lblBundles, btnAddBundles, btnRemoveBundles));
         mainPanel.add(Box.createVerticalStrut(5));
@@ -211,7 +221,7 @@ public class EventUI extends JFrame {
         mainPanel.add(getSecondaryPanel(lblImagePokemon, btnAddImagePokemon, btnClearImagePokemon));
         mainPanel.add(Box.createVerticalStrut(5));
         mainPanel.add(getSecondaryPanel(new JLabel("Nom WikiDex :"), txtSpanish, null));
-        mainPanel.add(Box.createVerticalStrut(10));
+        mainPanel.add(Box.createVerticalStrut(20));
         mainPanel.add(btnConfirm);
 
         setContentPane(mainPanel);
@@ -262,7 +272,7 @@ public class EventUI extends JFrame {
         }
         panel.add(Box.createHorizontalGlue());
 
-        panel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        panel.setAlignmentX(Component.LEFT_ALIGNMENT);
         return panel;
     }
 }

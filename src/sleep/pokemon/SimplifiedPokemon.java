@@ -33,12 +33,8 @@ public record SimplifiedPokemon(String name, String forme, PokeTypes type, Speci
 
     public String getSleepData() {
         List<SleepStyle> sleepStyles = getSleepStyles();
-        String sleepStr = sleep.getNom();
 
-        StringBuilder sleepData = new StringBuilder("""
-                | rowspan="%d" | {{#invoke:Ressources|pokemon|%s jeu(Sleep)}}
-                | rowspan="%d" class="%s" | [[Fichier:Icône Type %s Sleep.png|50px]] %s""".formatted(sleepStyles.size(),
-                getId(), sleepStyles.size(), sleepStr.toLowerCase(), sleepStr.toLowerCase(), sleepStr));
+        StringBuilder sleepData = new StringBuilder(getSleepFirstLines(sleepStyles.size()));
 
         for (int i = 1; i <= sleepStyles.size(); i++) {
             SleepStyle sleepStyle = sleepStyles.get(i-1);
@@ -48,6 +44,23 @@ public record SimplifiedPokemon(String name, String forme, PokeTypes type, Speci
         }
 
         return sleepData.toString();
+    }
+
+    public String getSleepFirstLines(int sleepCount) {
+        String sleepStr = sleep.getNom();
+        return """
+                | rowspan="%d" | {{#invoke:Ressources|pokemon|%s jeu(Sleep)}}
+                | rowspan="%d" class="%s" | [[Fichier:Icône Type %s Sleep.png|50px]] %s""".formatted(sleepCount,
+                getId(), sleepCount, sleepStr.toLowerCase(), sleepStr.toLowerCase(), sleepStr);
+    }
+
+    public String getSleepListID() {
+        String id = "nom=" + name;
+        if (forme != null) {
+            id += "|forme=" + forme;
+        }
+
+        return id + "|type";
     }
 
     private String getId() {
@@ -86,7 +99,7 @@ public record SimplifiedPokemon(String name, String forme, PokeTypes type, Speci
             HashMap<Island, SleepRank> locations = new HashMap<>();
 
             for (Island island : Island.values()) {
-                initialLine = lines.indexOf("! [[%s]]".formatted(island.getName(true)));
+                initialLine = lines.indexOf("! [[%s]]".formatted(island.getFullName(true)));
                 if (initialLine == -1) continue;
                 String line = lines.get(initialLine + i);
                 if (line.equals("| —")) continue;

@@ -31,7 +31,7 @@ public record SleepStyle(String name, int rarity, int exp, int shards, int candy
             }
             SleepRank loc = locations.get(island);
             r.append("[[Fichier:Sprite Rang %s Sleep.png|25px]] %s ([[%s]])".formatted(
-                    loc.getBall(), loc.getPalier(), island.getName(true)
+                    loc.getBall(), loc.getPalier(), island.getFullName(true)
             ));
         }
         return r.toString();

@@ -65,7 +65,7 @@ public class DialogDodoPoke extends JDialog {
 
         for(Island ile : iles)
         {
-            panel.add(new JLabel(ile.getName(true)));
+            panel.add(new JLabel(ile.getFullName(true)));
             panel.add(new JComboBox<>(new String[]{"n", "Basique 1", "Basique 2", "Basique 3", "Basique 4", "Basique 5",
                     "Super 1", "Super 2", "Super 3", "Super 4", "Super 5", "Hyper 1", "Hyper 2", "Hyper 3", "Hyper 4", "Hyper 5",
                     "Master 1", "Master 2", "Master 3", "Master 4", "Master 5", "Master 6", "Master 7", "Master 8", "Master 9", "Master 10",

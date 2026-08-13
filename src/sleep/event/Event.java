@@ -1,7 +1,6 @@
 package sleep.event;
 
 import sleep.event.bonus.Bonus;
-import sleep.event.bundle.Bundle;
 import sleep.event.bundle.BundlePack;
 import sleep.pokemon.SimplifiedPokemon;
 import utilitaire.*;
@@ -193,7 +192,7 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
 
         section.append("Ci-dessous, les rangs de dodoforce à atteindre avec Ronflex pour faire apparaître ")
                 .append(apparition).append("""
-                        lors d'une session de sommeil, pendant l'évènement.
+                         lors d'une session de sommeil, pendant l'évènement.
                         
                         {| class="tableaustandard"
                         ! Nom
@@ -244,7 +243,7 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
     }
 
     private String getNameWithArticle() {
-        return name.startsWith("Semaine") ? "La " + name : name;
+        return (name.startsWith("Semaine") || name.startsWith("Fête")) ? "La " + name : name;
     }
 
     private String getSpanishLink() {
@@ -327,6 +326,7 @@ public record Event(String name, Date startDate, int weekDuration, List<Bonus> b
         return new PageToPublish(eventPage, newContent, "Ajout de " + name);
     }
 
+    @Deprecated
     public PageToPublish updateShopPage() {
         int year = getYear();
         Page page = new Page("Boutique (Pokémon Sleep)", Wiki.POKEPEDIA);

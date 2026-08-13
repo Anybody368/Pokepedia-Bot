@@ -1,8 +1,12 @@
 package sleep.event.bonus;
 
-public record SpawnChanceBonus() implements Bonus {
+public record SpawnChanceBonus(boolean shinyIsBoosted) implements Bonus {
     @Override
     public String getBonusString() {
-        return "certains Pokémon ont plus de chance d'apparaître pendant les recherches sur le sommeil";
+        if (shinyIsBoosted) {
+            return "certains Pokémon ont plus de chance d'apparaître pendant les recherches sur le sommeil, y compris sous leur forme [[chromatique]]";
+        } else {
+            return "certains Pokémon ont plus de chance d'apparaître pendant les recherches sur le sommeil";
+        }
     }
 }

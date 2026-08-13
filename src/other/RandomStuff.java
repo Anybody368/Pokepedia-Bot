@@ -29,7 +29,7 @@ public class RandomStuff {
         while (currentLine.length() > 10) {
             StringBuilder zones = new StringBuilder("|zones=");
             for (Island zone : Island.values()) {
-                if (currentLine.contains(zone.getName(true))) zones.append("[[%s]]<br>".formatted(zone.getName(true)));
+                if (currentLine.contains(zone.getFullName(true))) zones.append("[[%s]]<br>".formatted(zone.getFullName(true)));
             }
 
             int place = currentLine.contains("|dodo=") ? currentLine.indexOf("|dodo=") : currentLine.indexOf("}}");

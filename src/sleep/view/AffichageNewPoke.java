@@ -90,7 +90,7 @@ public class AffichageNewPoke extends JFrame {
 
         for(Island ile : Island.values())
         {
-            panel.add(new JCheckBox(ile.getName(true)));
+            panel.add(new JCheckBox(ile.getFullName(true)));
         }
 
         panel.add(new JLabel());

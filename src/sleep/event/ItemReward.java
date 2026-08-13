@@ -23,12 +23,14 @@ public record ItemReward(Item item, int quantity) {
         ENCENS_AMITIE("Encens Amitié", "Encens (Pokémon Sleep)|Encens Amitié]]", true),
         ENCENS_VEINE("Encens Veine", "Encens (Pokémon Sleep)|Encens Veine]]", true),
         ENCENS_CONCENTRATION("Encens Concentration", "Encens (Pokémon Sleep)|Encens Concentration]]", true),
+        ENCENS_CROISSANCE("Encens Croissance", "Encens (Pokémon Sleep)|Encens Croissance]]", true),
         ENCENS_POKEMON("Encens ???", "Encens (Pokémon Sleep)|Encens ???]]", false),
 
         TICKET_CAMPING("Ticket de Camping", "Ticket de Camping]]", true),
 
         GRAINE_PRINCIPALE("Graine de Compétence Principale", "Graine de Compétence Principale]]", true),
         GRAINE_SECONDAIRE("Graine de Compétence Secondaire", "Graine de Compétence Secondaire]]", true),
+        GRAINE_PRINCIPALE_POKEMON("Graine de Compétence Principale", "Graine de Compétence Principale|Graine de Compétence Principale (???)]]", true),
 
         FRAGMENT_DE_REVE("Fragment de Rêve", "Fragment de Rêve]]", true),
         ;

@@ -11,40 +11,49 @@
 package sleep.zone;
 
 public enum Island {
-    ILE_VERTEPOUSSE("Île Vertepousse", false),
-    PLAGE_CYAN("Plage Cyan", false),
-    GROTTE_SEPIA("Grotte Sépia", false),
-    PLAINE_PERCENEIGE("Plaine Perce-neige", false),
-    RIVAGE_LAPISLAZULI("Rivage Lapis-lazuli", false),
-    VIEILLE_CENTRALE_DOREE("Vieille Centrale Dorée", false),
-    CANYON_AMBRE("Canyon Ambre", false),
+    ILE_VERTEPOUSSE("Île Vertepousse", false, "L'"),
+    PLAGE_CYAN("Plage Cyan", false, "La "),
+    GROTTE_SEPIA("Grotte Sépia", false, "La "),
+    PLAINE_PERCENEIGE("Plaine Perce-neige", false, "La "),
+    RIVAGE_LAPISLAZULI("Rivage Lapis-lazuli", false, "La "),
+    VIEILLE_CENTRALE_DOREE("Vieille Centrale Dorée", false, "La "),
+    CANYON_AMBRE("Canyon Ambre", false, "La "),
 
-    EX_ILE_VERTEPOUSSE("Île Vertepousse", true);
-    private final String m_name;
-    private final boolean m_isExpert;
+    EX_ILE_VERTEPOUSSE("Île Vertepousse", true, "L'"),
+    EX_PLAGE_CYAN("Plage Cyan", true, "La ");
+    private final String name;
+    private final boolean isExpert;
+    private final String article;
 
-    Island(String name, boolean isExpert)
+    Island(String name, boolean isExpert, String article)
     {
-        m_name = name;
-        m_isExpert = isExpert;
+        this.name = name;
+        this.isExpert = isExpert;
+        this.article = article;
     }
 
     public boolean isExpert()
     {
-        return m_isExpert;
+        return isExpert;
     }
 
-    public String getName(boolean getShort) {
-        if(!m_isExpert) {
-            return m_name;
+    public String getFullName(boolean getShort) {
+        if(!isExpert) {
+            return name;
         } else {
             if(!getShort) {
-                return m_name + " (mode expert)";
+                return name + " (mode expert)";
             } else {
-                return m_name + " (expert)";
+                return name + " (expert)";
             }
         }
     }
 
+    public String getArticle() {
+        return article;
+    }
 
+    public String getName() {
+        return name;
+    }
 }

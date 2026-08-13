@@ -60,12 +60,14 @@ public class SleepApp {
 
         //Ajout manuel de recettes
         /*ArrayList<IngredientPoke> ingr = new ArrayList<>();
-        ingr.add(new IngredientPoke(ListeIngredients.MIEL, 38));
-        ingr.add(new IngredientPoke(ListeIngredients.MAIS_VERTEPOUSSE, 28));
-        ingr.add(new IngredientPoke(ListeIngredients.HUILE_PURE, 28));
-        ingr.add(new IngredientPoke(ListeIngredients.CACAO_RELAXANT, 21));
+        ingr.add(new IngredientPoke(ListeIngredients.GINGEMBRE_CHALEUREUX, 20));
+        ingr.add(new IngredientPoke(ListeIngredients.AROMATE_ARDENT, 20));
+        ingr.add(new IngredientPoke(ListeIngredients.SOJA_VERTEPOUSSE, 8));
+        ingr.add(new IngredientPoke(ListeIngredients.HUILE_PURE, 15));
 
-        Recette newRecette = new Recette("Gaufre au chocolat Cherche Miel", CategoriesRecettes.BOISSONS_DESSERTS, ingr, 25484, "Cette gourmandise a été préparée en mélangeant une pâte amère avec du cacao, avant d'être recouverte généreusement avec du miel.");
+        String description = "Un concentré de saveurs de l'Île Vertepousse dans une petit pain au curry. Croustillant à l'extérieur, gourmand à l'intérieur.";
+
+        Recette newRecette = new Recette("Petit Pain au Curry Vertepousse", CategoriesRecettes.CURRYS_RAGOUTS, ingr, 10945, description);
         HashMap<Page, String> pages = newRecette.getModifiedPages();
 
         Scanner confirm = new Scanner(System.in);
