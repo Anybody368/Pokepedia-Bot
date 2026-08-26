@@ -497,4 +497,23 @@ public class Util {
 
         return cal.getTime();
     }
+
+    public static String insertIntoSideGamesPage(Page page, String game, String content) {
+
+        return "";
+    }
+
+    public static String extractSection(String content, String sectionName) {
+        int level = sectionName.split(" ")[0].length();
+        if (!content.contains(sectionName)) throw new ElementNotFoundException(sectionName, "section in the page");
+
+        String result = null;
+
+        for (int i = 1; i <= level; i++) {
+            String newResult = searchValueOf(content, sectionName, "\n" + "=".repeat(i) + " ", false).strip();
+            if (result == null || newResult.length() < result.length()) result = newResult;
+        }
+
+        return result;
+    }
 }

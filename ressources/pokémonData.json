@@ -8211,7 +8211,7 @@
   "type1" : "POISON",
   "type2" : "EAU",
   "forms" : [ ],
-  "regionalForms" : [ "ALOLA" ],
+  "regionalForms" : [ ],
   "HasMega" : false,
   "HasGigantamax" : false,
   "numDex" : 747

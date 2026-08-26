@@ -2,10 +2,7 @@ package tcgp.card;
 
 import tcgp.Dictionary;
 import tcgp.category.*;
-import tcgp.category.decorator.PastFutureTense;
-import tcgp.category.decorator.RegionalForm;
-import tcgp.category.decorator.SpecialForm;
-import tcgp.category.decorator.UltraBeast;
+import tcgp.category.decorator.*;
 import tcgp.category.pokemon.PokeEXStrategy;
 import tcgp.category.pokemon.PokeMegaEXStrategy;
 import tcgp.category.pokemon.PokemonStrategy;
@@ -155,6 +152,11 @@ public class Card {
             }
         }
 
+        PokemonTrainerName trainer = PokemonTrainerName.getTrainerFromEnglish(m_enName);
+        if (trainer != null) {
+            category = new PokemonTrainer(category, trainer);
+        }
+
         if(en_text.contains("{{Cardtext/UltraBeast")) {
             category = new UltraBeast(category);
         }
@@ -220,6 +222,9 @@ public class Card {
                 String name = specialForm.isAdjectiveAtTheEnd() ? m_enName.substring(0, m_enName.length() - specialForm.getFormEnSize())
                         : m_enName.substring(specialForm.getFormEnSize());
                 m_frName = PokeData.getFrenchNameFromEnglish(name, "special form Pokémon name") + " " + specialForm.getFrAdjective();
+            } else if (m_category instanceof PokemonTrainer pokemonTrainer) {
+                String name = m_enName.substring(pokemonTrainer.getTrainerEnSize());
+                m_frName = PokeData.getFrenchNameFromEnglish(name, "Trainer's Pokémon name") + " " + pokemonTrainer.getFrFullName();
             } else {
                 m_frName = PokeData.getFrenchNameFromEnglish(m_enName, "Pokémon name");
             }
