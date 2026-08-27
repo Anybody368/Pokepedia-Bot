@@ -16,9 +16,9 @@ public class PokeForme extends Pokemon{
     private final String m_nomForme;
     private final String m_precision;
 
-    public PokeForme(String nom, String forme, String precision, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType, String description, boolean isSingle)
+    public PokeForme(String nom, String forme, String precision, int numDex, PokeTypes type, TypesDodo dodoType, Specialites specialite, ArrayList<IngredientPoke> ingredients, ArrayList<SleepStyle> sleepStyles, ArrayList<Island> iles, String frequence, int capacite, Competences competence, int ptsAmitie, String bonbon, Imagery imageryType)
     {
-        super(nom, numDex, type, dodoType, specialite, ingredients, sleepStyles, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType, description, isSingle);
+        super(nom, numDex, type, dodoType, specialite, ingredients, sleepStyles, iles, frequence, capacite, competence, ptsAmitie, bonbon, imageryType, "ERREUR A L'AJOUT D'UNE FORME", false);
         m_nomForme = forme;
         m_precision = precision;
     }
@@ -26,6 +26,8 @@ public class PokeForme extends Pokemon{
     @Override
     public ArrayList<PageToPublish> getWikiModifications() {
         ArrayList<PageToPublish> wikiPages = super.getWikiModifications();
+        wikiPages.remove(5);
+        wikiPages.remove(4);
         wikiPages.remove(3);
 
         return wikiPages;
@@ -76,5 +78,10 @@ public class PokeForme extends Pokemon{
         String form = m_nomForme + addPrecision().replace("(", "\\(").replace(")", "\\(");
 
         return super.getPokemonListName() + " forme(" + form + ")";
+    }
+
+    @Override
+    public boolean hasUniqueCandy() {
+        return false;
     }
 }

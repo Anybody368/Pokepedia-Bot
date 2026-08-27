@@ -123,18 +123,18 @@ public class Pokemon {
         wikiPages.add(new PageToPublish(listeSoutien, updateListePokeSoutien(listeSoutien), SUMMARY));
         wikiPages.add(new PageToPublish(listeDodo, updateListeDodo(listeDodo), SUMMARY));
         wikiPages.add(new PageToPublish(imagery, updateImageryPage(imagery), "Ajout Pokémon Sleep"));
-        if(updateAbilityPage(ability) != null) {
-            wikiPages.add(new PageToPublish(ability, updateAbilityPage(ability), SUMMARY));
-        }
-        wikiPages.addAll(updateZones());
         wikiPages.add(new PageToPublish(main, updateMainPokemonPage(main), "Ajout description Pokèmon Sleep"));
         wikiPages.add(new PageToPublish(secondaryGames, makePokemonPage(), "Ajout Pokémon Sleep à compléter"));
         wikiPages.add(new PageToPublish(redirection, "#REDIRECTION [[%s/Jeux secondaires#Pokémon Sleep]]".formatted(getRegionalName()), "Redirection vers Jeux secondaires"));
+        wikiPages.addAll(updateZones());
+        if(updateAbilityPage(ability) != null) {
+            wikiPages.add(new PageToPublish(ability, updateAbilityPage(ability), SUMMARY));
+        }
 
         //Si le pokémon n'est pas la forme de base de sa ligne évolutive, on ne l'ajoute pas à certaines pages.
         if (hasUniqueCandy()) {
-            wikiPages.add(new PageToPublish(listeIngredients, updateIngredientsPage(listeIngredients), SUMMARY));
             wikiPages.add(new PageToPublish(listeBonbons, updateCandyPage(listeBonbons), SUMMARY));
+            wikiPages.add(new PageToPublish(listeIngredients, updateIngredientsPage(listeIngredients), SUMMARY));
         }
 
         //Si le Pokémon n'a pas de famille evolutive, on peut l'ajouter automatiquement a la page des familles d'évolution
@@ -795,6 +795,8 @@ public class Pokemon {
     }
 
     private String getEvolutionData(Page basePage) {
+        if (m_isSingle) return "";
+
         String evolutionData = Util.searchValueOf(basePage.getContent(), "=== [[Évolution]] ===\n", "\n==", true);
         if(evolutionData == null || evolutionData.contains("n'a pas d'évolution")) return "";
 
@@ -876,7 +878,7 @@ public class Pokemon {
     private String getDescriptionInsert() {
         return """
                 ;{{Jeu|Sleep}}
-                %s
+                :%s
                 """.formatted(m_description);
     }
 

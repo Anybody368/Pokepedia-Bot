@@ -63,7 +63,7 @@ public class SpriteHandler {
 
     private void uploadSleeping() {
         for (int i = 1; i <= m_pokemon.getSleepCount(); i++) {
-            String localDirectory = "/sleep/" + ((i == 4) ? "onSnorlax" : i) + "/";
+            String localDirectory = "/sleep/" + i + "/";
             File sprite = new File(PATH_TO_ARCHIVE + localDirectory + m_numDex + ".png");
             uploadSprite(sprite, "Sprite " + m_pokemon.getNumDex() + " Dodo " + i + " Sleep.png");
         }

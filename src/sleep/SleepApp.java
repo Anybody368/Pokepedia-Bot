@@ -3,10 +3,10 @@ package sleep;
 import sleep.bouffe.*;
 import sleep.dodos.*;
 import sleep.pokemon.*;
+import sleep.pokemon.Pokemon;
 import sleep.view.AffichageNewPoke;
-import utilitaire.Login;
-import utilitaire.Page;
-import utilitaire.PokeTypes;
+import sleep.zone.Island;
+import utilitaire.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,40 +23,31 @@ public class SleepApp {
         new AffichageNewPoke();
 
         //Ajout manuel de forme spéciale
-        /*ArrayList<Iles> iles = new ArrayList<>();
-        ArrayList<Dodo> dodos = new ArrayList<>();
+        /*ArrayList<Island> iles = new ArrayList<>();
+        ArrayList<SleepStyle> dodos = new ArrayList<>();
         ArrayList<IngredientPoke> ingr = new ArrayList<>();
 
-        iles.add(Iles.ILE_VERTEPOUSSE);
-        iles.add(Iles.EX_ILE_VERTEPOUSSE);
+        iles.add(Island.ILE_VERTEPOUSSE);
 
-        dodos.add(new Dodo("Bascule", 1, 27, 75, 4, iles, true));
-        dodos.add(new Dodo("Oreilles Tombantes", 2, 228, 676, 6, iles, true));
+        HashMap<Island, SleepRank> ranks1 = new HashMap<>();
+        ranks1.put(Island.ILE_VERTEPOUSSE, new SleepRank("b3"));
+
+        //HashMap<Island, SleepRank> ranks2 = new HashMap<>();
+
+
+        dodos.add(new SleepStyle("sur Queue", 1, 67, 195, 5, ranks1));
+        //dodos.add(new SleepStyle("Oreilles Tombantes", 2, 228, 676, 6, iles, true));
         //dodos.add(new Dodo("Vautre-Boue", 3, 2303, 1809, 7, iles, true));
         //dodos.add(new Dodo("sur Gros Bidou", 4, 3076, 2415, 8, iles, true));
 
-        ingr.add(new IngredientPoke(ListeIngredients.HUILE_PURE, 1, 2, 4));
-        ingr.add(new IngredientPoke(ListeIngredients.VIANDE_VEGETALE, 0, 3, 4));
-        ingr.add(new IngredientPoke(ListeIngredients.GINGEMBRE_CHALEUREUX, 0, 0, 4));
+        ingr.add(new IngredientPoke(ListeIngredients.POMME_JUTEUSE, 1, 2, 4));
+        ingr.add(new IngredientPoke(ListeIngredients.GINGEMBRE_CHALEUREUX, 0, 2, 3));
+        ingr.add(new IngredientPoke(ListeIngredients.OEUF_EXQUIS, 0, 0, 3));
 
-        Pokemon newPoke = new PokeForme("Obalie", "Fêtes", "", 363, PokeTypes.GLACE, TypesDodo.GRODODO, Specialites.COMPETENCES, ingr, dodos, iles, "55:00", 20, Competences.PLAT_SUPER_BON, 5, "Obalie", Imagery.AGENDER);
-        HashMap<Page, String> wikiPages = newPoke.getWikiModifications();
+        Pokemon newPoke = new PokeForme("Pikachu", "Capitaine", "", 25, PokeTypes.ELECTRIK, TypesDodo.BONDODO, Specialites.BAIES, ingr, dodos, iles, "41:40", 21, Competences.AIMANT_INGREDIENT, 7, "Pikachu", Imagery.AGENDER);
+        ArrayList<PageToPublish> wikiPages = newPoke.getWikiModifications();
 
-        Scanner confirm = new Scanner(System.in);
-        System.out.println("Toutes les pages sont prêtes, appuyez sur \"Entrer\" pour lancer la publication.");
-        confirm.nextLine();
-        confirm.close();
-
-        wikiPages.forEach( (k, v) -> {
-            if(k.setContent(v, "Ajout automatique de la forme de " + newPoke.getName()))
-            {
-                System.out.println(k.getTitle() + " modifiée avec succès !");
-            }
-            else
-            {
-                System.err.println("Echec de la modification de " + k.getTitle());
-            }
-        });*/
+        Util.publishMultipleEdits(wikiPages);*/
 
         //Ajout manuel de recettes
         /*ArrayList<IngredientPoke> ingr = new ArrayList<>();
