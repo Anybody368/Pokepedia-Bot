@@ -50,7 +50,9 @@ public class CardListMaker {
             }
 
             String model = Util.searchValueOf(line, "|| ", " ||", false);
-            links.add(cardModelToLink(model));
+            String link = cardModelToLink(model);
+            links.add(link);
+            System.out.println(link);
         }
 
         try {

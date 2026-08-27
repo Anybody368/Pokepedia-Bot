@@ -30,7 +30,9 @@ public enum Expansion {
     MEGA_RAYONNEMENT("Méga-Rayonnement", "Mega Shine", 69, false),
     AURA_PALPITANTE("Aura Palpitante", "Pulsing Aura", 155, false),
     PROPULSION_PARADOXE("Propulsion Paradoxe", "Paradox Drive", 74, false),
-    JOURS_HEUREUX("Jours Heureux", "Everyday Wonders", 69, false);
+    JOURS_HEUREUX("Jours Heureux", "Everyday Wonders", 69, false),
+    DOMINATION_CELESTE("Domination Céleste", "Ruler of the Skies", 155, false),
+    L_AMBITION_DE_LA_TEAM_ROCKET("L'Ambition de la Team Rocket", "Team Rocket's Ambition", 72, false);
 
     private final String m_frName;
     private final String m_enName;
