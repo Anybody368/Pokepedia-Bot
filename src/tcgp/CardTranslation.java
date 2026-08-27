@@ -41,6 +41,7 @@ public class CardTranslation {
             while(scan.hasNextLine())
             {
                 String nomPage = scan.nextLine();
+                System.out.println("Gestion de " + nomPage + "...");
                 Page page = new Page(nomPage, Wiki.BULBAPEDIA);
                 String content = page.getContent();
                 //System.out.println(content);

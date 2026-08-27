@@ -14,6 +14,8 @@ import tcgp.category.CategoryStrategy;
 import tcgp.enums.PokemonTrainerName;
 import utilitaire.Util;
 
+import java.util.regex.Pattern;
+
 public class PokemonTrainer extends BaseDecorator {
     private final PokemonTrainerName trainer;
 
@@ -40,6 +42,11 @@ public class PokemonTrainer extends BaseDecorator {
             String name = Util.searchValueOf(original, "| nom=", false).replace(" "  + trainer.getNameWithAdjective(), "");
             result = original.substring(0, place1) + "<small>" + original.substring(place1, place2) + "</small>\n| nomréel="
                     + name + original.substring(place2);
+        }
+
+        if (original.contains("{{Symbole JCC")) {
+            String symbol = "{{Symbole JCC|" + Util.searchValueOf(original, "{{Symbole JCC|", "}}", false) + "}}";
+            result = Util.insertIntoString(result.replaceFirst(Pattern.quote(symbol), ""), symbol, place1-1);
         }
 
         int enAdjectivePlace = result.indexOf(trainer.enName);

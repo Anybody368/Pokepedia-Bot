@@ -18,7 +18,7 @@ public class Utilitaire {
 
         PokemonTrainerName trainer = PokemonTrainerName.getTrainerFromFrench(frName);
         if (trainer != null) {
-            return frName.substring(0, frName.length() - trainer.getNameWithAdjective().length());
+            return frName.substring(0, frName.length() - trainer.getNameWithAdjective().length()-1);
         }
         return frName;
     }

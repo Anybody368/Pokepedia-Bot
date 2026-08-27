@@ -365,7 +365,13 @@ public class Card {
      */
     private String getPageName(CardSpecs spec)
     {
-        return(m_frName + m_category.getTitleBonus() + " (" + spec.getExpansionFrName() + " " + spec.getNbrCardToString() + ")");
+        if (m_category instanceof PokemonTrainer pokemonTrainer) {
+            int index = m_frName.indexOf(" " + pokemonTrainer.getFrFullName());
+            String cardName = m_frName.substring(0, index) + pokemonTrainer.getTitleBonus() + m_frName.substring(index);
+            return cardName + " (" + spec.getExpansionFrName() + " " + spec.getNbrCardToString() + ")";
+        } else {
+            return (m_frName + m_category.getTitleBonus() + " (" + spec.getExpansionFrName() + " " + spec.getNbrCardToString() + ")");
+        }
     }
 
     /**
