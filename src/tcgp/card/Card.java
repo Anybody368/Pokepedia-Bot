@@ -1,6 +1,7 @@
 package tcgp.card;
 
 import tcgp.Dictionary;
+import tcgp.Utilitaire;
 import tcgp.category.*;
 import tcgp.category.decorator.*;
 import tcgp.category.pokemon.PokeEXStrategy;
@@ -106,14 +107,17 @@ public class Card {
         {
             String enPrevo = Util.searchValueOf(en_text, "|prevo name=", false);
             Region prevoRegion = Region.findRegionalFromEn(enPrevo);
-            if(prevoRegion != null)
-            {
-                enPrevo = enPrevo.substring(prevoRegion.getEnAdjective().length() +1);
+            PokemonTrainerName trainer = PokemonTrainerName.getTrainerFromEnglish(enPrevo);
+            if(prevoRegion != null) {
+                enPrevo = enPrevo.substring(prevoRegion.getEnAdjective().length() + 1);
                 prevolution = PokeData.getFrenchNameFromEnglish(enPrevo, "pre-evolution regional Pokémon") + " " + prevoRegion.getFrAdjective();
+            } else if (trainer != null) {
+                enPrevo = enPrevo.substring(trainer.enName.length() + 1);
+                prevolution = PokeData.getFrenchNameFromEnglish(enPrevo, "pre-evolution Trainer's Pokémon") + " " + trainer.getNameWithAdjective();
             } else if (enPrevo.contains(" Fossil") || enPrevo.contains("Old ")) {
                 prevolution = Dictionary.getTranslation(enPrevo);
             } else {
-                prevolution = PokeData.getFrenchNameFromEnglish(enPrevo, "pre-evolution Pokémon");
+                prevolution = PokeData.getFrenchNameFromEnglish(Utilitaire.actualName(enPrevo), "pre-evolution Pokémon");
             }
         }
 

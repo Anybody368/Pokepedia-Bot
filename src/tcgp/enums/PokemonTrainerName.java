@@ -29,9 +29,18 @@ public enum PokemonTrainerName {
         return frAdj + frName;
     }
 
-    public static PokemonTrainerName getTrainerFromEnglish(String enName) {
+    public static PokemonTrainerName getTrainerFromEnglish(String name) {
         for (PokemonTrainerName trainer : PokemonTrainerName.values()) {
-            if (trainer.enName.startsWith(enName)) {
+            if (name.startsWith(trainer.enName)) {
+                return trainer;
+            }
+        }
+        return null;
+    }
+
+    public static PokemonTrainerName getTrainerFromFrench(String name) {
+        for (PokemonTrainerName trainer : PokemonTrainerName.values()) {
+            if (name.endsWith(trainer.getNameWithAdjective())) {
                 return trainer;
             }
         }
