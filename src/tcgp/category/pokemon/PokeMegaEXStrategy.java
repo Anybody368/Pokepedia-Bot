@@ -19,8 +19,8 @@ public class PokeMegaEXStrategy extends PokeEXStrategy {
      * @param hasAbility  whether that Pokémon has an ability or not
      * @param attacks     the list of CardAttacks this Pokémon has
      */
-    public PokeMegaEXStrategy(TCGType type, TCGType weakness, int hp, int stage, int retreat, String prevolution, boolean hasAbility, ArrayList<CardAttack> attacks) {
-        super(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
+    public PokeMegaEXStrategy(TCGType type, TCGType weakness, int hp, int stage, int retreat, String prevolution, String prevolutionSpecies, boolean hasAbility, ArrayList<CardAttack> attacks) {
+        super(type, weakness, hp, stage, retreat, prevolution, prevolutionSpecies, hasAbility, attacks);
     }
 
     @Override

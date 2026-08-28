@@ -11,7 +11,7 @@
 package tcgp.enums;
 
 public enum PokemonTrainerName {
-    TEAM_ROCKET("Team Rocket's", "de la ", "Team Rocket", "ロケット団の");
+    TEAM_ROCKET("Team Rocket", "de la", "Team Rocket", "ロケット団");
 
     public final String enName;
     private final String frAdj;
@@ -19,14 +19,14 @@ public enum PokemonTrainerName {
     public final String jaName;
 
     PokemonTrainerName(String enName, String frAdj, String frName, String jaName) {
-        this.enName = enName;
+        this.enName = enName + "'s";
         this.frAdj = frAdj;
         this.frName = frName;
-        this.jaName = jaName;
+        this.jaName = jaName + "の";
     }
 
     public String getNameWithAdjective() {
-        return frAdj + frName;
+        return (frAdj + " ") + frName;
     }
 
     public static PokemonTrainerName getTrainerFromEnglish(String name) {

@@ -103,6 +103,7 @@ public class Card {
         boolean hasAbility = en_text.contains("{{Cardtext/Ability");
 
         String prevolution = null;
+        String prevolutionSpecies = null;
         if(en_text.contains("|prevo name=") && stage != 0)
         {
             String enPrevo = Util.searchValueOf(en_text, "|prevo name=", false);
@@ -114,6 +115,7 @@ public class Card {
             } else if (trainer != null) {
                 enPrevo = enPrevo.substring(trainer.enName.length() + 1);
                 prevolution = PokeData.getFrenchNameFromEnglish(enPrevo, "pre-evolution Trainer's Pokémon") + " " + trainer.getNameWithAdjective();
+                prevolutionSpecies = PokeData.getFrenchNameFromEnglish(enPrevo, "pre-evolution Trainer's Pokémon species");
             } else if (enPrevo.contains(" Fossil") || enPrevo.contains("Old ")) {
                 prevolution = Dictionary.getTranslation(enPrevo);
             } else {
@@ -126,18 +128,18 @@ public class Card {
         String name = searchValueOf(en_text, "|en name=", false);
         if(name.contains("{{TCGP Icon|ex}}"))
         {
-            category = new PokeEXStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
+            category = new PokeEXStrategy(type, weakness, hp, stage, retreat, prevolution, prevolutionSpecies, hasAbility, attacks);
         } else if (name.contains("{{TCGP Icon|Mega ex}}")) {
-            category = new PokeMegaEXStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks);
+            category = new PokeMegaEXStrategy(type, weakness, hp, stage, retreat, prevolution, prevolutionSpecies, hasAbility, attacks);
         } else {
             String englishDescriptionGame = searchValueOf(en_text, "[[Pokédex]] entry comes from {{g|", "}}", true);
             if (englishDescriptionGame == null) {
                 System.err.println("No game description found for " + name + ".");
-                category = new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks, null);
+                category = new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, prevolutionSpecies, hasAbility, attacks, null);
             } else {
                 Game descriptionGame = Game.getGameFromEnglishName(englishDescriptionGame,
                         "game the description is from");
-                category = new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, hasAbility, attacks, descriptionGame);
+                category = new PokemonStrategy(type, weakness, hp, stage, retreat, prevolution, prevolutionSpecies, hasAbility, attacks, descriptionGame);
             }
         }
 

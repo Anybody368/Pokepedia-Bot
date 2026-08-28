@@ -23,6 +23,7 @@ public class PokemonStrategy implements CategoryStrategy {
     private final int m_stage;
     private final int m_retreat;
     private final String m_prevolution;
+    private final String m_prevolution_species;
     private final boolean m_hasAbility;
     private final ArrayList<CardAttack> m_attacks;
     private final Game m_descriptionGame;
@@ -36,12 +37,13 @@ public class PokemonStrategy implements CategoryStrategy {
      * @param stage the evolution stage of the Pokémon (0 for basic, 1 for first evolution, etc.)
      * @param retreat the cost of retreat for that pokémon, usually between 0 and 4
      * @param prevolution French name of the Pokémon this Pokémon evolves from (should be null if stage = 0)
+     * @param prevolution_species French name of the Pokémon species this Pokémon evolves from (should be null if same as prevolution)
      * @param hasAbility whether that Pokémon has an ability or not
      * @param attacks the list of CardAttacks this Pokémon has
      * @param desciptionGame the Game this Pokémon's description is from (null if that card doesn't have a description
      *                       or the game is undetermined)
      */
-    public PokemonStrategy(TCGType type, @Nullable TCGType weakness, int hp, int stage, int retreat, @Nullable String prevolution, boolean hasAbility, ArrayList<CardAttack> attacks, Game desciptionGame)
+    public PokemonStrategy(TCGType type, @Nullable TCGType weakness, int hp, int stage, int retreat, @Nullable String prevolution, String prevolution_species, boolean hasAbility, ArrayList<CardAttack> attacks, Game desciptionGame)
     {
         m_type = type;
         m_weakness = weakness;
@@ -49,6 +51,7 @@ public class PokemonStrategy implements CategoryStrategy {
         m_stage = stage;
         m_retreat = retreat;
         m_prevolution = prevolution;
+        m_prevolution_species = prevolution_species;
         m_hasAbility = hasAbility;
         m_attacks = attacks;
         m_descriptionGame = desciptionGame;
@@ -60,6 +63,10 @@ public class PokemonStrategy implements CategoryStrategy {
         if(m_prevolution != null)
         {
             code += "\n| niveau-précédent=" + m_prevolution;
+        }
+        if(m_prevolution_species != null)
+        {
+            code += "\n| niveau-précédent-artwork=" + m_prevolution_species + ".png";
         }
         code += "\n| retraite=" + m_retreat;
         if(m_weakness != null)
