@@ -10,8 +10,14 @@ import java.util.Objects;
 
 public record BundlePack(Date startDate, Date endDate, List<Bundle> bundles) {
     public String getWikiCode() {
-        StringBuilder sb = new StringBuilder("| rowspan=\"3\" | ").append(Util.dateToString(startDate)).append("<br>—<br>")
-                .append(Util.dateToString(endDate));
+        StringBuilder sb = new StringBuilder("| ");
+
+        if (bundles.size() > 1) {
+            sb.append("rowspan=\"%d\" | ".formatted(bundles.size()));
+        }
+
+        sb.append(Util.dateToString(startDate)).append("<br>—<br>").append(Util.dateToString(endDate));
+
         for (Bundle bundle : bundles) {
             sb.append("\n").append(bundle.getWikiCode()).append("\n|-");
         }

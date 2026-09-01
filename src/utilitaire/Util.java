@@ -484,10 +484,13 @@ public class Util {
     }
 
     public static String dateToString(Date date) {
-        SimpleDateFormat formatter =
-                new SimpleDateFormat("dd MMMM yyyy", Locale.FRENCH);
+        SimpleDateFormat formatter = new SimpleDateFormat("d MMMM yyyy", Locale.FRENCH);
 
-        return formatter.format(date);
+        String result = formatter.format(date);
+
+        if (result.startsWith("1 ")) return result.replaceFirst("1 ", "1<sup>er</sup> ");
+
+        return result;
     }
 
     public static Date getEndDate(Date date, int duration) {
