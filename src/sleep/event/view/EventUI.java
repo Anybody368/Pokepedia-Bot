@@ -127,15 +127,15 @@ public class EventUI extends JFrame {
             }
         });
 
-        JLabel lblImagePokemon = new JLabel("0 anciens Pokémon sélectionné(s)");
+        JLabel lblImagePokemon = new JLabel("0 Pokémon sur l'image sélectionné(s)");
         JButton btnAddImagePokemon = new JButton("Ajout");
         JButton btnClearImagePokemon = new JButton("Supprimer dernier");
         btnClearImagePokemon.setEnabled(false);
         btnAddImagePokemon.addActionListener(e -> {
             SimplifiedPokemon newImagePokemon = ObjectSelectionDialog.chooseObject(this, "Pokémon sur l'image", "Sélectionnez le Pokémon à ajouter", pokemonList);
-            updateListSingle(newImagePokemon, pokemonOnImage, lblImagePokemon, " Pokémon sélectionné(s)", btnClearImagePokemon);
+            updateListSingle(newImagePokemon, pokemonOnImage, lblImagePokemon, " Pokémon sur l'image sélectionné(s)", btnClearImagePokemon);
         });
-        btnClearImagePokemon.addActionListener(e -> removeFromList(returningPokemon, lblImagePokemon, " Pokémon sélectionné(s)", btnClearImagePokemon));
+        btnClearImagePokemon.addActionListener(e -> removeFromList(pokemonOnImage, lblImagePokemon, " Pokémon sur l'image sélectionné(s)", btnClearImagePokemon));
 
         JTextField txtSpanish = new JTextField();
 

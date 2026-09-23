@@ -467,7 +467,10 @@ public class Pokemon {
                 .append("|dodo1=").append(m_sleepList.getFirst().name());
 
         for (int i = 1; i < m_sleepList.size(); i++) {
-            sleepLine.append("|dodo").append(i + 1).append("=").append(m_sleepList.get(i).name());
+            SleepStyle sleep = m_sleepList.get(i);
+            sleepLine.append("|dodo").append(i + 1).append("=").append(sleep.name());
+
+            if (sleep.rarity() != Math.min(i, 4)) sleepLine.append("|rarity").append(i + 1).append("=").append(sleep.rarity());
         }
 
         if (m_sleepList.size() != 4) {

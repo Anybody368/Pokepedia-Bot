@@ -50,7 +50,10 @@ public enum Competences {
     CHANCEUX("Chanceux (Pioche à Ingrédient S)", "Pioche à Ingrédient S", "Pioche"),
     HYPER_CUTTER("Hyper Cutter (Pioche à Ingrédient S)", "Pioche à Ingrédient S", "Pioche"),
 
-    GONFLETTE("Gonflette (Aide de Cuisine S)", "Aide de Cuisine S", "Cuisine"),;
+    GONFLETTE("Gonflette (Aide de Cuisine S)", "Aide de Cuisine S", "Cuisine"),
+
+    BAIES_EN_FOLIE("Baies en folie", "Baies en folie", "Baies en folie"),
+    FRAPPE_PSY("Frappe Psy (Baies en folie)", "Baies en folie", "Baies en folie");
 
     private final String m_name;
     private final String m_category;

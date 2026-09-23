@@ -15,7 +15,7 @@ void main(String[] args) {
     //Login.handleLogin(args);
 
     for (Pokemon pokemon : PokeData.getAllPokemon()) {
-        if (pokemon.getFrenchName().equals("Pikachu")) continue;
+        if (pokemon.getFrenchName().equals("Pikachu") | pokemon.getFrenchName().equals("Darkrai")) continue;
 
         handlePokemon(pokemon.getFrenchName());
 
@@ -33,20 +33,41 @@ private void handlePokemon(String name) {
     String mainContent = mainPage.getContent().replace("|Unite}}", "|UNITE}}").replace("Pokémon Unite", "Pokémon UNITE")
             .replace("''[[Pokkén Tournament]]''", "[[Pokkén Tournament]]")
             .replace("Apparitions dans {{Jeu|UNITE}}", "Apparition dans {{Jeu|UNITE}}")
-            .replace("==== Dans {{Jeu|Pokkén}} ====", "=== Dans {{Jeu|PokkénDX}} ===");
+            .replace("==== Dans {{Jeu|Pokkén}} ====", "=== Dans {{Jeu|PokkénDX}} ===")
+            .replace("== Apparition dans ''[[Pokémon UNITE]]'' ==", "== Apparition dans {{Jeu|UNITE}} ==");
+
+    String newContent = mainContent;
+
+    if (!mainContent.contains("== Apparitions dans [[Pokémon Donjon Mystère (série)|Pokémon Donjon Mystère]] =="))
+        System.err.printf("PDM Louche pour %s ?%n", name);
 
     if (mainContent.contains("UNITE")) {
-        String sectionName = mainContent.contains("UNITE]]'' ==") ? "== Apparition dans ''[[Pokémon UNITE]]'' ==" : "== Apparition dans {{Jeu|UNITE}} ==";
-        String oldSection = extractSection(mainContent, sectionName);
+        String titleSection = "== Apparition dans {{Jeu|UNITE}} ==";
+        String oldSection = extractSection(mainContent, titleSection);
         String newSection = extractUnite(oldSection);
+        newContent = newContent.replace(oldSection, "").replace(titleSection, "");
     }
 
     if (mainContent.contains("Pokkén")) {
         boolean isDX = mainContent.contains("PokkénDX");
-        System.out.println(extractPokken(mainContent, isDX, name));
+        String sectionTitle;
+        if (isDX) {
+            if (mainContent.contains("''[[Pokkén")) {
+                sectionTitle = "=== Dans ''[[Pokkén Tournament DX]]'' ===";
+            } else {
+                sectionTitle = "=== Dans {{Jeu|PokkénDX}} ===";
+            }
+        } else {
+            sectionTitle = mainContent.contains("Jeu|Pokkén") ? "=== Dans {{Jeu|Pokkén}} ===" : "=== Dans [[Pokkén Tournament]] ===";
+        }
+        String oldSection = extractSection(mainContent, sectionTitle);
+        String newSection = extractPokken(oldSection, isDX, name);
+        newContent = newContent.replace(oldSection, "").replace(sectionTitle, "");
     }
 
-    if (mainContent.contains("Dans {{Jeu|PPk")) System.err.println("Poképark fait son relou");
+    //if (!newContent.equals(mainContent)) System.out.println(newContent);
+
+    if (mainContent.contains("Dans {{Jeu|PPk") | mainContent.contains("Poképark")) System.err.println("Poképark fait son relou");
 }
 
 private String extractUnite(String section) {
@@ -56,19 +77,8 @@ private String extractUnite(String section) {
     return section.replaceAll(" apparaît comme personnage jouable[^.]*\\.", newIntro).replace(".\n{{", ".\n\n{{");
 }
 
-private String extractPokken(String content, boolean isDX, String name) {
-    String section;
+private String extractPokken(String section, boolean isDX, String name) {
     String game = isDX ? "PokkénDX" : "Pokkén";
-    if (isDX) {
-        if (content.contains("''[[Pokkén")) {
-            section = extractSection(content, "=== Dans ''[[Pokkén Tournament DX]]'' ===");
-        } else {
-            section = extractSection(content, "=== Dans {{Jeu|PokkénDX}} ===");
-        }
-    } else {
-        String searchSection = content.contains("Jeu|Pokkén") ? "=== Dans {{Jeu|Pokkén}} ===" : "=== Dans [[Pokkén Tournament]] ===";
-        section = extractSection(content, searchSection);
-    }
 
     String newSection = section.replace("Dans ce jeu, ", "").replace("un Pokémon de soutien",
             "un Pokémon de soutien de {{Jeu|%s}},".formatted(game)).replace("Dans ''Pokkén Tournament DX'', ", "")

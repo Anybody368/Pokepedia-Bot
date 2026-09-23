@@ -38,7 +38,7 @@ public record SimplifiedPokemon(String name, String forme, PokeTypes type, Speci
 
         for (int i = 1; i <= sleepStyles.size(); i++) {
             SleepStyle sleepStyle = sleepStyles.get(i-1);
-            sleepData.append("\n| ").repeat("[[Fichier:Miniature Étoile Sleep.png|20px]] ", i);
+            sleepData.append("\n| ").repeat("[[Fichier:Miniature Étoile Sleep.png|20px]] ", sleepStyle.rarity());
             sleepData.replace(sleepData.length() - 1, sleepData.length(), "\n");
             sleepData.append("| ").append(sleepStyle.getLocationsText()).append("\n|-");
         }
