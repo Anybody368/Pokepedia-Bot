@@ -2,6 +2,8 @@ package other;
 
 import sleep.zone.Island;
 import utilitaire.*;
+import utilitaire.article.Page;
+import utilitaire.article.PageToPublish;
 
 import java.util.ArrayList;
 import java.util.Arrays;

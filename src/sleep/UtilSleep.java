@@ -1,11 +1,11 @@
 package sleep;
 
-import sleep.dodos.SleepStyle;
 import sleep.dodos.TypesDodo;
 import sleep.pokemon.Competences;
 import sleep.pokemon.SimplifiedPokemon;
 import sleep.pokemon.Specialites;
 import utilitaire.*;
+import utilitaire.article.Page;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;

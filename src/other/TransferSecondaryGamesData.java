@@ -9,6 +9,8 @@
  */
 
 import utilitaire.*;
+import utilitaire.article.Page;
+
 import static utilitaire.Util.*;
 
 void main(String[] args) {

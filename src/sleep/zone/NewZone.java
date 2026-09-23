@@ -11,8 +11,8 @@
 package sleep.zone;
 
 import sleep.Rank;
-import utilitaire.Page;
-import utilitaire.PageToPublish;
+import utilitaire.article.Page;
+import utilitaire.article.PageToPublish;
 import utilitaire.Util;
 import utilitaire.Wiki;
 

@@ -1,6 +1,7 @@
 package other;
 
 import utilitaire.*;
+import utilitaire.article.Page;
 
 import java.util.ArrayList;
 import java.util.HashMap;

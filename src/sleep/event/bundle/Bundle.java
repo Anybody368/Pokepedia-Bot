@@ -2,6 +2,7 @@ package sleep.event.bundle;
 
 import sleep.event.ItemReward;
 import utilitaire.*;
+import utilitaire.article.FileToUpload;
 
 import java.io.File;
 import java.util.List;

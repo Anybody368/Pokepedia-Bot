@@ -4,6 +4,9 @@ import sleep.event.bonus.Bonus;
 import sleep.event.bundle.BundlePack;
 import sleep.pokemon.SimplifiedPokemon;
 import utilitaire.*;
+import utilitaire.article.FileToUpload;
+import utilitaire.article.Page;
+import utilitaire.article.PageToPublish;
 
 import java.io.File;
 import java.net.URL;

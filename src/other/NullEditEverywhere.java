@@ -1,7 +1,7 @@
 package other;
 
 import utilitaire.Login;
-import utilitaire.Page;
+import utilitaire.article.Page;
 import utilitaire.Wiki;
 
 public class NullEditEverywhere {

@@ -6,6 +6,7 @@ import sleep.dodos.SleepRank;
 import sleep.dodos.SleepStyle;
 import sleep.dodos.TypesDodo;
 import utilitaire.*;
+import utilitaire.article.Page;
 
 import java.util.ArrayList;
 import java.util.HashMap;

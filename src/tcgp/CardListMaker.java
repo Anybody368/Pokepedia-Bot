@@ -1,6 +1,6 @@
 package tcgp;
 
-import utilitaire.Page;
+import utilitaire.article.Page;
 import utilitaire.Util;
 import utilitaire.Wiki;
 

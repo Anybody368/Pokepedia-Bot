@@ -1,6 +1,6 @@
 package sleep.bouffe;
 
-import utilitaire.Page;
+import utilitaire.article.Page;
 import utilitaire.Util;
 
 import java.util.ArrayList;

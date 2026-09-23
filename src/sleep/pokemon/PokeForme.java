@@ -4,8 +4,8 @@ import sleep.bouffe.IngredientPoke;
 import sleep.dodos.SleepStyle;
 import sleep.zone.Island;
 import sleep.dodos.TypesDodo;
-import utilitaire.Page;
-import utilitaire.PageToPublish;
+import utilitaire.article.Page;
+import utilitaire.article.PageToPublish;
 import utilitaire.PokeTypes;
 import utilitaire.Util;
 

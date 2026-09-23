@@ -7,6 +7,7 @@ import sleep.dodos.TypesDodo;
 import sleep.pokemon.*;
 import sleep.pokemon.Pokemon;
 import utilitaire.*;
+import utilitaire.article.PageToPublish;
 
 import javax.swing.*;
 import java.awt.*;

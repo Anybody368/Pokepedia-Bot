@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import utilitaire.article.Page;
 
 import static utilitaire.Util.*;
 

@@ -9,6 +9,7 @@ import sleep.dodos.TypesDodo;
 import sleep.pokemon.*;
 import sleep.pokemon.Pokemon;
 import utilitaire.*;
+import utilitaire.article.Page;
 
 import java.util.ArrayList;
 import java.util.HashMap;

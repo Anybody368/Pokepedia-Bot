@@ -1,9 +1,10 @@
 package other;
 
 import utilitaire.*;
+import utilitaire.article.Page;
+import utilitaire.article.PageToPublish;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ReplacePokemonLinks {

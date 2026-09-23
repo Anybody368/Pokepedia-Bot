@@ -1,7 +1,7 @@
 package sleep.pokemon;
 
 import utilitaire.API;
-import utilitaire.Page;
+import utilitaire.article.Page;
 import utilitaire.Wiki;
 
 import java.io.File;

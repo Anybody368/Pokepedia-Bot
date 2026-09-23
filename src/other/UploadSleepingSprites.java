@@ -1,10 +1,10 @@
 package other;
 
 import utilitaire.*;
+import utilitaire.article.Page;
 
 import javax.swing.*;
 import java.io.File;
-import java.nio.file.*;
 
 public class UploadSleepingSprites {
     private static final String DESCRIPTION = "{{#invoke:Description|sprite|source=sleepwiki}}";

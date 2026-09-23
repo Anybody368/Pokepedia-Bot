@@ -1,6 +1,6 @@
 package sleep.event.bundle;
 
-import utilitaire.FileToUpload;
+import utilitaire.article.FileToUpload;
 import utilitaire.Util;
 
 import java.util.ArrayList;

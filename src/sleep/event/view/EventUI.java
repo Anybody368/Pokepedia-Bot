@@ -17,6 +17,9 @@ import sleep.event.bonus.SpawnChanceBonus;
 import sleep.event.bundle.BundlePack;
 import sleep.pokemon.SimplifiedPokemon;
 import utilitaire.*;
+import utilitaire.article.FileToUpload;
+import utilitaire.article.Page;
+import utilitaire.article.PageToPublish;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

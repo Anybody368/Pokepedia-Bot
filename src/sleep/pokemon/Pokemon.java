@@ -6,6 +6,8 @@ import sleep.dodos.TypesDodo;
 import sleep.UtilSleep;
 import sleep.bouffe.IngredientPoke;
 import utilitaire.*;
+import utilitaire.article.Page;
+import utilitaire.article.PageToPublish;
 
 import java.util.*;
 

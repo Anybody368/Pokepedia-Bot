@@ -2,6 +2,7 @@ package tcgp;
 
 import tcgp.card.Card;
 import utilitaire.*;
+import utilitaire.article.Page;
 
 import static tcgp.Dictionary.*;
 
